@@ -38,6 +38,12 @@ export const PROJECTS = [
   },
 ];
 
+export const METRICS = [
+  { n: '0→1', l: 'Products shipped from scratch' },
+  { n: 'Agentic', l: 'AI running in production' },
+  { n: 'Full-stack', l: 'Frontend, backend, infra, AI' },
+];
+
 export const SKILLS = [
   { group: 'Frontend', items: ['React', 'Next.js', 'Tailwind CSS', 'Flutter', 'PWAs'] },
   { group: 'Backend', items: ['Node.js / Express', 'Python / FastAPI', 'REST APIs', 'WebSockets'] },

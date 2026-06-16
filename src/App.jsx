@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { PROJECTS, SKILLS, SOCIALS } from './data.js';
+import { PROJECTS, METRICS, SKILLS, SOCIALS } from './data.js';
+import { ParticleField, AgentConsole, ReactionGame } from './interactive.jsx';
 
 const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
@@ -9,16 +10,16 @@ function useReveal() {
     const els = ref.current?.querySelectorAll('.reveal') ?? [];
     const io = new IntersectionObserver(
       (es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }),
-      { threshold: 0.12 }
+      { threshold: 0.14 }
     );
-    els.forEach((el, i) => { el.style.animationDelay = `${(i % 3) * 0.1}s`; io.observe(el); });
+    els.forEach((el, i) => { el.style.animationDelay = `${(i % 4) * 0.1}s`; io.observe(el); });
     return () => io.disconnect();
   });
   return ref;
 }
 
 const Arrow = ({ className = 'w-4 h-4' }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <path d="M7 17L17 7M9 7h8v8" />
   </svg>
 );
@@ -31,16 +32,15 @@ function Nav() {
     window.addEventListener('scroll', f); return () => window.removeEventListener('scroll', f);
   }, []);
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition ${solid ? 'bg-base/80 backdrop-blur border-b border-white/5' : ''}`}>
-      <nav className="mx-auto max-w-5xl px-6 h-16 flex items-center justify-between">
-        <a href="#top" className="font-extrabold tracking-tight text-white">aneesh<span className="grad-text">.</span></a>
-        <div className="hidden sm:flex items-center gap-7 text-sm">
-          {[['Work', 'work'], ['About', 'about'], ['Contact', 'contact']].map(([t, id]) => (
-            <button key={id} onClick={() => scrollTo(id)} className="text-slate-400 hover:text-white transition">{t}</button>
+    <header className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${solid ? 'bg-ink/80 backdrop-blur-md border-b border-white/[0.05]' : ''}`}>
+      <nav className="mx-auto max-w-6xl px-8 h-20 flex items-center justify-between">
+        <a href="#top" className="font-display text-ivory text-lg tracking-tight">Aneesh Mohan</a>
+        <div className="hidden sm:flex items-center gap-10 font-mono text-[11px] uppercase tracking-[0.2em]">
+          {[['Work', 'work'], ['Playground', 'play'], ['About', 'about'], ['Contact', 'contact']].map(([t, id]) => (
+            <button key={id} onClick={() => scrollTo(id)} className="text-muted hover:text-ivory transition link-underline">{t}</button>
           ))}
-          <a href="mailto:mohananeesh003@gmail.com" className="rounded-full bg-white text-base font-semibold px-4 py-2 hover:bg-slate-200 transition">Hire me</a>
         </div>
-        <a href="mailto:mohananeesh003@gmail.com" className="sm:hidden rounded-full bg-white text-base font-semibold px-4 py-2 text-sm">Hire me</a>
+        <a href="mailto:mohananeesh003@gmail.com" className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent border-b border-accent/40 pb-0.5 hover:text-ivory hover:border-ivory transition">Hire me</a>
       </nav>
     </header>
   );
@@ -49,29 +49,48 @@ function Nav() {
 /* ── Hero ───────────────────────────────────────────────────────────────── */
 function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden grid-bg min-h-screen flex items-center">
-      <div className="aurora bg-v1 w-96 h-96 -top-20 -left-24 floaty" />
-      <div className="aurora bg-v2 w-80 h-80 top-32 right-0 floaty" style={{ animationDelay: '1.5s' }} />
-      <div className="aurora bg-v3 w-80 h-80 bottom-0 left-1/3 floaty" style={{ animationDelay: '3s' }} />
-      <div className="absolute inset-0 bg-gradient-to-b from-base/0 via-base/40 to-base" />
+    <section id="top" className="relative min-h-screen flex items-center grid-bg overflow-hidden">
+      <ParticleField />
+      <div className="glow w-[40rem] h-[40rem] -top-48 -right-56" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/30" />
 
-      <div className="relative z-10 mx-auto max-w-5xl px-6 w-full">
-        <div style={{ animation: 'fadeIn .8s both' }} className="inline-flex items-center gap-2 glass rounded-full px-3.5 py-1.5 text-xs text-slate-300">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Available for freelance & contract work
-        </div>
-        <h1 style={{ animation: 'fadeUp .8s .1s both' }} className="mt-6 text-5xl sm:text-7xl font-extrabold tracking-tight text-white leading-[1.05]">
-          I build full-stack<br />products with <span className="grad-text">agentic AI.</span>
+      <div className="relative z-10 mx-auto max-w-6xl px-8 w-full">
+        <div style={{ animation: 'fadeIn .9s both' }} className="eyebrow">Full-Stack &amp; AI Engineer</div>
+
+        <h1 style={{ animation: 'fadeUp 1s .1s both' }} className="mt-10 text-[3.25rem] sm:text-[5.5rem] leading-[1.04] tracking-tight">
+          Fast, intelligent<br />software, built to <span className="italic text-accent">ship.</span>
         </h1>
-        <p style={{ animation: 'fadeUp .8s .2s both' }} className="mt-6 text-lg text-slate-400 max-w-xl">
-          I'm Aneesh Mohan, a full-stack and AI engineer. I take ideas from a blank page to production: clean frontends, solid APIs, real databases, and LLM agents that actually do the work.
+
+        <p style={{ animation: 'fadeUp 1s .22s both' }} className="mt-9 text-lg text-muted max-w-lg leading-relaxed">
+          I'm Aneesh Mohan. I take products from a blank page to production with the same standard end to end: a precise interface, a solid API and data layer, and AI that does real work.
         </p>
-        <div style={{ animation: 'fadeUp .8s .3s both' }} className="mt-9 flex flex-wrap gap-3">
-          <button onClick={() => scrollTo('work')} className="rounded-full bg-gradient-to-r from-v1 to-v2 text-white font-semibold px-6 py-3.5 hover:brightness-110 active:scale-95 transition shadow-lg shadow-fuchsia-500/20">View my work</button>
-          <a href="mailto:mohananeesh003@gmail.com" className="rounded-full glass px-6 py-3.5 font-semibold text-white hover:bg-white/10 transition">Get in touch</a>
+
+        <div style={{ animation: 'fadeUp 1s .32s both' }} className="mt-12 flex flex-wrap items-center gap-7">
+          <button onClick={() => scrollTo('work')} className="group font-mono text-[12px] uppercase tracking-[0.2em] text-ivory inline-flex items-center gap-3 border-b border-white/20 pb-1.5 hover:border-accent hover:text-accent transition">
+            View the work <Arrow className="w-4 h-4 group-hover:translate-x-1 transition" />
+          </button>
+          <span className="inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" style={{ animation: 'pulse2 2.4s infinite' }} /> Available for work
+          </span>
         </div>
-        <div style={{ animation: 'fadeUp .8s .4s both' }} className="mt-12 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-500 font-mono">
-          {['React', 'Next.js', 'FastAPI', 'Node', 'PostgreSQL', 'LLMs', 'AWS'].map((t) => <span key={t}>{t}</span>)}
-        </div>
+
+        <div style={{ animation: 'fadeUp 1s .42s both' }} className="mt-20 charge-track max-w-sm" />
+      </div>
+    </section>
+  );
+}
+
+/* ── Metrics ────────────────────────────────────────────────────────────── */
+function Metrics() {
+  return (
+    <section className="border-y border-white/[0.05]">
+      <div className="mx-auto max-w-6xl px-8 py-14 grid grid-cols-1 sm:grid-cols-3 gap-10">
+        {METRICS.map((m) => (
+          <div key={m.l}>
+            <div className="font-display text-4xl text-ivory">{m.n}</div>
+            <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted mt-3">{m.l}</div>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -81,30 +100,28 @@ function Hero() {
 function Work() {
   const ref = useReveal();
   return (
-    <section id="work" ref={ref} className="mx-auto max-w-5xl px-6 py-24">
-      <div className="reveal flex items-end justify-between mb-12">
-        <div>
-          <p className="grad-text font-bold text-sm tracking-widest uppercase">Selected work</p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2">Things I've built</h2>
-        </div>
-        <span className="hidden sm:block text-sm text-slate-500">{PROJECTS.length} projects</span>
+    <section id="work" ref={ref} className="mx-auto max-w-6xl px-8 py-32">
+      <div className="reveal max-w-2xl">
+        <div className="eyebrow">Selected Work</div>
+        <h2 className="text-4xl sm:text-5xl mt-7 leading-tight">Products designed, built<br className="hidden sm:block" /> and shipped from zero.</h2>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {PROJECTS.map((p) => (
-          <article key={p.name} className="reveal gcard p-6 flex flex-col hover:-translate-y-1 transition duration-300">
-            <div className="flex items-center justify-between">
-              <span className={`text-xs font-semibold px-2.5 py-1 rounded-md bg-gradient-to-r ${p.accent} text-white`}>{p.tag}</span>
+      <div className="mt-20 grid md:grid-cols-2 gap-7">
+        {PROJECTS.map((p, i) => (
+          <article key={p.name} className="reveal pcard p-9 flex flex-col">
+            <div className="flex items-start justify-between">
+              <span className="font-mono text-xs text-muted/60">{String(i + 1).padStart(2, '0')} / 04</span>
               {p.link && (
-                <a href={p.link} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-white transition inline-flex items-center gap-1 text-sm">
-                  {p.linkLabel} <Arrow />
+                <a href={p.link} target="_blank" rel="noreferrer" className="text-muted hover:text-accent transition inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider">
+                  {p.linkLabel} <Arrow className="w-3.5 h-3.5" />
                 </a>
               )}
             </div>
-            <h3 className="mt-4 text-2xl font-extrabold text-white">{p.name}</h3>
-            <p className="mt-2 text-sm text-slate-400 leading-relaxed flex-1">{p.blurb}</p>
-            {p.note && <p className="mt-3 text-xs text-slate-500 italic">{p.note}</p>}
-            <div className="mt-4 flex flex-wrap gap-2">
+            <h3 className="mt-8 text-3xl">{p.name}</h3>
+            <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">{p.tag}</p>
+            <p className="mt-6 text-[15px] text-muted leading-relaxed flex-1">{p.blurb}</p>
+            {p.note && <p className="mt-5 text-xs text-muted/70 italic">{p.note}</p>}
+            <div className="mt-7 flex flex-wrap gap-2">
               {p.tech.map((t) => <span key={t} className="chip">{t}</span>)}
             </div>
           </article>
@@ -114,30 +131,51 @@ function Work() {
   );
 }
 
+/* ── Playground (interactive) ───────────────────────────────────────────── */
+function Playground() {
+  const ref = useReveal();
+  return (
+    <section id="play" ref={ref} className="border-t border-white/[0.05]">
+      <div className="mx-auto max-w-6xl px-8 py-32">
+        <div className="reveal max-w-2xl">
+          <div className="eyebrow">Interactive</div>
+          <h2 className="text-4xl sm:text-5xl mt-7 leading-tight">Don't take my word for it.<br className="hidden sm:block" /> Try it yourself.</h2>
+          <p className="reveal text-muted mt-6 max-w-xl leading-relaxed">A taste of how I think about agentic AI and speed. Drive the energy agent and watch it act, or test your own reflexes against the clock.</p>
+        </div>
+        <div className="reveal mt-16 grid md:grid-cols-2 gap-7">
+          <AgentConsole />
+          <ReactionGame />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── About + Skills ─────────────────────────────────────────────────────── */
 function About() {
   const ref = useReveal();
   return (
-    <section id="about" ref={ref} className="relative">
-      <div className="mx-auto max-w-5xl px-6 py-24 grid md:grid-cols-5 gap-12">
+    <section id="about" ref={ref} className="border-t border-white/[0.05]">
+      <div className="mx-auto max-w-6xl px-8 py-32 grid md:grid-cols-5 gap-16">
         <div className="md:col-span-2">
-          <p className="reveal grad-text font-bold text-sm tracking-widest uppercase">About</p>
-          <h2 className="reveal text-3xl font-extrabold text-white mt-2">Engineer, and founder.</h2>
-          <p className="reveal text-slate-400 mt-4 leading-relaxed">
-            I'm the founder of RiDERgy, where I build agentic AI for EV charging and energy management. I love the full arc of a product: architecture, a polished UI, the API and data model underneath, and the AI layer that makes it feel alive.
+          <div className="reveal eyebrow">About</div>
+          <h2 className="reveal text-3xl sm:text-4xl mt-7 leading-snug">Founder's mind,<br />engineer's hands.</h2>
+          <p className="reveal text-muted mt-8 leading-relaxed">
+            I founded RiDERgy, where I build agentic AI for EV charging and energy management, a domain where speed, reliability and clarity are non-negotiable.
           </p>
-          <p className="reveal text-slate-400 mt-3 leading-relaxed">
-            I work fast, communicate clearly, and care about shipping things people actually use.
+          <p className="reveal text-muted mt-4 leading-relaxed">
+            I own the whole stack: the architecture, a considered interface, the API and data beneath it, and the intelligence layer that makes it useful. I move quickly, and I ship things people depend on.
           </p>
         </div>
-        <div className="md:col-span-3 grid sm:grid-cols-2 gap-4">
+        <div className="md:col-span-3 grid sm:grid-cols-2 gap-x-7 gap-y-10">
           {SKILLS.map((s) => (
-            <div key={s.group} className="reveal gcard p-5">
-              <h3 className="font-bold text-white">{s.group}</h3>
-              <ul className="mt-3 space-y-1.5">
+            <div key={s.group} className="reveal">
+              <h3 className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold">{s.group}</h3>
+              <div className="rule mt-4" />
+              <ul className="mt-4 space-y-2.5">
                 {s.items.map((it) => (
-                  <li key={it} className="text-sm text-slate-400 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-v1 to-v3" /> {it}
+                  <li key={it} className="text-[15px] text-muted flex items-center gap-3">
+                    <span className="w-1 h-1 rounded-full bg-accent/70" /> {it}
                   </li>
                 ))}
               </ul>
@@ -152,19 +190,19 @@ function About() {
 /* ── Contact ────────────────────────────────────────────────────────────── */
 function Contact() {
   return (
-    <section id="contact" className="relative overflow-hidden">
-      <div className="aurora bg-v2 w-96 h-96 -bottom-24 left-1/2 -translate-x-1/2 opacity-40" />
-      <div className="relative mx-auto max-w-3xl px-6 py-28 text-center">
-        <h2 className="text-4xl sm:text-5xl font-extrabold text-white">Let's build something <span className="grad-text">great.</span></h2>
-        <p className="mt-4 text-slate-400 max-w-lg mx-auto">Have a product, an MVP, or an AI idea you want shipped? I'm available and I'd love to hear about it.</p>
-        <a href="mailto:mohananeesh003@gmail.com" className="inline-flex items-center gap-2 mt-8 rounded-full bg-gradient-to-r from-v1 to-v2 text-white font-semibold px-7 py-4 hover:brightness-110 active:scale-95 transition shadow-lg shadow-fuchsia-500/20">
+    <section id="contact" className="relative border-t border-white/[0.05] overflow-hidden">
+      <div className="glow w-[36rem] h-[36rem] -bottom-56 left-1/2 -translate-x-1/2" />
+      <div className="relative mx-auto max-w-3xl px-8 py-36 text-center">
+        <div className="eyebrow justify-center">Contact</div>
+        <h2 className="text-4xl sm:text-6xl mt-8 leading-[1.08]">Have something<br /> worth building?</h2>
+        <p className="mt-8 text-muted max-w-md mx-auto leading-relaxed">An MVP, a production platform, or an AI feature you need shipped. I'm available, and I'd like to hear about it.</p>
+        <a href="mailto:mohananeesh003@gmail.com" className="inline-block mt-10 font-display italic text-2xl sm:text-3xl text-ivory border-b border-accent/50 pb-1 hover:text-accent transition">
           mohananeesh003@gmail.com
         </a>
-        <div className="mt-10 flex flex-wrap justify-center gap-3">
-          {SOCIALS.map((s) => (
-            <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="glass rounded-full px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/10 transition">
-              {s.label} <span className="text-slate-500">{s.handle}</span>
-            </a>
+        <div className="mt-12 charge-track max-w-[14rem] mx-auto" />
+        <div className="mt-10 flex flex-wrap justify-center gap-x-10 gap-y-3 font-mono text-[11px] uppercase tracking-[0.18em]">
+          {SOCIALS.filter((s) => s.label !== 'Email').map((s) => (
+            <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="text-muted hover:text-ivory transition">{s.label}</a>
           ))}
         </div>
       </div>
@@ -174,10 +212,10 @@ function Contact() {
 
 function Footer() {
   return (
-    <footer className="border-t border-white/5">
-      <div className="mx-auto max-w-5xl px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
-        <span className="font-extrabold text-white">aneesh<span className="grad-text">.</span></span>
-        <span>© {new Date().getFullYear()} Aneesh Mohan. Built from scratch with React & Tailwind.</span>
+    <footer className="border-t border-white/[0.05]">
+      <div className="mx-auto max-w-6xl px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted/70">
+        <span className="font-display text-ivory tracking-normal text-sm normal-case">Aneesh Mohan</span>
+        <span>© {new Date().getFullYear()} · Built from scratch · React &amp; Tailwind</span>
       </div>
     </footer>
   );
@@ -188,7 +226,9 @@ export default function App() {
     <>
       <Nav />
       <Hero />
+      <Metrics />
       <Work />
+      <Playground />
       <About />
       <Contact />
       <Footer />

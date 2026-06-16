@@ -4,13 +4,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        base: '#08080c',
-        surface: '#0f0f17',
-        v1: '#7c3aed', // violet
-        v2: '#d946ef', // fuchsia
-        v3: '#22d3ee', // cyan
+        ink: '#0a0a0c',      // warm near-black
+        panel: '#121215',    // raised surface
+        panel2: '#17171b',
+        ivory: '#ECE7DC',    // warm off-white (primary text)
+        muted: '#8d887e',    // warm muted body text
+        accent: '#27e0d4',   // electric cyan, used sparingly
+        gold: '#c7b299',     // soft beige-gold (luxury neutral)
       },
       fontFamily: {
+        display: ['"Bodoni Moda"', 'Didot', 'Georgia', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
