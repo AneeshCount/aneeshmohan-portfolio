@@ -5,7 +5,7 @@
 html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
 body { @apply bg-ink text-muted font-sans antialiased; }
 section { scroll-margin-top: 88px; }
-::selection { background: rgba(39,224,212,.22); color: #fff; }
+::selection { background: rgba(47,227,190,.22); color: #fff; }
 
 /* Editorial serif display, ivory, generous and precise */
 h1,h2,h3 { @apply font-display text-ivory; letter-spacing: -0.01em; font-weight: 600; }
@@ -30,7 +30,7 @@ h1,h2,h3 { @apply font-display text-ivory; letter-spacing: -0.01em; font-weight:
 .charge-track { position: relative; height: 1px; background: rgba(236,231,220,.10); overflow: hidden; }
 .charge-track::after {
   content: ''; position: absolute; top: 0; left: 0; width: 28%; height: 100%;
-  background: linear-gradient(90deg, transparent, #27e0d4, transparent);
+  background: linear-gradient(90deg, transparent, #2FE3BE, transparent);
   animation: flow 4.5s ease-in-out infinite;
 }
 
@@ -41,7 +41,7 @@ h1,h2,h3 { @apply font-display text-ivory; letter-spacing: -0.01em; font-weight:
 .pcard { @apply relative bg-panel/60 border border-white/[0.06] rounded-xl overflow-hidden transition-all duration-500; }
 .pcard::before {
   content: ''; position: absolute; top: 0; left: 0; height: 1px; width: 0;
-  background: linear-gradient(90deg, #27e0d4, transparent); transition: width .7s cubic-bezier(.16,.8,.24,1);
+  background: linear-gradient(90deg, #2FE3BE, transparent); transition: width .7s cubic-bezier(.16,.8,.24,1);
 }
 .pcard:hover { @apply border-white/15; background: #131316; transform: translateY(-3px); }
 .pcard:hover::before { width: 100%; }
@@ -50,9 +50,9 @@ h1,h2,h3 { @apply font-display text-ivory; letter-spacing: -0.01em; font-weight:
 
 /* Faint blueprint grid, very subtle */
 .grid-bg { background-image: linear-gradient(rgba(236,231,220,.018) 1px, transparent 1px), linear-gradient(90deg, rgba(236,231,220,.018) 1px, transparent 1px); background-size: 72px 72px; }
-.glow { position: absolute; border-radius: 9999px; background: radial-gradient(circle, rgba(39,224,212,.10), transparent 70%); filter: blur(30px); pointer-events: none; }
+.glow { position: absolute; border-radius: 9999px; background: radial-gradient(circle, rgba(47,227,190,.10), transparent 70%); filter: blur(30px); pointer-events: none; }
 
-.link-underline { background-image: linear-gradient(#27e0d4,#27e0d4); background-size: 0% 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size .4s; }
+.link-underline { background-image: linear-gradient(#2FE3BE,#2FE3BE); background-size: 0% 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size .4s; }
 .link-underline:hover { background-size: 100% 1px; }
 
 *::-webkit-scrollbar { width: 9px; }

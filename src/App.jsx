@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PROJECTS, METRICS, SKILLS, SOCIALS } from './data.js';
-import { ParticleField, AgentConsole, ReactionGame } from './interactive.jsx';
+import { ParticleField } from './interactive.jsx';
+import { EnergyGame } from './game.jsx';
 
 const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
@@ -140,11 +141,10 @@ function Playground() {
         <div className="reveal max-w-2xl">
           <div className="eyebrow">Interactive</div>
           <h2 className="text-4xl sm:text-5xl mt-7 leading-tight">Don't take my word for it.<br className="hidden sm:block" /> Try it yourself.</h2>
-          <p className="reveal text-muted mt-6 max-w-xl leading-relaxed">A taste of how I think about agentic AI and speed. Drive the energy agent and watch it act, or test your own reflexes against the clock.</p>
+          <p className="reveal text-muted mt-6 max-w-xl leading-relaxed">This is the kind of problem I build for: balancing solar, battery and grid under a hard limit. Play one round of <span className="text-ivory">Grid Master</span> and see how efficiently you can run a charging site.</p>
         </div>
-        <div className="reveal mt-16 grid md:grid-cols-2 gap-7">
-          <AgentConsole />
-          <ReactionGame />
+        <div className="reveal mt-16">
+          <EnergyGame />
         </div>
       </div>
     </section>

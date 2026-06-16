@@ -4,13 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#0a0a0c',      // warm near-black
-        panel: '#121215',    // raised surface
-        panel2: '#17171b',
-        ivory: '#ECE7DC',    // warm off-white (primary text)
-        muted: '#8d887e',    // warm muted body text
-        accent: '#27e0d4',   // electric cyan, used sparingly
-        gold: '#c7b299',     // soft beige-gold (luxury neutral)
+        ink: '#0a1014',      // teal-black
+        panel: '#0f1a1e',    // raised surface
+        panel2: '#14242a',
+        ivory: '#EAF0EE',    // bright primary text
+        muted: '#AEBFBB',    // higher-contrast body text
+        accent: '#2FE3BE',   // luminous teal (used sparingly)
+        gold: '#CBB489',     // rare warm detail
+        danger: '#ff5d5d',
       },
       fontFamily: {
         display: ['"Bodoni Moda"', 'Didot', 'Georgia', 'serif'],
