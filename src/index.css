@@ -20,6 +20,17 @@ h1,h2,h3 { @apply font-display text-ivory; letter-spacing: -0.01em; font-weight:
 .reveal { opacity: 0; }
 .reveal.in { animation: fadeUp 1s cubic-bezier(.16,.8,.24,1) both; }
 
+/* Keyboard focus: visible teal ring (mouse clicks stay clean) */
+a:focus-visible, button:focus-visible { outline: 2px solid #2FE3BE; outline-offset: 3px; border-radius: 2px; }
+
+/* Reduced motion: show everything immediately, stop ambient animation */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .reveal { opacity: 1; }
+  .charge-track::after { display: none; }
+}
+
 /* Eyebrow: mono, uppercase, wide tracking, with a hairline tick */
 .eyebrow { @apply font-mono text-[10px] font-medium uppercase text-gold inline-flex items-center gap-3; letter-spacing: 0.34em; }
 .eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; display: inline-block; opacity: .6; }

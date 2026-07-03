@@ -9,6 +9,8 @@ export function ParticleField() {
     let raf, w, h, dpr;
     const mouse = { x: -9999, y: -9999 };
     let nodes = [];
+    // Reduced motion: render one static constellation frame, no animation loop.
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -51,7 +53,7 @@ export function ParticleField() {
         ctx.fillStyle = 'rgba(47,227,190,0.5)';
         ctx.beginPath(); ctx.arc(a.x, a.y, 1.5, 0, Math.PI * 2); ctx.fill();
       }
-      raf = requestAnimationFrame(tick);
+      if (!still) raf = requestAnimationFrame(tick);
     };
 
     const onMove = (e) => {
@@ -60,11 +62,14 @@ export function ParticleField() {
     };
     const onLeave = () => { mouse.x = -9999; mouse.y = -9999; };
 
+    const onResize = () => { resize(); if (still) tick(); };
     resize(); tick();
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseleave', onLeave);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseleave', onLeave); };
+    window.addEventListener('resize', onResize);
+    if (!still) {
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseleave', onLeave);
+    }
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseleave', onLeave); };
   }, []);
   return <canvas ref={ref} className="absolute inset-0 w-full h-full opacity-70" aria-hidden />;
 }

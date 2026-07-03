@@ -15,7 +15,7 @@ function useReveal() {
     );
     els.forEach((el, i) => { el.style.animationDelay = `${(i % 4) * 0.1}s`; io.observe(el); });
     return () => io.disconnect();
-  });
+  }, []);
   return ref;
 }
 
@@ -26,23 +26,45 @@ const Arrow = ({ className = 'w-4 h-4' }) => (
 );
 
 /* ── Nav ────────────────────────────────────────────────────────────────── */
+const NAV_LINKS = [['Work', 'work'], ['Playground', 'play'], ['About', 'about'], ['Contact', 'contact']];
+
 function Nav() {
   const [solid, setSolid] = useState(false);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     const f = () => setSolid(window.scrollY > 24);
     window.addEventListener('scroll', f); return () => window.removeEventListener('scroll', f);
   }, []);
+  const go = (id) => { setOpen(false); scrollTo(id); };
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${solid ? 'bg-ink/80 backdrop-blur-md border-b border-white/[0.05]' : ''}`}>
+    <header className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${solid || open ? 'bg-ink/90 backdrop-blur-md border-b border-white/[0.05]' : ''}`}>
       <nav className="mx-auto max-w-6xl px-8 h-20 flex items-center justify-between">
         <a href="#top" className="font-display text-ivory text-lg tracking-tight">Aneesh Mohan</a>
         <div className="hidden sm:flex items-center gap-10 font-mono text-[11px] uppercase tracking-[0.2em]">
-          {[['Work', 'work'], ['Playground', 'play'], ['About', 'about'], ['Contact', 'contact']].map(([t, id]) => (
-            <button key={id} onClick={() => scrollTo(id)} className="text-muted hover:text-ivory transition link-underline">{t}</button>
+          {NAV_LINKS.map(([t, id]) => (
+            <button key={id} onClick={() => go(id)} className="text-muted hover:text-ivory transition link-underline">{t}</button>
           ))}
         </div>
-        <a href="mailto:mohananeesh003@gmail.com" className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent border-b border-accent/40 pb-0.5 hover:text-ivory hover:border-ivory transition">Hire me</a>
+        <div className="flex items-center gap-6">
+          <a href="mailto:mohananeesh003@gmail.com" className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent border-b border-accent/40 pb-0.5 hover:text-ivory hover:border-ivory transition">Hire me</a>
+          <button
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            className="sm:hidden flex flex-col justify-center gap-[5px] w-8 h-8"
+          >
+            <span className={`block h-px w-5 bg-ivory transition-transform duration-300 ${open ? 'translate-y-[3px] rotate-45' : ''}`} />
+            <span className={`block h-px w-5 bg-ivory transition-transform duration-300 ${open ? '-translate-y-[3px] -rotate-45' : ''}`} />
+          </button>
+        </div>
       </nav>
+      {open && (
+        <div className="sm:hidden border-t border-white/[0.05] bg-ink/95 backdrop-blur-md px-8 py-6 flex flex-col gap-5">
+          {NAV_LINKS.map(([t, id]) => (
+            <button key={id} onClick={() => go(id)} className="text-left font-mono text-[12px] uppercase tracking-[0.2em] text-muted hover:text-ivory transition">{t}</button>
+          ))}
+        </div>
+      )}
     </header>
   );
 }
