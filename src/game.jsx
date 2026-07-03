@@ -1,94 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
+import {
+  DAY, TICK_MS, FUSE, BATT_CAP, LEVELS, HIGH, OVER_TICKS, TOTAL_CARS, PMAX,
+  clockOf, newSeed, fresh, step, runDay, naiveControl, agentControl,
+  selfSuff, selfCons, scoreOf, gradeOf,
+} from './sim.js';
 
 /* ════════════════════════════════════════════════════════════════════════
-   GRID MASTER — live site energy management
-   Sources: Solar PV, Battery, Grid (capped by a fuse). Loads: Building + EV
-   chargers. Keep grid IMPORT under the fuse (3s over = blackout/lose).
-   Discharge the battery when spot price is high, soak up solar, charge the cars.
+   GRID MASTER — the interactive console. Simulation lives in sim.js; every
+   day is seeded, so at the end the same day is replayed by an AI agent and
+   by "dumb charging" for a like-for-like comparison.
    ════════════════════════════════════════════════════════════════════════ */
-
-const DAY = 150, TICK_MS = 300, DT = 24 / DAY;          // ~45s = one day
-const SOLAR_MAX = 10, FUSE = 14;                         // kW
-const BATT_CAP = 16, BATT_KW = 6;                        // kWh / kW
-const LEVELS = [0, 3.5, 7, 11];                          // charger throttle (kW)
-const HIGH = 10, FEED = 3;                               // ₹ price threshold / feed-in
-const OVER_TICKS = Math.ceil(3000 / TICK_MS);            // 3s breach = lose
-const TOTAL_CARS = 5, PMAX = 20;
-
-const gauss = (x, m, s) => Math.exp(-((x - m) ** 2) / (2 * s * s));
-const sun = (f) => Math.max(0, Math.sin(Math.PI * f));
-const buildingAt = (f) => 1.2 + 3.4 * gauss(f, 0.32, 0.06) + 4.2 * gauss(f, 0.8, 0.07) + 1.2 * gauss(f, 0.55, 0.18);
-const priceAt = (f) => 4 + 9 * gauss(f, 0.34, 0.06) + 13 * gauss(f, 0.8, 0.07) + 1.5 * gauss(f, 0.5, 0.2);
-
-const fresh = () => ({
-  t: 0, solar: 0, building: 0, price: 6, hist: [],
-  chargers: [{ car: null, lvl: 0 }, { car: null, lvl: 0 }, { car: null, lvl: 0 }],
-  batt: { kwh: BATT_CAP * 0.55, mode: 'auto' },
-  spawned: 0, nextSpawn: 2,
-  gridDraw: 0, load: 0, bCharge: 0, bDischarge: 0,
-  importE: 0, exportE: 0, loadE: 0, solarE: 0, cost: 0,
-  over: 0, done: 0, missed: 0,
-});
-
-function step(g) {
-  g.t++;
-  const f = g.t / DAY;
-  g.solar = +(SOLAR_MAX * sun(f)).toFixed(2);
-  g.building = +buildingAt(f).toFixed(2);
-  g.price = +(priceAt(f) + (Math.random() - 0.5) * 1.5).toFixed(1);
-  g.hist.push(g.price);
-
-  // spawn EVs into free bays
-  if (g.spawned < TOTAL_CARS && g.t >= g.nextSpawn) {
-    const i = g.chargers.findIndex((c) => !c.car);
-    if (i >= 0) {
-      g.chargers[i].car = { need: 9 + Math.floor(Math.random() * 7), total: 0, deadline: g.t + 40 + Math.floor(Math.random() * 22) };
-      g.chargers[i].car.total = g.chargers[i].car.need;
-      g.chargers[i].lvl = 0; g.spawned++; g.nextSpawn = g.t + 16 + Math.floor(Math.random() * 12);
-    } else g.nextSpawn = g.t + 3;
-  }
-
-  const chargers = g.chargers.reduce((s, c) => s + ((c.car && c.car.need > 0) ? LEVELS[c.lvl] : 0), 0);
-  const load = +(g.building + chargers).toFixed(2);
-  g.load = load; g.chargersKW = chargers;
-
-  // battery decision
-  const socKW = g.batt.kwh / DT, capLeftKW = (BATT_CAP - g.batt.kwh) / DT, surplus = g.solar - load;
-  let bC = 0, bD = 0;
-  if (g.batt.mode === 'charge') bC = Math.min(BATT_KW, capLeftKW);
-  else if (g.batt.mode === 'discharge') bD = Math.min(BATT_KW, socKW);
-  else { // auto: soak surplus solar, else cover load when price is high
-    if (surplus > 0.2) bC = Math.min(BATT_KW, capLeftKW, surplus);
-    else if (g.price >= HIGH && load > g.solar) bD = Math.min(BATT_KW, socKW, load - g.solar);
-  }
-  g.batt.kwh = Math.max(0, Math.min(BATT_CAP, g.batt.kwh + bC * DT - bD * DT));
-  g.bCharge = +bC.toFixed(2); g.bDischarge = +bD.toFixed(2);
-
-  const gridDraw = +(load + bC - g.solar - bD).toFixed(2);
-  g.gridDraw = gridDraw;
-  const imp = Math.max(0, gridDraw), exp = Math.max(0, -gridDraw);
-
-  // fuse: sustained import over the limit loses the game
-  if (imp > FUSE) g.over++; else g.over = 0;
-
-  // accounting
-  g.importE += imp * DT; g.exportE += exp * DT; g.loadE += load * DT; g.solarE += g.solar * DT;
-  g.cost += imp * DT * g.price - exp * DT * FEED;
-
-  // deliver charge
-  for (const c of g.chargers) if (c.car && c.car.need > 0 && LEVELS[c.lvl] > 0) c.car.need = Math.max(0, c.car.need - LEVELS[c.lvl] * DT);
-  for (const c of g.chargers) if (c.car) {
-    if (c.car.need <= 0) { g.done++; c.car = null; c.lvl = 0; }
-    else if (g.t > c.car.deadline) { g.missed++; c.car = null; c.lvl = 0; }
-  }
-}
-
-const selfSuff = (g) => g.loadE > 0 ? Math.max(0, Math.round((1 - g.importE / g.loadE) * 100)) : 100;
-const selfCons = (g) => g.solarE > 0 ? Math.max(0, Math.round((1 - g.exportE / g.solarE) * 100)) : 0;
-const scoreOf = (g) => Math.max(0, Math.min(100, Math.round(
-  (g.done / TOTAL_CARS) * 45 + selfSuff(g) * 0.35 + (1 - Math.min(1, Math.max(0, g.cost) / 500)) * 20
-)));
-const gradeOf = (s) => s >= 90 ? 'GRID MASTER' : s >= 70 ? 'EFFICIENT' : s >= 50 ? 'GETTING THERE' : 'INEFFICIENT';
 
 /* ── Power-flow diagram (mirrors the Energiemonitor) ─────────────────────── */
 function Flow({ g }) {
@@ -100,7 +21,7 @@ function Flow({ g }) {
     load: { x: 246, y: 140, into: false, kW: g.load, color: '#EAF0EE', icon: '🏠', label: 'Load' },
   };
   return (
-    <svg viewBox="0 0 280 280" className="w-full h-auto">
+    <svg viewBox="0 -18 280 316" className="w-full h-auto">
       {Object.entries(nodes).map(([k, n]) => {
         const active = n.kW > 0.1;
         const dur = Math.max(0.4, 2.2 - n.kW * 0.13);
@@ -124,20 +45,23 @@ function Flow({ g }) {
   );
 }
 
-/* ── Spot price chart ────────────────────────────────────────────────────── */
-function PriceChart({ hist, price }) {
-  const W = 280, H = 84, n = DAY;
-  const x = (i) => (i / (n - 1)) * W;
+/* ── Spot price: history solid, day-ahead forecast faint ─────────────────── */
+function PriceChart({ curve, idx, price }) {
+  const W = 280, H = 84;
+  const x = (i) => (i / (DAY - 1)) * W;
   const y = (p) => H - (Math.min(p, PMAX) / PMAX) * H;
-  const pts = hist.map((p, i) => `${x(i).toFixed(1)},${y(p).toFixed(1)}`).join(' ');
-  const i = hist.length - 1;
+  const pt = (p, i) => `${x(i).toFixed(1)},${y(p).toFixed(1)}`;
+  const all = curve.map(pt).join(' ');
+  const past = curve.slice(0, Math.max(1, idx + 1)).map(pt).join(' ');
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto">
       <rect x="0" y="0" width={W} height={y(HIGH)} fill="rgba(255,93,93,.07)" />
       <line x1="0" y1={y(HIGH)} x2={W} y2={y(HIGH)} stroke="rgba(255,93,93,.4)" strokeWidth="1" strokeDasharray="3 4" />
       <text x="3" y={y(HIGH) - 3} fontSize="8" fill="#ff5d5d" fontFamily="JetBrains Mono">high ₹{HIGH}</text>
-      {hist.length > 1 && <polyline points={pts} fill="none" stroke="#f5b942" strokeWidth="2" strokeLinejoin="round" />}
-      {i >= 0 && <circle cx={x(i)} cy={y(hist[i])} r="3" fill={price >= HIGH ? '#ff5d5d' : '#f5b942'} />}
+      <polyline points={all} fill="none" stroke="rgba(245,185,66,.28)" strokeWidth="1.5" strokeDasharray="1 3" strokeLinejoin="round" />
+      {idx >= 0 && <polyline points={past} fill="none" stroke="#f5b942" strokeWidth="2" strokeLinejoin="round" />}
+      {idx >= 0 && <circle cx={x(idx)} cy={y(curve[idx])} r="3" fill={price >= HIGH ? '#ff5d5d' : '#f5b942'} />}
+      <text x={W - 3} y="9" fontSize="8" textAnchor="end" fill="#AEBFBB" fontFamily="JetBrains Mono">forecast ┄</text>
     </svg>
   );
 }
@@ -149,28 +73,118 @@ const Stat = ({ label, value, tone }) => (
   </div>
 );
 
+const practiceHint = (s, danger) =>
+  danger ? '⚠ Import is over the fuse. Throttle a charger or force the battery to discharge.'
+  : s.price >= HIGH && s.batt.kwh > 1 ? 'Price spike: the battery (auto) covers the load now, grid power is expensive.'
+  : s.chargers.some((c) => c.car && c.car.need > 0 && c.lvl === 0) ? 'A car is waiting: tap its bay to raise charging power.'
+  : s.solar - s.load > 0.5 && s.batt.kwh < BATT_CAP - 0.5 ? 'Solar surplus: the auto battery is banking it for the evening peak.'
+  : 'The faint dashed line is the day-ahead price forecast. Fill the battery before the 18:00 peak.';
+
 export function EnergyGame() {
-  const [status, setStatus] = useState('intro'); // intro | playing | over | lost
-  const g = useRef(fresh());
+  const [status, setStatus] = useState('intro'); // intro | playing | paused | done
+  const [end, setEnd] = useState(null);
+  const [copied, setCopied] = useState(false);
+  const g = useRef(fresh(1));
+  const seed = useRef(newSeed());
+  const practice = useRef(false);
+  const autoPaused = useRef(false);
+  const statusRef = useRef(status);
+  const cardRef = useRef(null);
   const [, setFrame] = useState(0);
   const render = () => setFrame((f) => f + 1);
+  useEffect(() => { statusRef.current = status; }, [status]);
 
+  const finish = (lost) => {
+    const gg = g.current;
+    const nv = runDay(gg.seed, naiveControl);
+    const ag = runDay(gg.seed, agentControl);
+    const nvCost = Math.max(1, nv.cost);
+    const score = scoreOf(gg, nvCost);
+    const agScore = scoreOf(ag, nvCost);
+    let best = 0, newBest = false;
+    try { best = +localStorage.getItem('gridmaster_best') || 0; } catch { /* private mode */ }
+    if (!lost && !practice.current && score > best) {
+      newBest = true; best = score;
+      try { localStorage.setItem('gridmaster_best', String(score)); } catch { /* private mode */ }
+    }
+    setEnd({
+      lost, practice: practice.current, score, grade: gradeOf(score), agScore,
+      agDone: ag.done, agCost: Math.round(ag.cost), nvCost: Math.round(nv.cost), nvTrips: nv.trips,
+      saved: Math.round(nv.cost - gg.cost), tripAt: clockOf(gg.t), best, newBest,
+    });
+    setCopied(false);
+    setStatus('done');
+  };
+
+  // game clock (practice runs at half speed)
   useEffect(() => {
     if (status !== 'playing') return;
     const id = setInterval(() => {
       step(g.current);
-      if (g.current.over >= OVER_TICKS) { clearInterval(id); setStatus('lost'); }
-      else if (g.current.t >= DAY) { clearInterval(id); setStatus('over'); }
+      const gg = g.current;
+      if (gg.over >= OVER_TICKS) {
+        if (practice.current) { gg.trips++; gg.over = 0; }
+        else { clearInterval(id); finish(true); return; }
+      }
+      if (gg.t >= DAY) { clearInterval(id); finish(false); return; }
       render();
-    }, TICK_MS);
+    }, practice.current ? TICK_MS * 2 : TICK_MS);
     return () => clearInterval(id);
   }, [status]);
 
-  const start = () => { g.current = fresh(); setStatus('playing'); render(); };
-  const cycleCharger = (i) => { const c = g.current.chargers[i]; if (status === 'playing' && c.car) { c.lvl = (c.lvl + 1) % LEVELS.length; render(); } };
-  const cycleBatt = () => { if (status !== 'playing') return; const m = g.current.batt.mode; g.current.batt.mode = m === 'auto' ? 'charge' : m === 'charge' ? 'discharge' : 'auto'; render(); };
+  const start = (asPractice, sameDay = false) => {
+    if (!sameDay) seed.current = newSeed();
+    g.current = fresh(seed.current);
+    practice.current = asPractice;
+    autoPaused.current = false;
+    setStatus('playing');
+  };
+  const pause = (auto = false) => {
+    if (statusRef.current !== 'playing') return;
+    autoPaused.current = auto;
+    setStatus('paused');
+  };
+  const resume = () => { autoPaused.current = false; setStatus('playing'); };
+
+  // auto-pause when the tab is hidden or the game scrolls out of view;
+  // auto-resume only if WE paused it (never override a manual pause)
+  useEffect(() => {
+    const onVis = () => { if (document.hidden) pause(true); };
+    document.addEventListener('visibilitychange', onVis);
+    const el = cardRef.current;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) pause(true);
+      else if (statusRef.current === 'paused' && autoPaused.current) resume();
+    }, { threshold: 0.2 });
+    if (el) io.observe(el);
+    return () => { document.removeEventListener('visibilitychange', onVis); io.disconnect(); };
+  }, []);
+
+  const cycleCharger = (i) => {
+    const c = g.current.chargers[i];
+    if (statusRef.current === 'playing' && c.car) { c.lvl = (c.lvl + 1) % LEVELS.length; render(); }
+  };
+  const cycleBatt = () => {
+    if (statusRef.current !== 'playing') return;
+    const m = g.current.batt.mode;
+    g.current.batt.mode = m === 'auto' ? 'charge' : m === 'charge' ? 'discharge' : 'auto';
+    render();
+  };
+
+  // keyboard: 1/2/3 bays · B battery · Space pause
+  useEffect(() => {
+    if (status !== 'playing' && status !== 'paused') return;
+    const h = (e) => {
+      if (e.key >= '1' && e.key <= '3') cycleCharger(+e.key - 1);
+      else if (e.key === 'b' || e.key === 'B') cycleBatt();
+      else if (e.key === ' ') { e.preventDefault(); statusRef.current === 'playing' ? pause(false) : resume(); }
+    };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [status]);
 
   const s = g.current;
+  const live = status === 'playing' || status === 'paused';
   const imp = Math.max(0, s.gridDraw);
   const load = Math.min(1, imp / FUSE);
   const danger = imp > FUSE;
@@ -178,126 +192,214 @@ export function EnergyGame() {
   const battPct = Math.round((s.batt.kwh / BATT_CAP) * 100);
   const secsOver = danger ? Math.max(0, Math.ceil((OVER_TICKS - s.over) * TICK_MS / 1000)) : 0;
 
+  const shareText = end
+    ? `⚡ Grid Master: I ran a solar + battery + EV charging site and scored ${end.score}/100 (${end.grade}). The AI agent scored ${end.agScore} on the same day. Think you can beat it?`
+    : '';
+  const copyScore = async () => {
+    try { await navigator.clipboard.writeText(`${shareText} ${window.location.href.split('#')[0]}#play`); setCopied(true); } catch { /* denied */ }
+  };
+
   return (
-    <div className="surface p-6 sm:p-8 relative overflow-hidden">
+    <div ref={cardRef} className="surface p-6 sm:p-8 relative">
+      {/* header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h3 className="text-2xl">Grid Master</h3>
           <p className="text-sm text-muted mt-1">Balance solar, battery, grid &amp; building. Keep import under the fuse.</p>
         </div>
-        {status === 'playing' && (
-          <div className="flex gap-5">
+        {live && (
+          <div className="flex items-center gap-5">
+            <Stat label="Time" value={clockOf(s.t)} />
             <Stat label="Self-suff." value={`${selfSuff(s)}%`} tone="a" />
             <Stat label="Cost" value={`₹${Math.round(s.cost)}`} />
             <Stat label="Cars" value={`${s.done}/${TOTAL_CARS}`} />
-            <Stat label="Left" value={`${Math.ceil((DAY - s.t) * TICK_MS / 1000)}s`} />
+            <button onClick={() => (status === 'playing' ? pause(false) : resume())}
+              className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted border border-white/15 rounded-full px-3 py-1.5 hover:text-ivory hover:border-white/30 transition">
+              {status === 'playing' ? '❚❚ Pause' : '▶ Resume'}
+            </button>
           </div>
         )}
       </div>
 
+      {/* intro */}
       {status === 'intro' && (
         <div className="mt-8 text-center py-6">
           <p className="text-muted max-w-lg mx-auto leading-relaxed">
-            You run a site powered by <span className="text-accent">solar</span>, a <span className="text-accent">battery</span> and the <span className="text-accent">grid</span>. A <span className="text-ivory">building</span> draws power all day and <span className="text-ivory">EVs</span> arrive to charge. Throttle the chargers and steer the battery so total <span className="text-danger">grid import never stays over the {FUSE} kW fuse for 3 seconds</span>. Discharge the battery when the <span className="text-amber-400">spot price</span> spikes, soak up surplus solar, and charge every car.
+            One day, 06:00 → 21:00. Your site runs on <span className="text-accent">solar</span>, a <span className="text-accent">battery</span> and the <span className="text-ivory">grid</span>. EVs arrive with deadlines; the sun sets before the <span className="text-amber-400">evening price peak</span>. Charge every car and never let grid import sit over the <span className="text-danger">{FUSE} kW fuse for 3 seconds</span>.
           </p>
-          <button onClick={start} className="mt-7 rounded-full bg-accent text-ink font-semibold px-7 py-3 hover:brightness-110 active:scale-[.98] transition">Start the day</button>
+          <p className="text-muted/70 max-w-lg mx-auto mt-3 text-sm leading-relaxed">
+            At the end, an <span className="text-accent">AI agent</span>, the kind I build at RiDERgy, replays your exact day. Beat its score.
+          </p>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-4">
+            <button onClick={() => start(false)} className="rounded-full bg-accent text-ink font-semibold px-7 py-3 hover:brightness-110 active:scale-[.98] transition">Start the day</button>
+            <button onClick={() => start(true)} className="rounded-full border border-white/20 text-muted font-semibold px-7 py-3 hover:text-ivory hover:border-white/40 transition">Practice first · half speed, can't lose</button>
+          </div>
+          <p className="hidden sm:block font-mono text-[10px] uppercase tracking-[0.16em] text-muted/50 mt-6">Keys: 1 2 3 bays · B battery · Space pause</p>
         </div>
       )}
 
-      {status === 'playing' && (
-        <div className="mt-6 grid lg:grid-cols-2 gap-6">
-          {/* left: flow diagram */}
-          <div className="rounded-xl border border-white/[0.07] p-4">
-            <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted mb-1">Energy flow · live</div>
-            <Flow g={s} />
+      {/* live console */}
+      {live && (
+        <>
+          {practice.current && (
+            <div className="mt-4 rounded-lg border border-accent/30 bg-accent/[0.05] px-4 py-2.5 font-mono text-[11px] text-accent">
+              PRACTICE · {practiceHint(s, danger)}
+            </div>
+          )}
+
+          {/* fuse — sticky on mobile so it's visible while you work the bays */}
+          <div className={`mt-4 sticky lg:static top-[88px] z-30 rounded-xl border p-4 bg-panel ${danger ? 'border-danger/60 bg-danger/10' : 'border-white/[0.07]'}`}>
+            <div className="flex justify-between font-mono text-[11px] mb-1.5">
+              <span className="text-muted uppercase tracking-wider">Grid import · fuse {FUSE}kW</span>
+              <span className={danger ? 'text-danger font-bold' : 'text-ivory'}>{danger ? `BREACH! blackout in ${secsOver}s` : `${imp.toFixed(1)} kW`}</span>
+            </div>
+            <div className="h-3 rounded-full bg-white/[0.06] overflow-hidden relative">
+              <div className={`h-full ${fuseColor} transition-all duration-200`} style={{ width: `${load * 100}%` }} />
+            </div>
           </div>
 
-          {/* right: fuse + price + battery */}
-          <div className="space-y-4">
-            <div className={`rounded-xl border p-4 ${danger ? 'border-danger/60 bg-danger/10' : 'border-white/[0.07]'}`}>
-              <div className="flex justify-between font-mono text-[11px] mb-1.5">
-                <span className="text-muted uppercase tracking-wider">Grid import · fuse {FUSE}kW</span>
-                <span className={danger ? 'text-danger font-bold' : 'text-ivory'}>{danger ? `BREACH! ${secsOver}s` : `${imp.toFixed(1)} kW`}</span>
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+            {/* bays first on mobile — they're the controls */}
+            <div className="lg:col-span-2">
+              <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-muted mb-2">
+                <span>Charging bays · tap to throttle (off → 3.5 → 7 → 11 kW)</span>
+                <span>🏠 Building {s.building.toFixed(1)}kW</span>
               </div>
-              <div className="h-3 rounded-full bg-white/[0.06] overflow-hidden relative">
-                <div className={`h-full ${fuseColor} transition-all duration-200`} style={{ width: `${load * 100}%` }} />
+              <div className="grid grid-cols-3 gap-3">
+                {s.chargers.map((c, i) => {
+                  const urgent = c.car && (Math.min(c.car.deadline, DAY) - s.t) < 16;
+                  const pct = c.car ? Math.round((1 - c.car.need / c.car.total) * 100) : 0;
+                  return (
+                    <button key={i} onClick={() => cycleCharger(i)} disabled={!c.car}
+                      aria-label={c.car ? `Bay ${i + 1}: ${pct}% charged, ${LEVELS[c.lvl]} kilowatts` : `Bay ${i + 1}: free`}
+                      className={`relative rounded-lg border p-3 min-h-[108px] text-left transition overflow-hidden ${c.car ? (c.lvl > 0 ? 'border-accent bg-accent/[0.06]' : urgent ? 'border-danger/50' : 'border-white/15 hover:border-white/30') : 'border-dashed border-white/10'}`}>
+                      {c.car ? (
+                        <>
+                          <div className="flex items-center justify-between">
+                            <span className="text-2xl">🚗<span className="hidden sm:inline font-mono text-[9px] text-muted/40 align-top ml-1">{i + 1}</span></span>
+                            <span className={`font-mono text-[10px] ${urgent ? 'text-danger' : 'text-muted'}`}>{Math.max(0, Math.ceil((c.car.deadline - s.t) * TICK_MS / 1000))}s</span>
+                          </div>
+                          <div className="mt-2 h-1.5 rounded bg-white/[0.08] overflow-hidden"><div className="h-full bg-accent transition-all" style={{ width: `${pct}%` }} /></div>
+                          <div className="mt-2 flex items-center justify-between font-mono text-[10px]">
+                            <span className="text-muted">{pct}%</span>
+                            <span className={LEVELS[c.lvl] > 0 ? 'text-accent' : 'text-muted'}>{LEVELS[c.lvl] > 0 ? `${LEVELS[c.lvl]}kW` : 'off'}</span>
+                          </div>
+                          {LEVELS[c.lvl] > 0 && <div className="absolute bottom-0 left-0 h-0.5 charge-track w-full" />}
+                        </>
+                      ) : <div className="h-full grid place-items-center font-mono text-[10px] uppercase tracking-wider text-muted/50">Free bay</div>}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
+            {/* battery + price */}
+            <div className="space-y-4">
+              <button onClick={cycleBatt} className={`w-full rounded-xl border p-4 text-left transition ${s.bDischarge > 0.05 ? 'border-accent/50 bg-accent/5' : 'border-white/[0.07] hover:border-white/20'}`}>
+                <div className="flex justify-between font-mono text-[11px] text-muted uppercase tracking-wider">
+                  <span>🔋 Battery · {s.batt.mode}</span>
+                  <span className="text-accent">{s.bDischarge > 0.05 ? `out ${s.bDischarge.toFixed(1)}kW` : s.bCharge > 0.05 ? `in ${s.bCharge.toFixed(1)}kW` : 'idle'}</span>
+                </div>
+                <div className="mt-2 h-2 rounded bg-white/[0.06] overflow-hidden"><div className="h-full bg-accent" style={{ width: `${battPct}%` }} /></div>
+                <div className="font-mono text-[10px] text-muted mt-1.5">{battPct}% · tap to cycle auto / charge / discharge</div>
+              </button>
+              <div className="rounded-xl border border-white/[0.07] p-4">
+                <div className="flex justify-between font-mono text-[11px] mb-1">
+                  <span className="text-muted uppercase tracking-wider">Spot price + forecast</span>
+                  <span className={s.price >= HIGH ? 'text-danger' : 'text-amber-400'}>₹{s.price.toFixed(1)}/kWh</span>
+                </div>
+                <PriceChart curve={s.priceCurve} idx={s.t - 1} price={s.price} />
+              </div>
+            </div>
+
+            {/* flow diagram */}
             <div className="rounded-xl border border-white/[0.07] p-4">
-              <div className="flex justify-between font-mono text-[11px] mb-1">
-                <span className="text-muted uppercase tracking-wider">Spot price</span>
-                <span className={s.price >= HIGH ? 'text-danger' : 'text-amber-400'}>₹{s.price.toFixed(1)}/kWh</span>
-              </div>
-              <PriceChart hist={s.hist} price={s.price} />
-            </div>
-
-            <button onClick={cycleBatt} className={`w-full rounded-xl border p-4 text-left transition ${s.bDischarge > 0.05 ? 'border-accent/50 bg-accent/5' : 'border-white/[0.07] hover:border-white/20'}`}>
-              <div className="flex justify-between font-mono text-[11px] text-muted uppercase tracking-wider">
-                <span>🔋 Battery · {s.batt.mode}</span>
-                <span className="text-accent">{s.bDischarge > 0.05 ? `out ${s.bDischarge.toFixed(1)}kW` : s.bCharge > 0.05 ? `in ${s.bCharge.toFixed(1)}kW` : 'idle'}</span>
-              </div>
-              <div className="mt-2 h-2 rounded bg-white/[0.06] overflow-hidden"><div className="h-full bg-accent" style={{ width: `${battPct}%` }} /></div>
-              <div className="font-mono text-[10px] text-muted mt-1.5">{battPct}% · tap to cycle auto / charge / discharge</div>
-            </button>
-          </div>
-
-          {/* building + chargers */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-muted mb-2">
-              <span>Charging bays · tap to throttle (off → 3.5 → 7 → 11 kW)</span>
-              <span>🏠 Building {s.building.toFixed(1)}kW</span>
-            </div>
-            <div className="grid grid-cols-3 gap-3">
-              {s.chargers.map((c, i) => {
-                const urgent = c.car && (c.car.deadline - s.t) < 16;
-                const pct = c.car ? Math.round((1 - c.car.need / c.car.total) * 100) : 0;
-                return (
-                  <button key={i} onClick={() => cycleCharger(i)} disabled={!c.car}
-                    className={`relative rounded-lg border p-3 min-h-[108px] text-left transition overflow-hidden ${c.car ? (c.lvl > 0 ? 'border-accent bg-accent/[0.06]' : urgent ? 'border-danger/50' : 'border-white/15 hover:border-white/30') : 'border-dashed border-white/10'}`}>
-                    {c.car ? (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <span className="text-2xl">🚗</span>
-                          <span className={`font-mono text-[10px] ${urgent ? 'text-danger' : 'text-muted'}`}>{Math.max(0, Math.ceil((c.car.deadline - s.t) * TICK_MS / 1000))}s</span>
-                        </div>
-                        <div className="mt-2 h-1.5 rounded bg-white/[0.08] overflow-hidden"><div className="h-full bg-accent transition-all" style={{ width: `${pct}%` }} /></div>
-                        <div className="mt-2 flex items-center justify-between font-mono text-[10px]">
-                          <span className="text-muted">{pct}%</span>
-                          <span className={LEVELS[c.lvl] > 0 ? 'text-accent' : 'text-muted'}>{LEVELS[c.lvl] > 0 ? `${LEVELS[c.lvl]}kW` : 'off'}</span>
-                        </div>
-                        {LEVELS[c.lvl] > 0 && <div className="absolute bottom-0 left-0 h-0.5 charge-track w-full" />}
-                      </>
-                    ) : <div className="h-full grid place-items-center font-mono text-[10px] uppercase tracking-wider text-muted/50">Free bay</div>}
-                  </button>
-                );
-              })}
+              <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted mb-1">Energy flow · live</div>
+              <Flow g={s} />
             </div>
           </div>
-        </div>
+
+          {status === 'paused' && (
+            <div className="absolute inset-0 z-40 rounded-xl bg-ink/70 backdrop-blur-[2px] grid place-items-center">
+              <button onClick={resume} className="rounded-full bg-accent text-ink font-semibold px-8 py-3.5 hover:brightness-110 transition">▶ Resume · {clockOf(s.t)}</button>
+            </div>
+          )}
+        </>
       )}
 
-      {(status === 'over' || status === 'lost') && (
+      {/* end of day */}
+      {status === 'done' && end && (
         <div className="mt-6 text-center py-6">
-          {status === 'lost' ? (
+          {end.lost ? (
             <>
               <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-danger">Blackout</div>
-              <div className="font-display text-4xl text-danger mt-3">⚡ Fuse held over limit</div>
-              <p className="text-muted mt-3 max-w-sm mx-auto">The grid breaker tripped the whole site. Throttle chargers and discharge the battery sooner to stay under {FUSE} kW.</p>
+              <div className="font-display text-4xl text-danger mt-3">⚡ Breaker tripped at {end.tripAt}</div>
+              <p className="text-muted mt-3 max-w-sm mx-auto">Sustained import over {FUSE} kW took the whole site down. Throttle chargers sooner and keep battery in reserve for the evening peak.</p>
+            </>
+          ) : end.practice ? (
+            <>
+              <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">Practice complete</div>
+              <div className="font-display text-4xl text-ivory mt-3">Ready for the real thing?</div>
+              <p className="text-muted mt-3 max-w-sm mx-auto">Same physics, full speed, and the fuse is live: 3 seconds over and the site goes dark.</p>
             </>
           ) : (
             <>
-              <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">{gradeOf(scoreOf(s))}</div>
-              <div className="font-display text-6xl text-ivory mt-3">{scoreOf(s)}<span className="text-2xl text-muted">/100</span></div>
-              <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-xl mx-auto">
-                <Stat label="Cars charged" value={`${s.done}/${TOTAL_CARS}`} />
-                <Stat label="Self-sufficiency" value={`${selfSuff(s)}%`} tone="a" />
-                <Stat label="Self-consumption" value={`${selfCons(s)}%`} tone="a" />
-                <Stat label="Net cost" value={`₹${Math.round(s.cost)}`} />
-              </div>
+              <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">{end.grade}{end.newBest && ' · new personal best'}</div>
+              <div className="font-display text-6xl text-ivory mt-3">{end.score}<span className="text-2xl text-muted">/100</span></div>
+              {end.best > 0 && !end.newBest && <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted mt-2">personal best {end.best}</div>}
             </>
           )}
-          <button onClick={start} className="mt-8 rounded-full bg-accent text-ink font-semibold px-7 py-3 hover:brightness-110 active:scale-[.98] transition">Play again</button>
+
+          <div className="mt-6 grid grid-cols-2 sm:grid-cols-5 gap-4 max-w-2xl mx-auto">
+            <Stat label="Cars charged" value={`${s.done}/${TOTAL_CARS}`} />
+            <Stat label="Missed" value={s.missed} tone={s.missed ? 'd' : undefined} />
+            <Stat label="Self-sufficiency" value={`${selfSuff(s)}%`} tone="a" />
+            <Stat label="Self-consumption" value={`${selfCons(s)}%`} tone="a" />
+            <Stat label="Net cost" value={`₹${Math.round(s.cost)}`} />
+          </div>
+
+          {/* same day, three operators */}
+          <div className="mt-8 max-w-2xl mx-auto rounded-xl border border-white/[0.07] overflow-hidden text-left">
+            <div className="px-5 py-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted border-b border-white/[0.07]">Same day · three operators</div>
+            {[
+              { name: end.lost ? 'You (blackout)' : 'You', score: end.lost ? '·' : end.score, cars: `${s.done}/${TOTAL_CARS}`, cost: `₹${Math.round(s.cost)}`, me: true },
+              { name: 'The agent', note: 'the kind I build at RiDERgy', score: end.agScore, cars: `${end.agDone}/${TOTAL_CARS}`, cost: `₹${end.agCost}` },
+              { name: 'Dumb charging', note: end.nvTrips > 0 ? `${end.nvTrips}× blackout` : 'no management', score: '·', cars: '', cost: `₹${end.nvCost}`, dumb: true },
+            ].map((r) => (
+              <div key={r.name} className={`px-5 py-3.5 flex items-center justify-between gap-3 border-b border-white/[0.05] last:border-0 ${r.me ? 'bg-accent/[0.04]' : ''}`}>
+                <div>
+                  <span className={`text-[15px] ${r.me ? 'text-ivory font-semibold' : r.dumb ? 'text-muted' : 'text-accent'}`}>{r.name}</span>
+                  {r.note && <span className="font-mono text-[10px] text-muted/70 ml-2">{r.note}</span>}
+                </div>
+                <div className="flex items-center gap-5 font-mono text-[12px]">
+                  {r.cars && <span className="text-muted">{r.cars} cars</span>}
+                  <span className="text-muted">{r.cost}</span>
+                  <span className={`w-14 text-right ${r.me ? 'text-ivory' : r.dumb ? 'text-muted/60' : 'text-accent'}`}>{r.score === '·' ? '·' : `${r.score}/100`}</span>
+                </div>
+              </div>
+            ))}
+            {!end.practice && !end.lost && end.saved > 0 && (
+              <div className="px-5 py-3 font-mono text-[11px] text-accent/90 border-t border-white/[0.07] bg-accent/[0.03]">
+                Smart operation saved ₹{end.saved} vs dumb charging{end.nvTrips > 0 && `, and avoided ${end.nvTrips} blackout${end.nvTrips > 1 ? 's' : ''}`}. That, at fleet scale, is my day job.
+              </div>
+            )}
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            {end.practice ? (
+              <button onClick={() => start(false)} className="rounded-full bg-accent text-ink font-semibold px-7 py-3 hover:brightness-110 active:scale-[.98] transition">Start the real day</button>
+            ) : (
+              <>
+                <button onClick={() => start(false, true)} className="rounded-full bg-accent text-ink font-semibold px-7 py-3 hover:brightness-110 active:scale-[.98] transition">Replay this day</button>
+                <button onClick={() => start(false)} className="rounded-full border border-white/20 text-muted font-semibold px-6 py-3 hover:text-ivory hover:border-white/40 transition">New day</button>
+                {!end.lost && (
+                  <button onClick={copyScore} className="rounded-full border border-accent/40 text-accent font-semibold px-6 py-3 hover:border-accent transition">
+                    {copied ? '✓ Copied' : 'Share score'}
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>
