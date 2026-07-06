@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PROJECTS, METRICS, SKILLS, SOCIALS } from './data.js';
 import { ParticleField } from './interactive.jsx';
-import { EnergyGame } from './game.jsx';
+import { AgentConsole } from './agent.jsx';
 
 const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
@@ -162,11 +162,11 @@ function Playground() {
       <div className="mx-auto max-w-6xl px-8 py-32">
         <div className="reveal max-w-2xl">
           <div className="eyebrow">Interactive</div>
-          <h2 className="text-4xl sm:text-5xl mt-7 leading-tight">Don't take my word for it.<br className="hidden sm:block" /> Try it yourself.</h2>
-          <p className="reveal text-muted mt-6 max-w-xl leading-relaxed">This is the kind of problem I build for: balancing solar, battery and grid under a hard limit. Play one round of <span className="text-ivory">Grid Master</span> and see how efficiently you can run a charging site.</p>
+          <h2 className="text-4xl sm:text-5xl mt-7 leading-tight">Give an agent a job.<br className="hidden sm:block" /> Watch it think.</h2>
+          <p className="reveal text-muted mt-6 max-w-xl leading-relaxed">This is what I build: AI agents that do real work, not chat. Pick a mission from any industry — the agent plans it, works its tools, and adapts when you <span className="text-ivory">throw it a curveball</span>.</p>
         </div>
         <div className="reveal mt-16">
-          <EnergyGame />
+          <AgentConsole />
         </div>
       </div>
     </section>

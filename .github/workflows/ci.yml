@@ -15,16 +15,3 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      # sim sanity: agent must beat dumb charging and never blackout
-      - run: |
-          node -e "
-          import('./src/sim.js').then((S) => {
-            for (let seed = 1; seed <= 50; seed++) {
-              const nv = S.runDay(seed, S.naiveControl);
-              const ag = S.runDay(seed, S.agentControl);
-              if (ag.trips > 0) throw new Error('agent blackout at seed ' + seed);
-              if (S.scoreOf(ag, Math.max(1, nv.cost)) <= S.scoreOf(nv, Math.max(1, nv.cost))) throw new Error('agent lost to naive at seed ' + seed);
-            }
-            console.log('sim OK: 50 seeds');
-          });
-          "
