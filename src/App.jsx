@@ -296,7 +296,7 @@ function About() {
 /* Form relay: Web3Forms (https://web3forms.com). The access key is public by
    design; it maps to the studio inbox without exposing the address anywhere
    on the page or in this bundle. Get a free key and paste it below. */
-const WEB3FORMS_KEY = 'REPLACE_WITH_WEB3FORMS_ACCESS_KEY';
+const WEB3FORMS_KEY = '59330203-42bb-48bb-9d3c-a96adeaf35c6';
 
 const FIELD_CLS = 'w-full rounded-lg bg-white/[0.03] border border-white/[0.08] px-4 py-3 text-[14px] text-ivory placeholder:text-muted/50 focus:outline-none focus:border-accent/50 transition';
 
