@@ -40,19 +40,93 @@ export const PROJECTS = [
 
 export const METRICS = [
   { n: '0→1', l: 'Products shipped from scratch' },
-  { n: 'Agentic', l: 'AI running in production' },
-  { n: 'Full-stack', l: 'Frontend, backend, infra, AI' },
+  { n: 'Live', l: 'Agentic AI in production' },
+  { n: 'Global', l: 'Async delivery across timezones' },
 ];
 
 export const SKILLS = [
   { group: 'Frontend', items: ['React', 'Next.js', 'Tailwind CSS', 'Flutter', 'PWAs'] },
   { group: 'Backend', items: ['Node.js / Express', 'Python / FastAPI', 'REST APIs', 'WebSockets'] },
-  { group: 'AI / Data', items: ['LLMs (Claude, GPT, Gemini)', 'LangChain / LangGraph', 'Agentic workflows', 'RAG + pgvector'] },
+  { group: 'AI / Agents', items: ['LLMs (Claude, GPT, Gemini)', 'LangChain / LangGraph', 'Agentic workflows', 'Voice agents (STT · TTS · telephony)', 'RAG + pgvector'] },
   { group: 'Infra / Ops', items: ['PostgreSQL', 'Redis', 'AWS', 'Docker', 'CI/CD', 'Nginx / VPS'] },
 ];
 
+export const SERVICES = [
+  {
+    t: 'Voice agents',
+    d: 'AI receptionists and outbound callers that answer, qualify, book and follow up, around the clock, in any language.',
+    eg: 'Live demo: take a call below',
+  },
+  {
+    t: 'AI agents & automations',
+    d: 'Agents that run real operations: triage, reporting, follow-ups, back-office flows that execute themselves.',
+    eg: 'Live demo: run the ops agent below',
+  },
+  {
+    t: 'WhatsApp & support AI',
+    d: 'Assistants on WhatsApp and your site that sell, support and answer from your own documents, with clean human handoff.',
+    eg: 'RAG over your prices, policies, FAQs',
+  },
+  {
+    t: 'Web & mobile apps',
+    d: 'Secure, fully integrated full-stack apps: auth, payments, admin panels, APIs, installable on any phone.',
+    eg: 'Daksh Sathi: 33-service marketplace PWA',
+  },
+  {
+    t: 'SaaS & MVPs',
+    d: 'Blank page to paying users: multi-tenant products with billing, infra and CI, shipped in weeks.',
+    eg: 'RiDERgy: production energy SaaS',
+  },
+  {
+    t: 'Dashboards & analytics',
+    d: 'Forecasting, AI insights and reporting that executives actually read and act on.',
+    eg: 'RetailMind: AI retail intelligence',
+  },
+  {
+    t: 'Integrations & internal tools',
+    d: 'Your CRM, calendar, inbox and telephony stitched into one system that updates itself.',
+    eg: 'n8n · Zapier · MCP · WhatsApp API',
+  },
+  {
+    t: 'Websites that sell',
+    d: 'Conversion-focused marketing sites with calculators, lead capture and clean SEO.',
+    eg: 'CargoLink: logistics site + quote engine',
+  },
+];
+
+export const TRUST = [
+  {
+    t: 'Senior-led, always',
+    d: 'Every project is led end to end by the founder. Vetted specialist designers and engineers join as your scope grows, so capacity is never the bottleneck.',
+  },
+  {
+    t: 'Your IP, fully yours',
+    d: 'Clean contracts, NDA before you share anything sensitive, and full source code and IP transfer on completion.',
+  },
+  {
+    t: 'Security by default',
+    d: 'Least-privilege access, encrypted secrets, audit trails and GDPR-aware data handling on every build.',
+  },
+  {
+    t: 'Global, async-first',
+    d: 'Clients across US, EU, Middle East and Asia get overlap hours, weekly demo videos and one accountable point of contact.',
+  },
+  {
+    t: 'Milestone billing',
+    d: 'Pay per shipped milestone, never for promises. Escrow-friendly: direct, Upwork or Freelancer, whichever protects you best.',
+  },
+  {
+    t: 'Supported after launch',
+    d: 'Documentation, handover training and 30 days of included support with every build. Long-term care via retainers.',
+  },
+];
+
+export const PLATFORMS = [
+  'AWS', 'Google Cloud', 'Anthropic Claude', 'OpenAI', 'ElevenLabs', 'Deepgram',
+  'Twilio', 'WhatsApp Business', 'Stripe', 'Razorpay', 'Supabase', 'PostgreSQL', 'Vercel', 'Docker',
+];
+
 export const SOCIALS = [
-  { label: 'Email', href: 'mailto:mohananeesh003@gmail.com', handle: 'mohananeesh003@gmail.com' },
   { label: 'GitHub', href: 'https://github.com/AneeshCount', handle: 'AneeshCount' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/aneeshmohan3', handle: 'aneeshmohan3' },
   { label: 'X', href: 'https://x.com/aniche03', handle: '@aniche03' },

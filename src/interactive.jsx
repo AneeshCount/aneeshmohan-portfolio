@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-/* ParticleField — mouse-reactive constellation canvas (futuristic hero bg) */
+/* ParticleField: mouse-reactive constellation canvas (futuristic hero bg) */
 export function ParticleField() {
   const ref = useRef(null);
   useEffect(() => {

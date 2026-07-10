@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MISSIONS } from './missions.js';
 
 /* ════════════════════════════════════════════════════════════════════════
-   AGENT CONSOLE — pick a mission from any industry and watch an agent
+   AGENT CONSOLE: pick a mission from any industry and watch an agent
    plan it, work its tools, and adapt when the visitor throws a curveball.
    Deterministic replay of a real agent loop; runs entirely in the browser.
    ════════════════════════════════════════════════════════════════════════ */
@@ -86,7 +86,7 @@ const ART = { spark: Spark, bars: Bars, kv: KV, diff: Diff, msg: Msg };
 
 /* ── Feed rows ───────────────────────────────────────────────────────────── */
 
-function ToolRow({ item }) {
+export function ToolRow({ item }) {
   return (
     <div className="font-mono text-[11px] leading-relaxed">
       <div className="text-ivory/90">
@@ -98,7 +98,7 @@ function ToolRow({ item }) {
   );
 }
 
-function FeedItem({ item }) {
+export function FeedItem({ item }) {
   if (item.k === 'tool') return <ToolRow item={item} />;
   if (item.k === 'think')
     return <p className="text-[13px] text-muted italic leading-relaxed border-l border-gold/30 pl-3">{item.text}<span className="text-gold/60">{item.text.length < item.full.length ? '▎' : ''}</span></p>;
@@ -224,7 +224,7 @@ export function AgentConsole() {
         <div className="max-w-xl">
           <h3 className="text-2xl">Agent Console</h3>
           <p className="text-sm text-muted mt-2 leading-relaxed">
-            Four industries, one loop: <span className="text-ivory">perceive → plan → act → adapt</span>. Pick a mission, watch the agent run it — then throw it a curveball.
+            Four industries, one loop: <span className="text-ivory">perceive → plan → act → adapt</span>. Pick a mission, watch the agent run it, then throw it a curveball.
           </p>
         </div>
         <div className="mt-8 grid sm:grid-cols-2 gap-4">
@@ -240,9 +240,17 @@ export function AgentConsole() {
             </button>
           ))}
         </div>
-        <p className="mt-6 font-mono text-[10px] text-muted/50 leading-relaxed">
-          Deterministic replay of a real agent architecture — runs entirely in your browser, no API calls.
-        </p>
+        <div className="mt-6 space-y-3">
+          <p className="font-mono text-[10px] text-muted/50 leading-relaxed">
+            Deterministic replay of a real agent architecture. Runs entirely in your browser, no API calls.
+          </p>
+          <p className="font-mono text-[10px] text-muted/70 leading-relaxed">
+            In production this loop runs on frontier models with real tools:
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {['Claude', 'GPT', 'Gemini', 'LangGraph', 'OpenClaw', 'MCP', 'n8n', 'Zapier', 'Make', 'Composio'].map((t) => <span key={t} className="chip">{t}</span>)}
+          </div>
+        </div>
       </div>
     );
   }
@@ -304,7 +312,7 @@ export function AgentConsole() {
       {done && (
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <button onClick={() => start(scen)} className="rounded-full bg-accent text-ink font-semibold text-sm px-6 py-2.5 hover:brightness-110 active:scale-[.98] transition">
-            {S.curve === 'used' ? 'Replay' : 'Replay — try the curveball'}
+            {S.curve === 'used' ? 'Replay' : 'Replay and try the curveball'}
           </button>
           {MISSIONS.filter((m) => m.id !== scen.id).map((m) => (
             <button key={m.id} onClick={() => start(m)}

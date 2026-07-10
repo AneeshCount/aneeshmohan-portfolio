@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════════════════════════════
-   AGENT CONSOLE — mission scripts. Each mission is a deterministic replay:
+   AGENT CONSOLE: mission scripts. Each mission is a deterministic replay:
    a plan, a stream of events (think / step / tool / alert), one optional
    visitor-triggered curveball the agent adapts to, and an outcome.
    Event `step` ids reference plan indices; curveball steps use c0, c1…
@@ -24,7 +24,7 @@ export const MISSIONS = [
       { t: 'step', id: 0 },
       { t: 'tool', call: "analytics.funnel(range: '14d')", ms: 1200, result: 'drop begins day 9 · 3.4% → 2.8%',
         art: { kind: 'spark', d: [3.4, 3.5, 3.3, 3.4, 3.6, 3.4, 3.5, 3.3, 3.4, 2.9, 2.8, 2.9, 2.8, 2.8], label: '2.8%', marker: 8, markerLabel: 'day 9' } },
-      { t: 'think', text: 'A sharp knee, not a slow drift — something changed on day 9.' },
+      { t: 'think', text: 'A sharp knee, not a slow drift. Something changed on day 9.' },
       { t: 'step', id: 1 },
       { t: 'tool', call: "analytics.segment(step: 'payment', by: 'device')", ms: 1300, result: 'the drop is mobile-only',
         art: { kind: 'bars', rows: [
@@ -47,22 +47,22 @@ export const MISSIONS = [
       { t: 'tool', call: "code.patch('checkout-ui/address.css')", ms: 1100, result: 'fix drafted · PR opened',
         art: { kind: 'diff', lines: ['  .autocomplete {', '-   z-index: 40;', '+   z-index: 10;', '+   max-height: 42vh;', '  }'] } },
       { t: 'tool', call: "report.draft(to: 'growth-team')", ms: 900, result: 'summary sent',
-        art: { kind: 'msg', title: 'Report · drafted by the agent', body: 'Conversion drop isolated to mobile checkout — the v2.31 autocomplete overlays the Pay button under 380 px. One-line fix in review; est. recovery ≈ ₹4.2L/week.' } },
+        art: { kind: 'msg', title: 'Report · drafted by the agent', body: 'Conversion drop isolated to mobile checkout: the v2.31 autocomplete overlays the Pay button under 380 px. One-line fix in review; est. recovery ≈ ₹4.2L/week.' } },
       { t: 'done' },
     ],
     curveball: {
       label: 'Traffic spike',
       steps: ['Hand the spike to on-call'],
       events: [
-        { t: 'alert', title: 'Curveball', text: 'Marketing just launched a flash sale — traffic is 6× normal, p95 latency 4.1 s and climbing.' },
+        { t: 'alert', title: 'Curveball', text: 'Marketing just launched a flash sale. Traffic is 6× normal, p95 latency 4.1 s and climbing.' },
         { t: 'step', id: 'c0' },
-        { t: 'think', text: 'Tempting to chase — but the drop started on day 9 and this spike started minutes ago. Two different problems. Handing latency to on-call, staying on mission.' },
+        { t: 'think', text: 'Tempting to chase, but the drop started on day 9 and this spike started minutes ago. Two different problems. Handing latency to on-call, staying on mission.' },
         { t: 'tool', call: "oncall.page(team: 'platform', severity: 'high')", ms: 900, result: 'acknowledged · autoscaling engaged' },
       ],
     },
     outcome: {
       headline: 'Root cause: a one-line CSS bug.',
-      detail: 'Isolated to mobile in four steps, verified with session replays, fix PR opened and the report drafted — before anyone had to dig.',
+      detail: 'Isolated to mobile in four steps, verified with session replays, fix PR opened and the report drafted, before anyone had to dig.',
       stats: [['6', 'tool calls'], ['1', 'root cause'], ['₹4.2L/wk', 'est. recovery']],
     },
   },
@@ -93,7 +93,7 @@ export const MISSIONS = [
           { l: 'Rail', v: 19, txt: '₹19k · 4d' },
           { l: 'LTL', v: 15, txt: '₹15k · 5d' },
         ] } },
-      { t: 'think', text: 'Rail and LTL miss Friday. Air makes it at 2.6× the cost. FTL lands Thursday at ₹22k — that is the answer, if fragile handling checks out.' },
+      { t: 'think', text: 'Rail and LTL miss Friday. Air makes it at 2.6× the cost. FTL lands Thursday at ₹22k. That is the answer, if fragile handling checks out.' },
       { t: 'step', id: 2 },
       { t: 'tool', call: "carriers.check(mode: 'FTL', cargo: 'fragile')", ms: 1100, result: 'carrier B qualifies',
         art: { kind: 'kv', rows: [['carrier B', 'air-ride suspension'], ['handling', 'strap kit included'], ['rating', '4.8 / 5']] } },
@@ -101,16 +101,16 @@ export const MISSIONS = [
       { t: 'tool', call: "booking.create(carrier: 'B', pickup: 'tomorrow 09:00')", ms: 1300, result: 'AWB #MH-2841 · pickup confirmed' },
       { t: 'step', id: 4 },
       { t: 'tool', call: "notify.customer(channel: 'email')", ms: 900, result: 'confirmation sent',
-        art: { kind: 'msg', title: 'Customer email · drafted by the agent', body: 'Your shipment is booked: full-truck with air-ride suspension, pickup tomorrow 09:00, arriving Thursday — ₹22,400, 61% below air freight.' } },
+        art: { kind: 'msg', title: 'Customer email · drafted by the agent', body: 'Your shipment is booked: full-truck with air-ride suspension, pickup tomorrow 09:00, arriving Thursday. ₹22,400, 61% below air freight.' } },
       { t: 'done' },
     ],
     curveball: {
       label: 'Carrier cancels',
       steps: ['Rebook with the backup carrier'],
       events: [
-        { t: 'alert', title: 'Curveball', text: 'Carrier B cancelled the 09:00 pickup — truck breakdown.' },
+        { t: 'alert', title: 'Curveball', text: 'Carrier B cancelled the 09:00 pickup. Truck breakdown.' },
         { t: 'step', id: 'c0' },
-        { t: 'think', text: 'This is why you quote wide. Carrier C was ₹1.3k more with the same air-ride spec — rebooking before the slot closes.' },
+        { t: 'think', text: 'This is why you quote wide. Carrier C was ₹1.3k more with the same air-ride spec. Rebooking before the slot closes.' },
         { t: 'tool', call: "booking.rebook(carrier: 'C')", ms: 1200, result: 'AWB #MH-2857 · pickup 10:30 · ETA still Thursday' },
       ],
     },
@@ -162,15 +162,15 @@ export const MISSIONS = [
       label: 'A sixth EV arrives',
       steps: ['Re-solve for the sixth car'],
       events: [
-        { t: 'alert', title: 'Curveball', text: 'A sixth EV just plugged in at 21:40 — needs 22 kWh by 08:00.' },
+        { t: 'alert', title: 'Curveball', text: 'A sixth EV just plugged in at 21:40. It needs 22 kWh by 08:00.' },
         { t: 'step', id: 'c0' },
-        { t: 'think', text: 'The solver re-runs in milliseconds. EV-4 has deadline slack — shifting it 40 minutes frees a slot for the newcomer.' },
+        { t: 'think', text: 'The solver re-runs in milliseconds. EV-4 has deadline slack. Shifting it 40 minutes frees a slot for the newcomer.' },
         { t: 'tool', call: 'schedule.resolve(evs: 6)', ms: 1100, result: 'still under the fuse · all deadlines met' },
       ],
     },
     outcome: {
       headline: 'All cars ready by 07:00. Fuse never touched.',
-      detail: 'Deadline-aware charging shifted to cheap hours, the battery covered the price peak, and a watchdog re-solves the moment anything changes. This one is my day job at RiDERgy.',
+      detail: 'Deadline-aware charging shifted to cheap hours, the battery covered the price peak, and a watchdog re-solves the moment anything changes. This one is our day job at RiDERgy.',
       stats: [['−34%', 'energy cost'], ['0', 'fuse breaches'], ['5/5', 'cars ready']],
     },
   },
@@ -200,7 +200,7 @@ export const MISSIONS = [
       { t: 'step', id: 1 },
       { t: 'tool', call: "traces.sample(endpoint: '/payments', n: 50)", ms: 1300, result: '92% are upstream timeouts',
         art: { kind: 'kv', rows: [['p50', '180 ms'], ['p95', '30 000 ms · timeout', true], ['upstream', 'payproc-gw', true]] } },
-      { t: 'think', text: 'Every slow trace dies at the same upstream. That smells like their outage, not our bug — check their status before touching code.' },
+      { t: 'think', text: 'Every slow trace dies at the same upstream. That smells like their outage, not our bug. Check their status before touching code.' },
       { t: 'tool', call: "status.check(vendor: 'payproc')", ms: 900, result: "vendor incident confirmed · 'degraded performance' since 02:41" },
       { t: 'step', id: 2 },
       { t: 'tool', call: "config.apply(fallback: 'razorpay', circuit_breaker: on)", ms: 1200, result: 'traffic failing over',
@@ -217,7 +217,7 @@ export const MISSIONS = [
       label: 'Retry storm',
       steps: ['Throttle the retry backlog'],
       events: [
-        { t: 'alert', title: 'Curveball', text: 'Queued retries from the outage are replaying all at once — 4× normal load hitting the fallback provider.' },
+        { t: 'alert', title: 'Curveball', text: 'Queued retries from the outage are replaying all at once. 4× normal load is hitting the fallback provider.' },
         { t: 'step', id: 'c0' },
         { t: 'think', text: 'Draining the backlog at full rate would take the fallback down too. Cap the replay rate and let it drain over twenty minutes.' },
         { t: 'tool', call: "queue.throttle(rate: '25%')", ms: 1000, result: 'backlog draining · fallback healthy' },
@@ -225,7 +225,7 @@ export const MISSIONS = [
     },
     outcome: {
       headline: 'Recovered in 11 minutes. Customers never noticed.',
-      detail: 'Blast radius measured, the failing vendor traced and confirmed, traffic failed over behind a circuit breaker, recovery verified, and the incident note written — at 3 a.m., without waking anyone else.',
+      detail: 'Blast radius measured, the failing vendor traced and confirmed, traffic failed over behind a circuit breaker, recovery verified, and the incident note written, at 3 a.m., without waking anyone else.',
       stats: [['11 min', 'to recovery'], ['0', 'customer impact'], ['1', 'note drafted']],
     },
   },
