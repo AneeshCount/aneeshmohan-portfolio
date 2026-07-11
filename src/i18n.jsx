@@ -75,6 +75,17 @@ const STR = {
       plan: 'Plan', liveRun: 'Live run', curveball: 'Curveball', incoming: '⚡ Incoming…', adapted: '✓ Agent adapted',
       complete: 'Mission complete', curveHandled: '1 curveball handled', replayTry: 'Replay and try the curveball', replay: 'Replay', addedLive: 'added live',
     },
+    labs: {
+      eyebrow: 'Labs', h2a: 'Ideas we test', h2b: 'in the open.',
+      p: 'Small, working experiments from our own idea pipeline. Each one becomes a client capability once it earns its keep.',
+      live: 'Live lab', soon: 'In the lab', open: 'Open the lab →',
+      note: 'A2A Commerce and Seller AI already run as live missions in the Playground above.',
+      items: [
+        { t: 'Voice Journal', d: 'Speak for a minute and get a structured journal entry: title, mood, action items. Real microphone input, entirely in your browser.' },
+        { t: 'AI Budgeter', d: 'A personal CFO that watches your spending, flags the overshoot and answers why in plain language.' },
+        { t: 'GiftingAI', d: 'Give it a person, an occasion and a budget; it argues its way to the right gift.' },
+      ],
+    },
     pr: {
       eyebrow: 'How we work', h2a: 'Big-firm discipline.', h2b: 'Studio speed.',
       p: 'Premium does not mean slow, and fast does not mean fragile. It means one accountable owner, clear milestones, and work you can inspect every week.',
@@ -172,6 +183,17 @@ const STR = {
       stackLine: 'In Produktion läuft diese Schleife auf Frontier-Modellen mit echten Tools:',
       plan: 'Plan', liveRun: 'Live-Lauf', curveball: 'Störfall', incoming: '⚡ Kommt…', adapted: '✓ Agent angepasst',
       complete: 'Mission abgeschlossen', curveHandled: '1 Störfall gemeistert', replayTry: 'Nochmal, mit Störfall', replay: 'Wiederholen', addedLive: 'live ergänzt',
+    },
+    labs: {
+      eyebrow: 'Labs', h2a: 'Ideen, die wir', h2b: 'offen testen.',
+      p: 'Kleine, funktionierende Experimente aus unserer eigenen Ideen-Pipeline. Jedes wird zur Kunden-Leistung, sobald es sich beweist.',
+      live: 'Live-Lab', soon: 'Im Labor', open: 'Lab öffnen →',
+      note: 'A2A Commerce und Seller AI laufen bereits als Live-Missionen im Playground oben.',
+      items: [
+        { t: 'Voice Journal', d: 'Eine Minute sprechen, ein strukturierter Journal-Eintrag: Titel, Stimmung, Action Items. Echte Mikrofon-Eingabe, komplett im Browser.' },
+        { t: 'AI Budgeter', d: 'Ein persönlicher CFO, der Ihre Ausgaben beobachtet, Überschreitungen meldet und das Warum in klarer Sprache erklärt.' },
+        { t: 'GiftingAI', d: 'Person, Anlass und Budget angeben; die KI argumentiert sich zum richtigen Geschenk.' },
+      ],
     },
     pr: {
       eyebrow: 'Wie wir arbeiten', h2a: 'Konzern-Disziplin.', h2b: 'Studio-Tempo.',
@@ -271,6 +293,17 @@ const STR = {
       plan: 'Plan', liveRun: 'Ejecución en vivo', curveball: 'Bola curva', incoming: '⚡ Llegando…', adapted: '✓ Agente adaptado',
       complete: 'Misión completada', curveHandled: '1 bola curva resuelta', replayTry: 'Repetir y probar la bola curva', replay: 'Repetir', addedLive: 'añadido en vivo',
     },
+    labs: {
+      eyebrow: 'Labs', h2a: 'Ideas que probamos', h2b: 'a la vista.',
+      p: 'Experimentos pequeños y funcionales de nuestra propia cantera de ideas. Cada uno se convierte en capacidad para clientes cuando se lo gana.',
+      live: 'Lab en vivo', soon: 'En el laboratorio', open: 'Abrir el lab →',
+      note: 'A2A Commerce y Seller AI ya corren como misiones en vivo en el Playground de arriba.',
+      items: [
+        { t: 'Voice Journal', d: 'Habla un minuto y recibe una entrada de diario estructurada: título, ánimo, acciones. Micrófono real, todo en tu navegador.' },
+        { t: 'AI Budgeter', d: 'Un CFO personal que vigila tus gastos, avisa del exceso y explica el porqué en lenguaje claro.' },
+        { t: 'GiftingAI', d: 'Dale una persona, una ocasión y un presupuesto; argumenta hasta dar con el regalo correcto.' },
+      ],
+    },
     pr: {
       eyebrow: 'Cómo trabajamos', h2a: 'Disciplina de gran firma.', h2b: 'Velocidad de estudio.',
       p: 'Premium no significa lento, y rápido no significa frágil. Significa un responsable claro, hitos definidos y trabajo que puedes inspeccionar cada semana.',
@@ -368,6 +401,17 @@ const STR = {
       stackLine: 'En production, cette boucle tourne sur des modèles frontier avec de vrais outils :',
       plan: 'Plan', liveRun: 'Exécution live', curveball: 'Imprévu', incoming: '⚡ Ça arrive…', adapted: '✓ Agent adapté',
       complete: 'Mission accomplie', curveHandled: '1 imprévu géré', replayTry: "Rejouer et tenter l'imprévu", replay: 'Rejouer', addedLive: 'ajouté en direct',
+    },
+    labs: {
+      eyebrow: 'Labs', h2a: 'Des idées testées', h2b: 'au grand jour.',
+      p: "De petites expériences fonctionnelles issues de notre propre vivier d'idées. Chacune devient une offre client dès qu'elle fait ses preuves.",
+      live: 'Lab en direct', soon: 'Au labo', open: 'Ouvrir le lab →',
+      note: 'A2A Commerce et Seller AI tournent déjà en missions live dans le Playground ci-dessus.',
+      items: [
+        { t: 'Voice Journal', d: 'Parlez une minute et recevez une entrée de journal structurée : titre, humeur, actions. Vrai micro, entièrement dans votre navigateur.' },
+        { t: 'AI Budgeter', d: 'Un directeur financier personnel qui surveille vos dépenses, signale les excès et explique pourquoi en langage clair.' },
+        { t: 'GiftingAI', d: "Donnez-lui une personne, une occasion et un budget ; il argumente jusqu'au bon cadeau." },
+      ],
     },
     pr: {
       eyebrow: 'Notre méthode', h2a: 'Rigueur de grand cabinet.', h2b: 'Vitesse de studio.',

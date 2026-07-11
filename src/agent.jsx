@@ -239,6 +239,7 @@ export function AgentConsole() {
                 <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{m.domain}</span>
               </div>
               <p className="mt-4 font-display italic text-[17px] text-ivory/90 leading-snug">“{m.goal}”</p>
+              {m.story && <p className="mt-3 text-[12.5px] text-muted leading-relaxed">{m.story}</p>}
               <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-accent opacity-60 group-hover:opacity-100 transition">{O.run}</div>
             </button>
           ))}
