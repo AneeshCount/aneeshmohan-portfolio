@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { MISSIONS } from './missions.js';
 import { useLang } from './i18n.jsx';
+import { locDemo } from './demo-i18n.js';
 
 /* ════════════════════════════════════════════════════════════════════════
    AGENT CONSOLE: pick a mission from any industry and watch an agent
@@ -140,8 +141,9 @@ function PlanList({ plan, addedLabel }) {
 /* ── The console ─────────────────────────────────────────────────────────── */
 
 export function AgentConsole() {
-  const { s: STR } = useLang();
+  const { s: STR, lang } = useLang();
   const O = STR.ops;
+  const missions = useMemo(() => MISSIONS.map((m) => locDemo(m, lang)), [lang]);
   const [, setFrame] = useState(0);
   const render = () => setFrame((f) => f + 1);
   const S = useRef({ phase: 'pick', scen: null, plan: [], feed: [], queue: [], curve: 'none', t0: 0 }).current;
@@ -258,7 +260,7 @@ export function AgentConsole() {
           </p>
         </div>
         <div className="mt-8 grid sm:grid-cols-2 gap-4">
-          {MISSIONS.map((m) => (
+          {missions.map((m) => (
             <button key={m.id} onClick={() => start(m)}
               className={`group text-left rounded-xl border p-6 transition-all duration-300 ${
                 m.featured
@@ -356,7 +358,7 @@ export function AgentConsole() {
           <button onClick={() => start(scen)} className="rounded-full bg-accent text-ink font-semibold text-sm px-6 py-2.5 hover:brightness-110 active:scale-[.98] transition">
             {S.curve === 'used' ? O.replay : O.replayTry}
           </button>
-          {MISSIONS.filter((m) => m.id !== scen.id).map((m) => (
+          {missions.filter((m) => m.id !== scen.id).map((m) => (
             <button key={m.id} onClick={() => start(m)}
               className="rounded-full border border-white/15 text-muted font-mono text-[10px] uppercase tracking-[0.14em] px-4 py-2.5 hover:text-ivory hover:border-white/35 transition">
               {m.icon} {m.short}

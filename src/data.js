@@ -45,6 +45,16 @@ export const PROJECTS = [
     linkLabel: 'Live demo',
     accent: 'from-emerald-500 to-teal-500',
   },
+  {
+    name: 'ESPAI',
+    tag: 'IoT · AI Firmware Copilot',
+    blurb: 'A local AI assistant that turns a plain-language description into working ESP32 firmware: planning, architecture, modular FreeRTOS code, local build and a safe flash flow.',
+    tech: ['ESP32', 'FreeRTOS', 'Arduino', 'FastAPI', 'React', 'LLMs'],
+    link: null,
+    linkLabel: '',
+    note: 'In development · private walkthrough on request',
+    accent: 'from-orange-500 to-amber-500',
+  },
 ];
 
 export const METRICS = [
@@ -57,7 +67,7 @@ export const SKILLS = [
   { group: 'Frontend', items: ['React', 'Next.js', 'Tailwind CSS', 'Flutter', 'PWAs'] },
   { group: 'Backend', items: ['Node.js / Express', 'Python / FastAPI', 'REST APIs', 'WebSockets'] },
   { group: 'AI / Agents', items: ['LLMs (Claude, GPT, Gemini)', 'LangChain / LangGraph', 'Agentic workflows', 'Voice agents (STT · TTS · telephony)', 'RAG + pgvector'] },
-  { group: 'Infra / Ops', items: ['PostgreSQL', 'Redis', 'AWS', 'Docker', 'CI/CD', 'Nginx / VPS'] },
+  { group: 'Infra / Ops', items: ['PostgreSQL', 'Redis', 'AWS', 'Docker', 'CI/CD', 'Nginx / VPS', 'IoT (ESP32 · MQTT · FreeRTOS)'] },
 ];
 
 export const SERVICES = [

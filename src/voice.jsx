@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CALLS } from './calls.js';
 import { FeedItem } from './agent.jsx';
 import { useLang } from './i18n.jsx';
+import { locDemo, TTS_LANG } from './demo-i18n.js';
 
 /* ════════════════════════════════════════════════════════════════════════
    VOICE AGENT: a simulated live phone call. The agent's lines are spoken
@@ -17,11 +18,17 @@ const VOICE_STACK = ['ElevenLabs', 'Cartesia', 'OpenAI Realtime', 'Deepgram', 'W
 
 const synthOK = typeof window !== 'undefined' && 'speechSynthesis' in window;
 
-function pickVoice() {
+const VOICE_PREFS = {
+  EN: [/Google US English/i, /Samantha/i, /Google UK English Female/i, /en[-_]IN/i, /^en/i],
+  DE: [/Google Deutsch/i, /de[-_]DE/i, /^de/i],
+  ES: [/Google español/i, /es[-_]ES/i, /es[-_]MX/i, /^es/i],
+  FR: [/Google français/i, /fr[-_]FR/i, /fr[-_]CA/i, /^fr/i],
+};
+
+function pickVoice(lang) {
   const vs = window.speechSynthesis.getVoices();
   if (!vs.length) return null;
-  const prefs = [/Google US English/i, /Samantha/i, /Google UK English Female/i, /en[-_]IN/i, /^en/i];
-  for (const p of prefs) {
+  for (const p of VOICE_PREFS[lang] || VOICE_PREFS.EN) {
     const v = vs.find((v) => p.test(v.name) || p.test(v.lang));
     if (v) return v;
   }
@@ -72,17 +79,18 @@ function Waveform({ modeRef }) {
 
 /* ── Transcript rows ─────────────────────────────────────────────────────── */
 function Turn({ item }) {
+  const { s } = useLang();
   if (item.k === 'tool' || item.k === 'think' || item.k === 'art') return <FeedItem item={item} />;
   const agent = item.k === 'agent';
   return (
     <div className="flex gap-3">
       <span className={`shrink-0 w-12 pt-[3px] font-mono text-[9px] uppercase tracking-[0.18em] ${agent ? 'text-accent' : 'text-gold'}`}>
-        {agent ? 'Agent' : 'Caller'}
+        {agent ? s.va.roleAgent : s.va.roleCaller}
       </span>
       <p className={`text-[13.5px] leading-relaxed ${agent ? 'text-ivory/95' : 'text-muted'}`}>
         {item.text}
         {item.live && <span className={`ml-0.5 inline-block w-1.5 h-3.5 align-middle ${agent ? 'bg-accent/80' : 'bg-gold/70'}`} style={{ animation: 'pulse2 .9s infinite' }} />}
-        {item.cut && <span className="ml-2 font-mono text-[9px] uppercase tracking-[0.14em] text-gold border border-gold/30 rounded px-1 py-px align-middle">interrupted</span>}
+        {item.cut && <span className="ml-2 font-mono text-[9px] uppercase tracking-[0.14em] text-gold border border-gold/30 rounded px-1 py-px align-middle">{s.va.cutTag}</span>}
       </p>
     </div>
   );
@@ -92,8 +100,9 @@ const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 
 
 /* ── The call ────────────────────────────────────────────────────────────── */
 export function VoiceAgent({ onOps }) {
-  const { s: STR } = useLang();
+  const { s: STR, lang } = useLang();
   const V = STR.va;
+  const calls = useMemo(() => CALLS.map((c) => locDemo(c, lang)), [lang]);
   const [, setFrame] = useState(0);
   const render = () => setFrame((f) => f + 1);
   const S = useRef({
@@ -145,7 +154,8 @@ export function VoiceAgent({ onOps }) {
     let spoke = false;
     if (speak && S.sound && synthOK) {
       const u = new SpeechSynthesisUtterance(item.full);
-      const v = pickVoice();
+      u.lang = TTS_LANG[lang] || TTS_LANG.EN;
+      const v = pickVoice(lang);
       if (v) u.voice = v;
       u.rate = 1.02; u.pitch = 1;
       u.onboundary = (e) => {
@@ -279,7 +289,7 @@ export function VoiceAgent({ onOps }) {
           </p>
         </div>
         <div className="mt-8 grid sm:grid-cols-2 gap-4">
-          {CALLS.map((c) => (
+          {calls.map((c) => (
             <button key={c.id} onClick={() => start(c)}
               className="group text-left rounded-xl border border-white/[0.08] p-6 hover:border-accent/40 hover:bg-accent/[0.03] transition-all duration-300">
               <div className="flex items-center justify-between">
@@ -392,7 +402,7 @@ export function VoiceAgent({ onOps }) {
           <button onClick={() => start(scen)} className="rounded-full bg-accent text-ink font-semibold text-sm px-6 py-2.5 hover:brightness-110 active:scale-[.98] transition">
             {S.barge === 'used' ? V.replay : V.replayTry}
           </button>
-          {CALLS.filter((c) => c.id !== scen.id).map((c) => (
+          {calls.filter((c) => c.id !== scen.id).map((c) => (
             <button key={c.id} onClick={() => start(c)}
               className="rounded-full border border-white/15 text-muted font-mono text-[10px] uppercase tracking-[0.14em] px-4 py-2.5 hover:text-ivory hover:border-white/35 transition">
               {c.icon} {c.short}

@@ -2,8 +2,9 @@ import React, { createContext, useContext, useState } from 'react';
 
 /* ════════════════════════════════════════════════════════════════════════
    I18N: all page copy in EN (primary), DE, ES, FR. The interactive demo
-   transcripts (missions.js / calls.js) stay in English by design; the
-   demo chrome is translated and non-EN modes show a small note.
+   transcripts (missions.js / calls.js) are localized via demo-i18n.js;
+   only tool-call signatures stay in English (they read as code).
+   Editorial rule: no em dashes, en dashes or minus signs anywhere.
    ════════════════════════════════════════════════════════════════════════ */
 
 export const LANGS = ['EN', 'DE', 'ES', 'FR'];
@@ -45,6 +46,7 @@ const STR = {
       { tag: 'AI Retail Intelligence', blurb: 'An AI dashboard for supermarkets and chains: demand forecasting with confidence bands, an AI reorder engine ranking SKUs by days-of-cover, price-optimization recommendations, and an agentic insights assistant that answers questions and proposes the next action.', label: 'Live demo' },
       { tag: 'Logistics Platform', blurb: 'A modern logistics company site with a real-time shipment cost calculator (volumetric weight, multi-mode pricing, fuel and GST), a live tracking widget, and a validated lead-capture flow. Built as a conversion-focused marketing site.', label: 'Live demo' },
       { tag: 'Hyperlocal Marketplace PWA', blurb: 'A 33-service hyperlocal marketplace as an installable PWA: a multi-screen booking flow, masonry partner portfolios with verified badges, and a wallet and escrow payment model with a 30:70 split released by customer PIN.', label: 'Live demo' },
+      { tag: 'IoT · AI Firmware Copilot', blurb: 'A local AI assistant that turns a plain-language description into working ESP32 firmware: it plans the project, generates the architecture and modular FreeRTOS code, writes the files into an Arduino project, builds locally and flashes the board only when a device is safely detected. IoT and microcontroller work, from prompt to hardware.', note: 'In development · private walkthrough on request', label: '' },
     ],
     pg: {
       eyebrow: 'Live demos', h2a: 'Give an agent a job.', h2b: 'Then interrupt it.',
@@ -54,7 +56,7 @@ const STR = {
       tabVoice: 'Voice agent · live call', tabOps: 'Ops agent · missions', demoNote: '',
     },
     va: {
-      title: 'Voice Agent',
+      title: 'Voice Agent', roleAgent: 'Agent', roleCaller: 'Caller', cutTag: 'interrupted',
       p1: 'A live call: the agent ', b1: 'speaks out loud', p2: ', works its tools mid-conversation, and (the hard part) ', b2: 'recovers when you interrupt it', p3: '. Pick a call.',
       answer: 'Answer the call →',
       foot: "Deterministic replay of a production voice pipeline (STT → LLM + tools → TTS). It speaks with your browser's free built-in voice, which is why it sounds robotic. Nothing is recorded and no audio leaves this page.",
@@ -109,7 +111,7 @@ const STR = {
         { t: 'Mobile Engineer', d: 'Flutter, PWAs' },
         { t: 'Product Designer', d: 'Premium interfaces, design systems' },
         { t: 'Automation Specialist', d: 'n8n, Make, WhatsApp API' },
-        { t: 'Growth & Partnerships', d: 'Proposals, client success' },
+        { t: 'Sales & Digital Marketing', d: 'Outbound, ads, SEO, content' },
       ],
       openT: 'None of these?', openD: 'Open applications are welcome. Tell us what you do exceptionally well and show one thing you made.',
       cta: 'Apply now', note: 'Applications go through the contact form: mention the role and link your best work.',
@@ -169,16 +171,17 @@ const STR = {
       { tag: 'KI-Retail-Intelligence', blurb: 'Ein KI-Dashboard für Supermärkte und Ketten: Nachfrageprognosen mit Konfidenzband, eine KI-Nachbestell-Engine, die SKUs nach Reichweite priorisiert, Preisoptimierung und ein agentischer Insights-Assistent, der Fragen beantwortet und die nächste Aktion vorschlägt.', label: 'Live-Demo' },
       { tag: 'Logistik-Plattform', blurb: 'Eine moderne Logistik-Website mit Echtzeit-Frachtkostenrechner (Volumengewicht, Multi-Mode-Preise, Kraftstoff und Steuern), Live-Tracking-Widget und validierter Lead-Erfassung. Gebaut als conversion-fokussierte Marketing-Site.', label: 'Live-Demo' },
       { tag: 'Hyperlokale Marktplatz-PWA', blurb: 'Ein hyperlokaler Marktplatz mit 33 Services als installierbare PWA: mehrstufiger Buchungsflow, Partner-Portfolios mit Verifizierungs-Badges und ein Wallet-/Escrow-Zahlungsmodell mit 30:70-Split per Kunden-PIN.', label: 'Live-Demo' },
+      { tag: 'IoT · KI-Firmware-Copilot', blurb: 'Ein lokaler KI-Assistent, der eine Alltagssprache-Beschreibung in funktionierende ESP32-Firmware verwandelt: Er plant das Projekt, erzeugt Architektur und modularen FreeRTOS-Code, schreibt die Dateien in ein Arduino-Projekt, baut lokal und flasht das Board nur, wenn ein Gerät sicher erkannt wird. IoT- und Mikrocontroller-Arbeit, vom Prompt bis zur Hardware.', note: 'In Entwicklung · privater Walkthrough auf Anfrage', label: '' },
     ],
     pg: {
       eyebrow: 'Live-Demos', h2a: 'Geben Sie einem Agenten einen Job.', h2b: 'Dann unterbrechen Sie ihn.',
       p1: 'Das ist, was wir bauen: KI, die echte Arbeit leistet, nicht Chat. Führen Sie ein Live-Telefonat mit einem ', voice: 'Voice-Agenten',
       p2: ', der spricht, bucht und sich fängt, wenn Sie ihn mitten im Satz unterbrechen. Oder schicken Sie einen ', ops: 'Operations-Agenten',
       p3: ' auf Mission und werfen Sie ihm einen Störfall dazwischen. Dieselbe Schleife liefern wir mit Frontier-Modellen in Produktion, hier im Browser wiedergegeben.',
-      tabVoice: 'Voice-Agent · Live-Anruf', tabOps: 'Ops-Agent · Missionen', demoNote: 'Die Demo-Gespräche laufen auf Englisch.',
+      tabVoice: 'Voice-Agent · Live-Anruf', tabOps: 'Ops-Agent · Missionen', demoNote: '',
     },
     va: {
-      title: 'Voice-Agent',
+      title: 'Voice-Agent', roleAgent: 'Agent', roleCaller: 'Anrufer', cutTag: 'unterbrochen',
       p1: 'Ein Live-Anruf: der Agent ', b1: 'spricht hörbar', p2: ', nutzt mitten im Gespräch seine Tools und (der schwere Teil) ', b2: 'fängt sich, wenn Sie ihn unterbrechen', p3: '. Wählen Sie einen Anruf.',
       answer: 'Anruf annehmen →',
       foot: 'Deterministische Wiedergabe einer produktiven Voice-Pipeline (STT → LLM + Tools → TTS). Gesprochen wird mit der kostenlosen Browser-Stimme, daher klingt sie robotisch. Nichts wird aufgezeichnet, kein Audio verlässt diese Seite.',
@@ -233,7 +236,7 @@ const STR = {
         { t: 'Mobile Engineer', d: 'Flutter, PWAs' },
         { t: 'Product Designer', d: 'Premium-Interfaces, Designsysteme' },
         { t: 'Automation Specialist', d: 'n8n, Make, WhatsApp API' },
-        { t: 'Growth & Partnerships', d: 'Angebote, Client Success' },
+        { t: 'Sales & Digital Marketing', d: 'Outbound, Ads, SEO, Content' },
       ],
       openT: 'Nichts dabei?', openD: 'Initiativbewerbungen sind willkommen. Sagen Sie uns, was Sie außergewöhnlich gut können, und zeigen Sie eine Sache, die Sie gebaut haben.',
       cta: 'Jetzt bewerben', note: 'Bewerbungen laufen über das Kontaktformular: Rolle nennen und beste Arbeit verlinken.',
@@ -293,16 +296,17 @@ const STR = {
       { tag: 'Inteligencia retail con IA', blurb: 'Un dashboard de IA para supermercados y cadenas: pronóstico de demanda con bandas de confianza, un motor de reposición que prioriza SKUs por días de cobertura, optimización de precios y un asistente agéntico que responde preguntas y propone la siguiente acción.', label: 'Demo en vivo' },
       { tag: 'Plataforma logística', blurb: 'Una web logística moderna con calculadora de costes de envío en tiempo real (peso volumétrico, precios multimodales, combustible e impuestos), widget de tracking en vivo y captura de leads validada. Construida como site de marketing enfocado en conversión.', label: 'Demo en vivo' },
       { tag: 'PWA marketplace hiperlocal', blurb: 'Un marketplace hiperlocal de 33 servicios como PWA instalable: flujo de reserva multipantalla, portafolios de socios con insignias verificadas y un modelo de pago con wallet y escrow con reparto 30:70 liberado por PIN del cliente.', label: 'Demo en vivo' },
+      { tag: 'IoT · Copiloto de firmware con IA', blurb: 'Un asistente de IA local que convierte una descripción en lenguaje natural en firmware ESP32 funcional: planifica el proyecto, genera la arquitectura y el código FreeRTOS modular, escribe los archivos en un proyecto Arduino, compila en local y flashea la placa solo cuando detecta un dispositivo de forma segura. Trabajo IoT y de microcontroladores, del prompt al hardware.', note: 'En desarrollo · demo privada bajo petición', label: '' },
     ],
     pg: {
       eyebrow: 'Demos en vivo', h2a: 'Dale un trabajo a un agente.', h2b: 'Luego interrúmpelo.',
       p1: 'Esto es lo que construimos: IA que hace trabajo real, no chat. Atiende una llamada en vivo con un ', voice: 'agente de voz',
       p2: ' que habla, agenda y se recupera cuando lo cortas a mitad de frase. O lanza un ', ops: 'agente de operaciones',
       p3: ' a una misión y tírale una bola curva. El mismo bucle que llevamos a producción con modelos frontier, reproducido en tu navegador.',
-      tabVoice: 'Agente de voz · llamada en vivo', tabOps: 'Agente de ops · misiones', demoNote: 'Las conversaciones de la demo son en inglés.',
+      tabVoice: 'Agente de voz · llamada en vivo', tabOps: 'Agente de ops · misiones', demoNote: '',
     },
     va: {
-      title: 'Agente de voz',
+      title: 'Agente de voz', roleAgent: 'Agente', roleCaller: 'Cliente', cutTag: 'interrumpido',
       p1: 'Una llamada en vivo: el agente ', b1: 'habla en voz alta', p2: ', usa sus herramientas en plena conversación y (la parte difícil) ', b2: 'se recupera cuando lo interrumpes', p3: '. Elige una llamada.',
       answer: 'Atender la llamada →',
       foot: 'Reproducción determinista de una pipeline de voz de producción (STT → LLM + herramientas → TTS). Habla con la voz gratuita del navegador, por eso suena robótica. No se graba nada y ningún audio sale de esta página.',
@@ -357,7 +361,7 @@ const STR = {
         { t: 'Mobile Engineer', d: 'Flutter, PWAs' },
         { t: 'Product Designer', d: 'Interfaces premium, sistemas de diseño' },
         { t: 'Automation Specialist', d: 'n8n, Make, WhatsApp API' },
-        { t: 'Growth & Partnerships', d: 'Propuestas, client success' },
+        { t: 'Ventas y Marketing Digital', d: 'Outbound, ads, SEO, contenido' },
       ],
       openT: '¿Nada encaja?', openD: 'Las candidaturas espontáneas son bienvenidas. Cuéntanos qué haces excepcionalmente bien y muestra algo que hayas creado.',
       cta: 'Postúlate', note: 'Las candidaturas van por el formulario de contacto: menciona el rol y enlaza tu mejor trabajo.',
@@ -417,16 +421,17 @@ const STR = {
       { tag: 'Intelligence retail IA', blurb: "Un dashboard IA pour supermarchés et enseignes : prévision de demande avec bandes de confiance, moteur de réassort classant les SKU par jours de couverture, optimisation des prix et assistant agentique qui répond aux questions et propose l'action suivante.", label: 'Démo live' },
       { tag: 'Plateforme logistique', blurb: "Un site logistique moderne avec calculateur de coûts en temps réel (poids volumétrique, tarifs multimodaux, carburant et taxes), widget de suivi en direct et capture de leads validée. Conçu comme un site marketing orienté conversion.", label: 'Démo live' },
       { tag: 'PWA marketplace hyperlocale', blurb: "Une marketplace hyperlocale de 33 services en PWA installable : parcours de réservation multi-écrans, portfolios partenaires avec badges vérifiés et paiement wallet/escrow avec répartition 30:70 libérée par PIN client.", label: 'Démo live' },
+      { tag: 'IoT · Copilote firmware IA', blurb: "Un assistant IA local qui transforme une description en langage courant en firmware ESP32 fonctionnel : il planifie le projet, génère l'architecture et le code FreeRTOS modulaire, écrit les fichiers dans un projet Arduino, compile en local et ne flashe la carte que lorsqu'un appareil est détecté en toute sécurité. Du prompt au matériel : IoT et microcontrôleurs.", note: 'En développement · démonstration privée sur demande', label: '' },
     ],
     pg: {
       eyebrow: 'Démos live', h2a: 'Donnez un travail à un agent.', h2b: 'Puis interrompez-le.',
       p1: "Voilà ce que nous construisons : une IA qui fait un vrai travail, pas du chat. Prenez un appel en direct avec un ", voice: 'agent vocal',
       p2: " qui parle, réserve et se rattrape quand vous le coupez en pleine phrase. Ou envoyez un ", ops: "agent d'opérations",
       p3: " en mission et lancez-lui un imprévu. La même boucle que nous livrons en production sur des modèles frontier, rejouée dans votre navigateur.",
-      tabVoice: 'Agent vocal · appel live', tabOps: "Agent d'ops · missions", demoNote: 'Les conversations de la démo sont en anglais.',
+      tabVoice: 'Agent vocal · appel live', tabOps: "Agent d'ops · missions", demoNote: '',
     },
     va: {
-      title: 'Agent vocal',
+      title: 'Agent vocal', roleAgent: 'Agent', roleCaller: 'Client', cutTag: 'interrompu',
       p1: "Un appel en direct : l'agent ", b1: 'parle à voix haute', p2: ', utilise ses outils en pleine conversation et (le plus dur) ', b2: "se rattrape quand vous l'interrompez", p3: '. Choisissez un appel.',
       answer: "Décrocher l'appel →",
       foot: "Rejeu déterministe d'une pipeline vocale de production (STT → LLM + outils → TTS). La voix est celle, gratuite, de votre navigateur, d'où son côté robotique. Rien n'est enregistré, aucun audio ne quitte cette page.",
@@ -481,7 +486,7 @@ const STR = {
         { t: 'Mobile Engineer', d: 'Flutter, PWA' },
         { t: 'Product Designer', d: 'Interfaces premium, design systems' },
         { t: 'Automation Specialist', d: 'n8n, Make, WhatsApp API' },
-        { t: 'Growth & Partnerships', d: 'Propositions, client success' },
+        { t: 'Sales & Marketing Digital', d: 'Outbound, ads, SEO, contenu' },
       ],
       openT: 'Rien qui colle ?', openD: "Les candidatures spontanées sont bienvenues. Dites-nous ce que vous faites exceptionnellement bien et montrez une chose que vous avez créée.",
       cta: 'Postuler', note: 'Les candidatures passent par le formulaire de contact : indiquez le rôle et un lien vers votre meilleur travail.',
