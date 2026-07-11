@@ -12,7 +12,7 @@ export const PROJECTS = [
   {
     name: 'Aurora Mentors',
     tag: 'Live Product · Mentorship Marketplace',
-    blurb: 'A two-sided marketplace where students headed to Germany book verified mentors already studying there.',
+    blurb: 'A two-sided mentorship marketplace: students planning to study abroad book verified mentors already at universities worldwide.',
     tech: ['Next.js 14', 'Supabase', 'NextAuth', 'Razorpay', 'Marketplace'],
     link: 'https://auroramentors.com',
     linkLabel: 'auroramentors.com',

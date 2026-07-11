@@ -41,7 +41,7 @@ const STR = {
     work: { eyebrow: 'Selected Work', h2a: 'Products designed, built', h2b: 'and shipped from zero.' },
     projects: [
       { tag: 'Flagship · Agentic AI', blurb: 'An EV charging and energy-management SaaS built from the ground up. Agentic watchdogs continuously monitor chargers, batteries and solar, while an LLM chat layer lets users control the system in plain language: start a vehicle charging, shift load to solar, or push a schedule, and the agents execute.', note: 'Proprietary codebase · private walkthrough on request', label: 'ridergy.com' },
-      { tag: 'Live Product · Mentorship Marketplace', blurb: 'A two-sided marketplace where students headed to Germany book verified mentors already studying there: paid sessions with contact unlock after checkout, document feedback, mentor earnings dashboards and multi-author visa guides. Designed, built and run as our own product.', label: 'auroramentors.com' },
+      { tag: 'Live Product · Mentorship Marketplace', blurb: 'A two-sided mentorship marketplace: students planning to study abroad book verified mentors already at universities around the world, with paid sessions, contact unlock after checkout, document feedback, mentor earnings dashboards and multi-author guides. Built and run as our own product, expanding beyond study abroad.', label: 'auroramentors.com' },
       { tag: 'AI Retail Intelligence', blurb: 'An AI dashboard for supermarkets and chains: demand forecasting with confidence bands, an AI reorder engine ranking SKUs by days-of-cover, price-optimization recommendations, and an agentic insights assistant that answers questions and proposes the next action.', label: 'Live demo' },
       { tag: 'Logistics Platform', blurb: 'A modern logistics company site with a real-time shipment cost calculator (volumetric weight, multi-mode pricing, fuel and GST), a live tracking widget, and a validated lead-capture flow. Built as a conversion-focused marketing site.', label: 'Live demo' },
       { tag: 'Hyperlocal Marketplace PWA', blurb: 'A 33-service hyperlocal marketplace as an installable PWA: a multi-screen booking flow, masonry partner portfolios with verified badges, and a wallet and escrow payment model with a 30:70 split released by customer PIN.', label: 'Live demo' },
@@ -68,7 +68,7 @@ const STR = {
     },
     ops: {
       title: 'Agent Console',
-      p1: 'Four industries, one loop: ', loop: 'perceive → plan → act → adapt', p2: '. Pick a mission, watch the agent run it, then throw it a curveball.',
+      p1: 'Six missions, one loop: ', loop: 'perceive → plan → act → adapt', p2: '. Pick a mission, watch the agent run it, then throw it a curveball.',
       run: 'Run mission →',
       foot: 'Deterministic replay of a real agent architecture. Runs entirely in your browser, no API calls.',
       stackLine: 'In production this loop runs on frontier models with real tools:',
@@ -139,7 +139,7 @@ const STR = {
     work: { eyebrow: 'Ausgewählte Arbeiten', h2a: 'Produkte entworfen, gebaut', h2b: 'und von null geliefert.' },
     projects: [
       { tag: 'Flaggschiff · Agentische KI', blurb: 'Ein SaaS für EV-Laden und Energiemanagement, von Grund auf gebaut. Agentische Watchdogs überwachen Ladepunkte, Batterien und Solar, während eine LLM-Chat-Ebene das System in Alltagssprache steuert: Fahrzeug laden, Last auf Solar verschieben, Zeitplan setzen, die Agenten führen aus.', note: 'Proprietäre Codebasis · privater Walkthrough auf Anfrage', label: 'ridergy.com' },
-      { tag: 'Live-Produkt · Mentoring-Marktplatz', blurb: 'Ein zweiseitiger Marktplatz, auf dem Studierende mit Ziel Deutschland verifizierte Mentoren buchen, die bereits dort studieren: bezahlte Sessions mit Kontaktfreigabe nach dem Checkout, Dokumenten-Feedback, Earnings-Dashboards für Mentoren und Visa-Guides mehrerer Autoren. Als eigenes Produkt konzipiert, gebaut und betrieben.', label: 'auroramentors.com' },
+      { tag: 'Live-Produkt · Mentoring-Marktplatz', blurb: 'Ein zweiseitiger Mentoring-Marktplatz: Studierende mit Auslandsplänen buchen verifizierte Mentoren, die bereits an Universitäten weltweit studieren, mit bezahlten Sessions, Kontaktfreigabe nach dem Checkout, Dokumenten-Feedback, Earnings-Dashboards und Guides mehrerer Autoren. Als eigenes Produkt gebaut und betrieben, mit Ausbau über das Auslandsstudium hinaus.', label: 'auroramentors.com' },
       { tag: 'KI-Retail-Intelligence', blurb: 'Ein KI-Dashboard für Supermärkte und Ketten: Nachfrageprognosen mit Konfidenzband, eine KI-Nachbestell-Engine, die SKUs nach Reichweite priorisiert, Preisoptimierung und ein agentischer Insights-Assistent, der Fragen beantwortet und die nächste Aktion vorschlägt.', label: 'Live-Demo' },
       { tag: 'Logistik-Plattform', blurb: 'Eine moderne Logistik-Website mit Echtzeit-Frachtkostenrechner (Volumengewicht, Multi-Mode-Preise, Kraftstoff und Steuern), Live-Tracking-Widget und validierter Lead-Erfassung. Gebaut als conversion-fokussierte Marketing-Site.', label: 'Live-Demo' },
       { tag: 'Hyperlokale Marktplatz-PWA', blurb: 'Ein hyperlokaler Marktplatz mit 33 Services als installierbare PWA: mehrstufiger Buchungsflow, Partner-Portfolios mit Verifizierungs-Badges und ein Wallet-/Escrow-Zahlungsmodell mit 30:70-Split per Kunden-PIN.', label: 'Live-Demo' },
@@ -166,7 +166,7 @@ const STR = {
     },
     ops: {
       title: 'Agenten-Konsole',
-      p1: 'Vier Branchen, eine Schleife: ', loop: 'wahrnehmen → planen → handeln → anpassen', p2: '. Wählen Sie eine Mission, sehen Sie dem Agenten zu, dann werfen Sie ihm einen Störfall dazwischen.',
+      p1: 'Sechs Missionen, eine Schleife: ', loop: 'wahrnehmen → planen → handeln → anpassen', p2: '. Wählen Sie eine Mission, sehen Sie dem Agenten zu, dann werfen Sie ihm einen Störfall dazwischen.',
       run: 'Mission starten →',
       foot: 'Deterministische Wiedergabe einer echten Agenten-Architektur. Läuft komplett im Browser, keine API-Calls.',
       stackLine: 'In Produktion läuft diese Schleife auf Frontier-Modellen mit echten Tools:',
@@ -237,7 +237,7 @@ const STR = {
     work: { eyebrow: 'Trabajo seleccionado', h2a: 'Productos diseñados, construidos', h2b: 'y entregados desde cero.' },
     projects: [
       { tag: 'Buque insignia · IA agéntica', blurb: 'Un SaaS de carga de vehículos eléctricos y gestión energética construido desde cero. Watchdogs agénticos vigilan cargadores, baterías y solar, mientras una capa de chat LLM permite controlar el sistema en lenguaje natural: cargar un vehículo, mover carga a solar o fijar un horario, y los agentes ejecutan.', note: 'Código propietario · demo privada bajo petición', label: 'ridergy.com' },
-      { tag: 'Producto en vivo · Marketplace de mentores', blurb: 'Un marketplace de dos lados donde estudiantes rumbo a Alemania reservan mentores verificados que ya estudian allí: sesiones de pago con desbloqueo de contacto tras el checkout, revisión de documentos, panel de ingresos para mentores y guías de visado multiautor. Diseñado, construido y operado como producto propio.', label: 'auroramentors.com' },
+      { tag: 'Producto en vivo · Marketplace de mentores', blurb: 'Un marketplace de mentores de dos lados: estudiantes que planean estudiar en el extranjero reservan mentores verificados que ya están en universidades de todo el mundo, con sesiones de pago, desbloqueo de contacto tras el checkout, revisión de documentos, panel de ingresos y guías multiautor. Construido y operado como producto propio, en expansión más allá del estudio en el extranjero.', label: 'auroramentors.com' },
       { tag: 'Inteligencia retail con IA', blurb: 'Un dashboard de IA para supermercados y cadenas: pronóstico de demanda con bandas de confianza, un motor de reposición que prioriza SKUs por días de cobertura, optimización de precios y un asistente agéntico que responde preguntas y propone la siguiente acción.', label: 'Demo en vivo' },
       { tag: 'Plataforma logística', blurb: 'Una web logística moderna con calculadora de costes de envío en tiempo real (peso volumétrico, precios multimodales, combustible e impuestos), widget de tracking en vivo y captura de leads validada. Construida como site de marketing enfocado en conversión.', label: 'Demo en vivo' },
       { tag: 'PWA marketplace hiperlocal', blurb: 'Un marketplace hiperlocal de 33 servicios como PWA instalable: flujo de reserva multipantalla, portafolios de socios con insignias verificadas y un modelo de pago con wallet y escrow con reparto 30:70 liberado por PIN del cliente.', label: 'Demo en vivo' },
@@ -264,7 +264,7 @@ const STR = {
     },
     ops: {
       title: 'Consola de agentes',
-      p1: 'Cuatro industrias, un bucle: ', loop: 'percibir → planear → actuar → adaptar', p2: '. Elige una misión, mira al agente ejecutarla y luego tírale una bola curva.',
+      p1: 'Seis misiones, un bucle: ', loop: 'percibir → planear → actuar → adaptar', p2: '. Elige una misión, mira al agente ejecutarla y luego tírale una bola curva.',
       run: 'Ejecutar misión →',
       foot: 'Reproducción determinista de una arquitectura de agentes real. Corre por completo en tu navegador, sin llamadas a APIs.',
       stackLine: 'En producción este bucle corre sobre modelos frontier con herramientas reales:',
@@ -335,7 +335,7 @@ const STR = {
     work: { eyebrow: 'Réalisations choisies', h2a: 'Des produits conçus, construits', h2b: 'et livrés de zéro.' },
     projects: [
       { tag: 'Vaisseau amiral · IA agentique', blurb: "Un SaaS de recharge VE et de gestion d'énergie construit de zéro. Des watchdogs agentiques surveillent bornes, batteries et solaire, tandis qu'une couche de chat LLM pilote le système en langage courant : lancer une charge, basculer sur le solaire, fixer un planning, et les agents exécutent.", note: 'Code propriétaire · démonstration privée sur demande', label: 'ridergy.com' },
-      { tag: "Produit live · Marketplace de mentorat", blurb: "Une marketplace à deux faces où les étudiants en route vers l'Allemagne réservent des mentors vérifiés qui y étudient déjà : sessions payantes avec déblocage du contact après paiement, relecture de documents, tableau de gains pour mentors et guides visa multi-auteurs. Conçu, construit et exploité comme notre propre produit.", label: 'auroramentors.com' },
+      { tag: "Produit live · Marketplace de mentorat", blurb: "Une marketplace de mentorat à deux faces : les étudiants qui préparent des études à l'étranger réservent des mentors vérifiés déjà dans des universités du monde entier, avec sessions payantes, déblocage du contact après paiement, relecture de documents, tableau de gains et guides multi-auteurs. Construit et exploité comme notre propre produit, en expansion au-delà des études à l'étranger.", label: 'auroramentors.com' },
       { tag: 'Intelligence retail IA', blurb: "Un dashboard IA pour supermarchés et enseignes : prévision de demande avec bandes de confiance, moteur de réassort classant les SKU par jours de couverture, optimisation des prix et assistant agentique qui répond aux questions et propose l'action suivante.", label: 'Démo live' },
       { tag: 'Plateforme logistique', blurb: "Un site logistique moderne avec calculateur de coûts en temps réel (poids volumétrique, tarifs multimodaux, carburant et taxes), widget de suivi en direct et capture de leads validée. Conçu comme un site marketing orienté conversion.", label: 'Démo live' },
       { tag: 'PWA marketplace hyperlocale', blurb: "Une marketplace hyperlocale de 33 services en PWA installable : parcours de réservation multi-écrans, portfolios partenaires avec badges vérifiés et paiement wallet/escrow avec répartition 30:70 libérée par PIN client.", label: 'Démo live' },
@@ -362,7 +362,7 @@ const STR = {
     },
     ops: {
       title: 'Console des agents',
-      p1: 'Quatre secteurs, une boucle : ', loop: 'percevoir → planifier → agir → adapter', p2: ". Choisissez une mission, regardez l'agent la mener, puis lancez-lui un imprévu.",
+      p1: 'Six missions, une boucle : ', loop: 'percevoir → planifier → agir → adapter', p2: ". Choisissez une mission, regardez l'agent la mener, puis lancez-lui un imprévu.",
       run: 'Lancer la mission →',
       foot: "Rejeu déterministe d'une vraie architecture d'agents. Tourne entièrement dans votre navigateur, sans appel d'API.",
       stackLine: 'En production, cette boucle tourne sur des modèles frontier avec de vrais outils :',
