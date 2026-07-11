@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MISSIONS } from './missions.js';
+import { useLang } from './i18n.jsx';
 
 /* ════════════════════════════════════════════════════════════════════════
    AGENT CONSOLE: pick a mission from any industry and watch an agent
@@ -118,7 +119,7 @@ export function FeedItem({ item }) {
 
 /* ── Plan sidebar ────────────────────────────────────────────────────────── */
 
-function PlanList({ plan }) {
+function PlanList({ plan, addedLabel }) {
   return (
     <ol className="space-y-2.5">
       {plan.map((p) => (
@@ -128,7 +129,7 @@ function PlanList({ plan }) {
           }`} style={p.st === 'active' ? { animation: 'pulse2 1.2s infinite' } : undefined} />
           <span className={p.st === 'done' ? 'text-muted/60' : p.st === 'active' ? 'text-ivory' : 'text-muted'}>
             {p.t}
-            {p.added && <span className="ml-2 font-mono text-[8.5px] uppercase tracking-[0.14em] text-gold border border-gold/30 rounded px-1 py-px align-middle">added live</span>}
+            {p.added && <span className="ml-2 font-mono text-[8.5px] uppercase tracking-[0.14em] text-gold border border-gold/30 rounded px-1 py-px align-middle">{addedLabel}</span>}
           </span>
         </li>
       ))}
@@ -139,6 +140,8 @@ function PlanList({ plan }) {
 /* ── The console ─────────────────────────────────────────────────────────── */
 
 export function AgentConsole() {
+  const { s: STR } = useLang();
+  const O = STR.ops;
   const [, setFrame] = useState(0);
   const render = () => setFrame((f) => f + 1);
   const S = useRef({ phase: 'pick', scen: null, plan: [], feed: [], queue: [], curve: 'none', t0: 0 }).current;
@@ -222,9 +225,9 @@ export function AgentConsole() {
     return (
       <div className="surface p-6 sm:p-10">
         <div className="max-w-xl">
-          <h3 className="text-2xl">Agent Console</h3>
+          <h3 className="text-2xl">{O.title}</h3>
           <p className="text-sm text-muted mt-2 leading-relaxed">
-            Four industries, one loop: <span className="text-ivory">perceive → plan → act → adapt</span>. Pick a mission, watch the agent run it, then throw it a curveball.
+            {O.p1}<span className="text-ivory">{O.loop}</span>{O.p2}
           </p>
         </div>
         <div className="mt-8 grid sm:grid-cols-2 gap-4">
@@ -236,16 +239,16 @@ export function AgentConsole() {
                 <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{m.domain}</span>
               </div>
               <p className="mt-4 font-display italic text-[17px] text-ivory/90 leading-snug">“{m.goal}”</p>
-              <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-accent opacity-60 group-hover:opacity-100 transition">Run mission →</div>
+              <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-accent opacity-60 group-hover:opacity-100 transition">{O.run}</div>
             </button>
           ))}
         </div>
         <div className="mt-6 space-y-3">
           <p className="font-mono text-[10px] text-muted/50 leading-relaxed">
-            Deterministic replay of a real agent architecture. Runs entirely in your browser, no API calls.
+            {O.foot}
           </p>
           <p className="font-mono text-[10px] text-muted/70 leading-relaxed">
-            In production this loop runs on frontier models with real tools:
+            {O.stackLine}
           </p>
           <div className="flex flex-wrap gap-2">
             {['Claude', 'GPT', 'Gemini', 'LangGraph', 'OpenClaw', 'MCP', 'n8n', 'Zapier', 'Make', 'Composio'].map((t) => <span key={t} className="chip">{t}</span>)}
@@ -272,7 +275,7 @@ export function AgentConsole() {
             className={`shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] rounded-full px-4 py-2 border transition ${
               S.curve === 'ready' ? 'border-gold/50 text-gold hover:bg-gold/10' : 'border-white/10 text-muted/60'
             }`}>
-            {S.curve === 'ready' ? `⚡ Curveball: ${scen.curveball.label}` : S.curve === 'thrown' ? '⚡ Incoming…' : '✓ Agent adapted'}
+            {S.curve === 'ready' ? `⚡ ${O.curveball}: ${scen.curveball.label}` : S.curve === 'thrown' ? O.incoming : O.adapted}
           </button>
         )}
       </div>
@@ -280,18 +283,18 @@ export function AgentConsole() {
       <div className="mt-6 grid lg:grid-cols-[240px_1fr] gap-6">
         {/* plan */}
         <div>
-          <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted mb-3">Plan</div>
-          <PlanList plan={S.plan} />
+          <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted mb-3">{O.plan}</div>
+          <PlanList plan={S.plan} addedLabel={O.addedLive} />
         </div>
 
         {/* feed */}
         <div>
-          <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted mb-3">Live run</div>
+          <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted mb-3">{O.liveRun}</div>
           <div ref={feedRef} className="rounded-xl border border-white/[0.07] bg-ink/60 p-4 sm:p-5 h-[360px] overflow-y-auto space-y-3.5">
             {S.feed.map((item, i) => <FeedItem key={i} item={item} />)}
             {done && (
               <div className="rounded-xl border border-accent/30 bg-accent/[0.04] p-5 mt-4">
-                <div className="font-mono text-[9px] uppercase tracking-[0.22em] text-accent">Mission complete · {elapsed}s{S.curve === 'used' && ' · 1 curveball handled'}</div>
+                <div className="font-mono text-[9px] uppercase tracking-[0.22em] text-accent">{O.complete} · {elapsed}s{S.curve === 'used' && ` · ${O.curveHandled}`}</div>
                 <div className="font-display text-2xl text-ivory mt-2.5">{scen.outcome.headline}</div>
                 <p className="text-[13px] text-muted mt-2 leading-relaxed">{scen.outcome.detail}</p>
                 <div className="mt-4 flex flex-wrap gap-x-7 gap-y-2">
@@ -312,7 +315,7 @@ export function AgentConsole() {
       {done && (
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <button onClick={() => start(scen)} className="rounded-full bg-accent text-ink font-semibold text-sm px-6 py-2.5 hover:brightness-110 active:scale-[.98] transition">
-            {S.curve === 'used' ? 'Replay' : 'Replay and try the curveball'}
+            {S.curve === 'used' ? O.replay : O.replayTry}
           </button>
           {MISSIONS.filter((m) => m.id !== scen.id).map((m) => (
             <button key={m.id} onClick={() => start(m)}

@@ -28,13 +28,13 @@ export const MISSIONS = [
       { t: 'step', id: 1 },
       { t: 'tool', call: "analytics.segment(step: 'payment', by: 'device')", ms: 1300, result: 'the drop is mobile-only',
         art: { kind: 'bars', rows: [
-          { l: 'Desktop', v: 1.9, txt: '−1.9%' },
-          { l: 'Tablet', v: 3.2, txt: '−3.2%' },
-          { l: 'Mobile', v: 18, txt: '−18%', hot: true },
+          { l: 'Desktop', v: 1.9, txt: '-1.9%' },
+          { l: 'Tablet', v: 3.2, txt: '-3.2%' },
+          { l: 'Mobile', v: 18, txt: '-18%', hot: true },
         ] } },
       { t: 'think', text: 'Mobile only, desktop flat. That rules out pricing, stock and payment outages.' },
       { t: 'step', id: 2 },
-      { t: 'tool', call: "deploys.list(window: 'day 8–10')", ms: 1000, result: 'one release touches checkout',
+      { t: 'tool', call: "deploys.list(window: 'day 8-10')", ms: 1000, result: 'one release touches checkout',
         art: { kind: 'kv', rows: [
           ['v2.31 · day 9', 'checkout-ui', true],
           ['changeset', 'new address autocomplete'],
@@ -153,7 +153,7 @@ export const MISSIONS = [
           { l: 'EV-5', v: 7, txt: '7 kW · 04:00' },
         ] } },
       { t: 'step', id: 3 },
-      { t: 'tool', call: "battery.dispatch(reserve: '19:00–21:00', kW: 4)", ms: 1000, result: 'battery carries the building through the peak' },
+      { t: 'tool', call: "battery.dispatch(reserve: '19:00-21:00', kW: 4)", ms: 1000, result: 'battery carries the building through the peak' },
       { t: 'step', id: 4 },
       { t: 'tool', call: "watchdog.arm(rules: ['fuse', 'deadlines'])", ms: 900, result: 'monitoring · re-solves on any change' },
       { t: 'done' },
@@ -171,7 +171,7 @@ export const MISSIONS = [
     outcome: {
       headline: 'All cars ready by 07:00. Fuse never touched.',
       detail: 'Deadline-aware charging shifted to cheap hours, the battery covered the price peak, and a watchdog re-solves the moment anything changes. This one is our day job at RiDERgy.',
-      stats: [['−34%', 'energy cost'], ['0', 'fuse breaches'], ['5/5', 'cars ready']],
+      stats: [['-34%', 'energy cost'], ['0', 'fuse breaches'], ['5/5', 'cars ready']],
     },
   },
 
@@ -210,7 +210,7 @@ export const MISSIONS = [
         art: { kind: 'spark', d: [14, 13.6, 12.1, 8.4, 4.2, 1.8, 0.7, 0.4, 0.3, 0.3], label: '0.3%', marker: 2, markerLabel: 'failover' } },
       { t: 'step', id: 4 },
       { t: 'tool', call: "incident.note(channel: '#eng')", ms: 900, result: 'posted',
-        art: { kind: 'msg', title: 'Incident note · drafted by the agent', body: 'payproc gateway degraded 02:41–03:12. Failed over to Razorpay with a circuit breaker at 03:01; error rate back to baseline in 11 minutes. No customer-visible impact. Follow-up: make failover automatic.' } },
+        art: { kind: 'msg', title: 'Incident note · drafted by the agent', body: 'payproc gateway degraded 02:41-03:12. Failed over to Razorpay with a circuit breaker at 03:01; error rate back to baseline in 11 minutes. No customer-visible impact. Follow-up: make failover automatic.' } },
       { t: 'done' },
     ],
     curveball: {

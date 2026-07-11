@@ -41,7 +41,7 @@ export const CALLS = [
       events: [
         { t: 'caller', text: 'Oh wait, sorry, my shift changed and evenings are out. Anything Saturday morning?' },
         { t: 'think', text: 'Constraint flipped mid-offer. Drop the evening holds, re-query Saturday morning.' },
-        { t: 'tool', call: "calendar.slots(window: 'Sat · 09:00–12:00')", ms: 1100, result: 'Sat 09:40 · 11:20 open' },
+        { t: 'tool', call: "calendar.slots(window: 'Sat · 09:00-12:00')", ms: 1100, result: 'Sat 09:40 · 11:20 open' },
         { t: 'agent', text: 'No problem at all. Saturday I have nine-forty or eleven-twenty. Which do you prefer?' },
         { t: 'caller', text: "9:40. And is the cleaning fully covered on my insurance?" },
         { t: 'tool', call: "kb.search('Star Health · preventive cleaning cover')", ms: 1000, result: 'covered 100% · visit 2 of 2 this year' },

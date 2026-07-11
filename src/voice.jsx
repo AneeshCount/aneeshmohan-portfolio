@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { CALLS } from './calls.js';
 import { FeedItem } from './agent.jsx';
+import { useLang } from './i18n.jsx';
 
 /* ════════════════════════════════════════════════════════════════════════
    VOICE AGENT: a simulated live phone call. The agent's lines are spoken
@@ -87,15 +88,12 @@ function Turn({ item }) {
   );
 }
 
-const STATE_LABEL = {
-  agent: 'Agent speaking', caller: 'Caller · transcribing', think: 'Reasoning',
-  tool: 'Working the tools', idle: 'Connecting…', done: 'Call ended',
-};
-
 const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 
 /* ── The call ────────────────────────────────────────────────────────────── */
 export function VoiceAgent({ onOps }) {
+  const { s: STR } = useLang();
+  const V = STR.va;
   const [, setFrame] = useState(0);
   const render = () => setFrame((f) => f + 1);
   const S = useRef({
@@ -275,9 +273,9 @@ export function VoiceAgent({ onOps }) {
     return (
       <div className="surface p-6 sm:p-10">
         <div className="max-w-xl">
-          <h3 className="text-2xl">Voice Agent</h3>
+          <h3 className="text-2xl">{V.title}</h3>
           <p className="text-sm text-muted mt-2 leading-relaxed">
-            A live call: the agent <span className="text-ivory">speaks out loud</span>, works its tools mid-conversation, and (the hard part) <span className="text-ivory">recovers when you interrupt it</span>. Pick a call.
+            {V.p1}<span className="text-ivory">{V.b1}</span>{V.p2}<span className="text-ivory">{V.b2}</span>{V.p3}
           </p>
         </div>
         <div className="mt-8 grid sm:grid-cols-2 gap-4">
@@ -290,17 +288,17 @@ export function VoiceAgent({ onOps }) {
               </div>
               <p className="mt-4 font-display italic text-[17px] text-ivory/90 leading-snug">“{c.goal}”</p>
               <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-accent opacity-60 group-hover:opacity-100 transition">
-                {synthOK ? '🔊 Answer the call →' : 'Start the call →'}
+                {synthOK ? `🔊 ${V.answer}` : V.answer}
               </div>
             </button>
           ))}
         </div>
         <div className="mt-6 space-y-3">
           <p className="font-mono text-[10px] text-muted/50 leading-relaxed">
-            Deterministic replay of a production voice pipeline (STT → LLM + tools → TTS). It speaks with your browser's free built-in voice, which is why it sounds robotic. Nothing is recorded and no audio leaves this page.
+            {V.foot}
           </p>
           <p className="font-mono text-[10px] text-muted/70 leading-relaxed">
-            Client builds sound human. We build on the production voice stack:
+            {V.stackLine}
           </p>
           <div className="flex flex-wrap gap-2">
             {VOICE_STACK.map((t) => <span key={t} className="chip">{t}</span>)}
@@ -321,7 +319,7 @@ export function VoiceAgent({ onOps }) {
           <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70 flex items-center gap-3 flex-wrap">
             <span className="inline-flex items-center gap-1.5">
               <span className={`w-1.5 h-1.5 rounded-full ${live ? 'bg-danger' : 'bg-muted/50'}`} style={live ? { animation: 'pulse2 1.4s infinite' } : undefined} />
-              {live ? 'Live' : 'Ended'} · {fmt(S.clock)}
+              {live ? V.live : V.ended} · {fmt(S.clock)}
             </span>
             <span>{scen.icon} {scen.domain}</span>
           </div>
@@ -330,7 +328,7 @@ export function VoiceAgent({ onOps }) {
         {synthOK && (
           <button onClick={toggleSound}
             className="shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] rounded-full px-3.5 py-2 border border-white/10 text-muted hover:text-ivory hover:border-white/30 transition">
-            {S.sound ? '🔊 Sound on' : '🔇 Muted'}
+            {S.sound ? V.soundOn : V.muted}
           </button>
         )}
       </div>
@@ -339,7 +337,7 @@ export function VoiceAgent({ onOps }) {
       <div className="mt-5 rounded-xl border border-white/[0.07] bg-ink/60 px-4 py-2.5">
         <Waveform modeRef={modeRef} />
         <div className="flex items-center justify-between gap-3 flex-wrap mt-1.5">
-          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{STATE_LABEL[S.state]}</span>
+          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{V.states[S.state]}</span>
           {live && (
             <div className="flex items-center gap-3">
               {S.barge !== 'none' && (
@@ -348,10 +346,10 @@ export function VoiceAgent({ onOps }) {
                   className={`font-mono text-[10px] uppercase tracking-[0.16em] rounded-full px-3.5 py-1.5 border transition ${
                     S.armed ? 'border-gold/60 text-gold hover:bg-gold/10' : 'border-white/10 text-muted/50'
                   }`} style={S.armed ? { animation: 'pulse2 1.6s infinite' } : undefined}>
-                  {S.barge === 'used' ? '✓ Handled live' : S.armed ? `⚡ Interrupt: ${scen.bargeLabel}` : `⚡ ${scen.bargeLabel} · soon`}
+                  {S.barge === 'used' ? V.handled : S.armed ? `⚡ ${V.interrupt}: ${scen.bargeLabel}` : `⚡ ${scen.bargeLabel} · ${V.soon}`}
                 </button>
               )}
-              <button onClick={skip} className="font-mono text-[10px] text-muted/60 hover:text-ivory transition">Skip to the result →</button>
+              <button onClick={skip} className="font-mono text-[10px] text-muted/60 hover:text-ivory transition">{V.skip}</button>
             </div>
           )}
         </div>
@@ -362,7 +360,7 @@ export function VoiceAgent({ onOps }) {
         {S.feed.map((item, i) => <Turn key={i} item={item} />)}
         {!live && S.outcome && (
           <div className="rounded-xl border border-accent/30 bg-accent/[0.04] p-5 mt-4">
-            <div className="font-mono text-[9px] uppercase tracking-[0.22em] text-accent">Call complete · {fmt(S.clock)} · summary extracted live</div>
+            <div className="font-mono text-[9px] uppercase tracking-[0.22em] text-accent">{V.complete} · {fmt(S.clock)} · {V.summary}</div>
             <div className="font-display text-2xl text-ivory mt-2.5">{S.outcome.headline}</div>
             <p className="text-[13px] text-muted mt-2 leading-relaxed">{S.outcome.detail}</p>
             <div className="mt-4 max-w-[320px] font-mono text-[10.5px] divide-y divide-white/[0.05]">
@@ -385,14 +383,14 @@ export function VoiceAgent({ onOps }) {
       </div>
 
       <p className="mt-3 font-mono text-[10px] text-muted/50 leading-relaxed">
-        Demo voice: your browser's free built-in TTS. Production agents run ElevenLabs or Cartesia-grade voices and sound human.
+        {V.voiceNote}
       </p>
 
       {/* actions */}
       {!live && (
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <button onClick={() => start(scen)} className="rounded-full bg-accent text-ink font-semibold text-sm px-6 py-2.5 hover:brightness-110 active:scale-[.98] transition">
-            {S.barge === 'used' ? 'Replay the call' : 'Replay and interrupt it'}
+            {S.barge === 'used' ? V.replay : V.replayTry}
           </button>
           {CALLS.filter((c) => c.id !== scen.id).map((c) => (
             <button key={c.id} onClick={() => start(c)}
@@ -403,7 +401,7 @@ export function VoiceAgent({ onOps }) {
           {onOps && (
             <button onClick={onOps}
               className="rounded-full border border-white/15 text-muted font-mono text-[10px] uppercase tracking-[0.14em] px-4 py-2.5 hover:text-ivory hover:border-white/35 transition">
-              ⚙ Run the ops agent
+              {V.opsBtn}
             </button>
           )}
         </div>
