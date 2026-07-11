@@ -93,7 +93,7 @@ function Nav() {
 function Hero() {
   const { s } = useLang();
   return (
-    <section id="top" className="relative min-h-screen flex items-center grid-bg overflow-hidden">
+    <section id="top" className="relative min-h-[88vh] flex items-center grid-bg overflow-hidden">
       <ParticleField />
       <div className="glow w-[40rem] h-[40rem] -top-48 -right-56" />
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/30" />
@@ -101,15 +101,15 @@ function Hero() {
       <div className="relative z-10 mx-auto max-w-6xl px-8 w-full">
         <div style={{ animation: 'fadeIn .9s both' }} className="eyebrow">{s.hero.eyebrow}</div>
 
-        <h1 style={{ animation: 'fadeUp 1s .1s both' }} className="mt-10 text-[3.25rem] sm:text-[5.5rem] leading-[1.04] tracking-tight">
+        <h1 style={{ animation: 'fadeUp 1s .1s both' }} className="mt-8 text-[3rem] sm:text-[4.75rem] leading-[1.04] tracking-tight">
           {s.hero.h1a}<br />{s.hero.h1b}<span className="italic text-accent">{s.hero.ship}</span>
         </h1>
 
-        <p style={{ animation: 'fadeUp 1s .22s both' }} className="mt-9 text-lg text-muted max-w-lg leading-relaxed">
+        <p style={{ animation: 'fadeUp 1s .22s both' }} className="mt-6 text-lg text-muted max-w-lg leading-relaxed">
           {s.hero.p}
         </p>
 
-        <div style={{ animation: 'fadeUp 1s .32s both' }} className="mt-12 flex flex-wrap items-center gap-7">
+        <div style={{ animation: 'fadeUp 1s .32s both' }} className="mt-9 flex flex-wrap items-center gap-7">
           <button onClick={() => scrollTo('work')} className="group font-mono text-[12px] uppercase tracking-[0.2em] text-ivory inline-flex items-center gap-3 border-b border-white/20 pb-1.5 hover:border-accent hover:text-accent transition">
             {s.hero.view} <Arrow className="w-4 h-4 group-hover:translate-x-1 transition" />
           </button>
@@ -118,7 +118,7 @@ function Hero() {
           </span>
         </div>
 
-        <div style={{ animation: 'fadeUp 1s .42s both' }} className="mt-20 charge-track max-w-sm" />
+        <div style={{ animation: 'fadeUp 1s .42s both' }} className="mt-12 charge-track max-w-sm" />
       </div>
     </section>
   );
@@ -129,7 +129,7 @@ function Metrics() {
   const { s } = useLang();
   return (
     <section className="border-y border-white/[0.05]">
-      <div className="mx-auto max-w-6xl px-8 py-14 grid grid-cols-1 sm:grid-cols-3 gap-10">
+      <div className="mx-auto max-w-6xl px-8 py-10 grid grid-cols-1 sm:grid-cols-3 gap-8">
         {METRICS.map((m, i) => (
           <div key={m.n}>
             <div className="font-display text-4xl text-ivory">{m.n}</div>
@@ -147,13 +147,13 @@ function WhatIBuild() {
   const ref = useReveal();
   return (
     <section ref={ref} className="border-b border-white/[0.05]">
-      <div className="mx-auto max-w-6xl px-8 py-24">
+      <div className="mx-auto max-w-6xl px-8 py-16">
         <div className="reveal max-w-2xl">
           <div className="eyebrow">{s.wb.eyebrow}</div>
-          <h2 className="text-3xl sm:text-4xl mt-7 leading-snug">{s.wb.h2}</h2>
+          <h2 className="text-3xl sm:text-4xl mt-5 leading-snug">{s.wb.h2}</h2>
           <p className="text-muted mt-5 leading-relaxed">{s.wb.p}</p>
         </div>
-        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {s.services.map((c) => (
             <div key={c.t} className="reveal flex flex-col">
               <div className="rule" />
@@ -163,7 +163,7 @@ function WhatIBuild() {
             </div>
           ))}
         </div>
-        <div className="reveal mt-16 rounded-xl border border-gold/25 bg-gold/[0.03] p-7 sm:p-9 flex flex-wrap items-center justify-between gap-6">
+        <div className="reveal mt-10 rounded-xl border border-gold/25 bg-gold/[0.03] p-7 sm:p-9 flex flex-wrap items-center justify-between gap-6">
           <div className="max-w-xl">
             <h3 className="font-display text-xl text-ivory">{s.audit.h}</h3>
             <p className="mt-2 text-[14px] text-muted leading-relaxed">{s.audit.p}</p>
@@ -180,17 +180,17 @@ function Work() {
   const { s } = useLang();
   const ref = useReveal();
   return (
-    <section id="work" ref={ref} className="mx-auto max-w-6xl px-8 py-32">
+    <section id="work" ref={ref} className="mx-auto max-w-6xl px-8 py-16">
       <div className="reveal max-w-2xl">
         <div className="eyebrow">{s.work.eyebrow}</div>
-        <h2 className="text-4xl sm:text-5xl mt-7 leading-tight">{s.work.h2a}<br className="hidden sm:block" /> {s.work.h2b}</h2>
+        <h2 className="text-3xl sm:text-4xl mt-5 leading-tight">{s.work.h2a}<br className="hidden sm:block" /> {s.work.h2b}</h2>
       </div>
 
-      <div className="mt-20 grid md:grid-cols-2 gap-7">
+      <div className="mt-10 grid md:grid-cols-2 gap-6">
         {PROJECTS.map((p, i) => {
           const tr = s.projects[i];
           return (
-            <article key={p.name} className="reveal pcard p-9 flex flex-col">
+            <article key={p.name} className="reveal pcard p-7 flex flex-col">
               <div className="flex items-start justify-between">
                 <span className="font-mono text-xs text-muted/60">{String(i + 1).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}</span>
                 {p.link && (
@@ -199,11 +199,11 @@ function Work() {
                   </a>
                 )}
               </div>
-              <h3 className="mt-8 text-3xl">{p.name}</h3>
+              <h3 className="mt-5 text-3xl">{p.name}</h3>
               <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">{tr.tag}</p>
-              <p className="mt-6 text-[15px] text-muted leading-relaxed flex-1">{tr.blurb}</p>
+              <p className="mt-4 text-[15px] text-muted leading-relaxed flex-1">{tr.blurb}</p>
               {tr.note && <p className="mt-5 text-xs text-muted/70 italic">{tr.note}</p>}
-              <div className="mt-7 flex flex-wrap gap-2">
+              <div className="mt-5 flex flex-wrap gap-2">
                 {p.tech.map((t) => <span key={t} className="chip">{t}</span>)}
               </div>
             </article>
@@ -222,16 +222,16 @@ function Playground() {
   const tabs = [['voice', s.pg.tabVoice], ['agent', s.pg.tabOps]];
   return (
     <section id="play" ref={ref} className="border-t border-white/[0.05]">
-      <div className="mx-auto max-w-6xl px-8 py-32">
+      <div className="mx-auto max-w-6xl px-8 py-16">
         <div className="reveal max-w-2xl">
           <div className="eyebrow">{s.pg.eyebrow}</div>
-          <h2 className="text-4xl sm:text-5xl mt-7 leading-tight">{s.pg.h2a}<br className="hidden sm:block" /> {s.pg.h2b}</h2>
+          <h2 className="text-3xl sm:text-4xl mt-5 leading-tight">{s.pg.h2a}<br className="hidden sm:block" /> {s.pg.h2b}</h2>
           <p className="reveal text-muted mt-6 max-w-xl leading-relaxed">
             {s.pg.p1}<span className="text-ivory">{s.pg.voice}</span>{s.pg.p2}<span className="text-ivory">{s.pg.ops}</span>{s.pg.p3}
           </p>
         </div>
 
-        <div className="reveal mt-12 flex flex-wrap items-center gap-4">
+        <div className="reveal mt-8 flex flex-wrap items-center gap-4">
           <div className="inline-flex rounded-full border border-white/[0.08] p-1 font-mono text-[10px] uppercase tracking-[0.16em]">
             {tabs.map(([id, label]) => (
               <button key={id} onClick={() => setTab(id)}
@@ -243,7 +243,7 @@ function Playground() {
           {s.pg.demoNote && <span className="font-mono text-[10px] text-muted/60">{s.pg.demoNote}</span>}
         </div>
 
-        <div className="reveal mt-8">
+        <div className="reveal mt-6">
           {tab === 'voice' ? <VoiceAgent onOps={() => setTab('agent')} /> : <AgentConsole />}
         </div>
       </div>
@@ -259,13 +259,13 @@ function Labs() {
   const ref = useReveal();
   return (
     <section id="labs" ref={ref} className="border-t border-white/[0.05]">
-      <div className="mx-auto max-w-6xl px-8 py-24">
+      <div className="mx-auto max-w-6xl px-8 py-16">
         <div className="reveal max-w-2xl">
           <div className="eyebrow">{s.labs.eyebrow}</div>
-          <h2 className="text-3xl sm:text-4xl mt-7 leading-snug">{s.labs.h2a}<br />{s.labs.h2b}</h2>
+          <h2 className="text-3xl sm:text-4xl mt-5 leading-snug">{s.labs.h2a}<br />{s.labs.h2b}</h2>
           <p className="text-muted mt-5 leading-relaxed">{s.labs.p}</p>
         </div>
-        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
+        <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {s.labs.items.map((it, i) => {
             const href = LAB_LINKS[i];
             const body = (
@@ -291,7 +291,7 @@ function Labs() {
             );
           })}
         </div>
-        <p className="reveal mt-8 font-mono text-[10px] text-muted/60">{s.labs.note}</p>
+        <p className="reveal mt-6 font-mono text-[10px] text-muted/60">{s.labs.note}</p>
       </div>
     </section>
   );
@@ -303,13 +303,13 @@ function Process() {
   const ref = useReveal();
   return (
     <section id="process" ref={ref} className="border-t border-white/[0.05]">
-      <div className="mx-auto max-w-6xl px-8 py-32">
+      <div className="mx-auto max-w-6xl px-8 py-16">
         <div className="reveal max-w-2xl">
           <div className="eyebrow">{s.pr.eyebrow}</div>
-          <h2 className="text-4xl sm:text-5xl mt-7 leading-tight">{s.pr.h2a}<br className="hidden sm:block" /> {s.pr.h2b}</h2>
+          <h2 className="text-3xl sm:text-4xl mt-5 leading-tight">{s.pr.h2a}<br className="hidden sm:block" /> {s.pr.h2b}</h2>
           <p className="text-muted mt-6 max-w-xl leading-relaxed">{s.pr.p}</p>
         </div>
-        <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
+        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {s.trust.map((t) => (
             <div key={t.t} className="reveal surface p-7">
               <h3 className="font-display text-lg text-ivory">{t.t}</h3>
@@ -317,7 +317,7 @@ function Process() {
             </div>
           ))}
         </div>
-        <div className="reveal mt-14">
+        <div className="reveal mt-10">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted/70">{s.pr.platforms}</p>
           <div className="mt-4 flex flex-wrap gap-2">
             {PLATFORMS.map((p) => <span key={p} className="chip">{p}</span>)}
@@ -334,10 +334,10 @@ function About() {
   const ref = useReveal();
   return (
     <section id="about" ref={ref} className="border-t border-white/[0.05]">
-      <div className="mx-auto max-w-6xl px-8 py-32 grid md:grid-cols-5 gap-16">
+      <div className="mx-auto max-w-6xl px-8 py-16 grid md:grid-cols-5 gap-12">
         <div className="md:col-span-2">
           <div className="reveal eyebrow">{s.ab.eyebrow}</div>
-          <h2 className="reveal text-3xl sm:text-4xl mt-7 leading-snug">{s.ab.h2a}<br />{s.ab.h2b}</h2>
+          <h2 className="reveal text-3xl sm:text-4xl mt-5 leading-snug">{s.ab.h2a}<br />{s.ab.h2b}</h2>
           <p className="reveal text-muted mt-8 leading-relaxed">
             {s.ab.p1}
           </p>
@@ -397,7 +397,7 @@ function ContactForm() {
 
   if (state === 'sent') {
     return (
-      <div className="mt-12 mx-auto max-w-lg rounded-xl border border-accent/30 bg-accent/[0.04] p-8 text-center">
+      <div className="mt-9 mx-auto max-w-lg rounded-xl border border-accent/30 bg-accent/[0.04] p-8 text-center">
         <div className="font-display text-2xl text-ivory">{s.ct.sentH}</div>
         <p className="mt-3 text-[14px] text-muted leading-relaxed">{s.ct.sentP}</p>
       </div>
@@ -405,7 +405,7 @@ function ContactForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-12 mx-auto max-w-lg text-left">
+    <form onSubmit={onSubmit} className="mt-9 mx-auto max-w-lg text-left">
       <input type="checkbox" name="botcheck" tabIndex="-1" autoComplete="off" className="hidden" aria-hidden="true" />
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
@@ -440,14 +440,14 @@ function Contact() {
   return (
     <section id="contact" className="relative border-t border-white/[0.05] overflow-hidden">
       <div className="glow w-[36rem] h-[36rem] -bottom-56 left-1/2 -translate-x-1/2" />
-      <div className="relative mx-auto max-w-3xl px-8 py-36 text-center">
+      <div className="relative mx-auto max-w-3xl px-8 py-20 text-center">
         <div className="eyebrow justify-center">{s.ct.eyebrow}</div>
-        <h2 className="text-4xl sm:text-6xl mt-8 leading-[1.08]">{s.ct.h2a}<br /> {s.ct.h2b}</h2>
-        <p className="mt-8 text-muted max-w-md mx-auto leading-relaxed">{s.ct.p}</p>
+        <h2 className="text-4xl sm:text-5xl mt-7 leading-[1.08]">{s.ct.h2a}<br /> {s.ct.h2b}</h2>
+        <p className="mt-6 text-muted max-w-md mx-auto leading-relaxed">{s.ct.p}</p>
         <ContactForm />
-        <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.18em] text-muted/60">{s.ct.nda}</p>
-        <div className="mt-12 charge-track max-w-[14rem] mx-auto" />
-        <div className="mt-10 flex flex-wrap justify-center gap-x-10 gap-y-3 font-mono text-[11px] uppercase tracking-[0.18em]">
+        <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.18em] text-muted/60">{s.ct.nda}</p>
+        <div className="mt-9 charge-track max-w-[14rem] mx-auto" />
+        <div className="mt-7 flex flex-wrap justify-center gap-x-10 gap-y-3 font-mono text-[11px] uppercase tracking-[0.18em]">
           {SOCIALS.map((s) => (
             <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="text-muted hover:text-ivory transition">{s.label}</a>
           ))}

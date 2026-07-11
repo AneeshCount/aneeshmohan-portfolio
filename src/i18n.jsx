@@ -73,7 +73,7 @@ const STR = {
       foot: 'Deterministic replay of a real agent architecture. Runs entirely in your browser, no API calls.',
       stackLine: 'In production this loop runs on frontier models with real tools:',
       plan: 'Plan', liveRun: 'Live run', curveball: 'Curveball', incoming: '⚡ Incoming…', adapted: '✓ Agent adapted',
-      complete: 'Mission complete', curveHandled: '1 curveball handled', replayTry: 'Replay and try the curveball', replay: 'Replay', addedLive: 'added live',
+      skip: 'Skip to the result →', complete: 'Mission complete', curveHandled: '1 curveball handled', replayTry: 'Replay and try the curveball', replay: 'Replay', addedLive: 'added live',
     },
     labs: {
       eyebrow: 'Labs', h2a: 'Ideas we test', h2b: 'in the open.',
@@ -182,7 +182,7 @@ const STR = {
       foot: 'Deterministische Wiedergabe einer echten Agenten-Architektur. Läuft komplett im Browser, keine API-Calls.',
       stackLine: 'In Produktion läuft diese Schleife auf Frontier-Modellen mit echten Tools:',
       plan: 'Plan', liveRun: 'Live-Lauf', curveball: 'Störfall', incoming: '⚡ Kommt…', adapted: '✓ Agent angepasst',
-      complete: 'Mission abgeschlossen', curveHandled: '1 Störfall gemeistert', replayTry: 'Nochmal, mit Störfall', replay: 'Wiederholen', addedLive: 'live ergänzt',
+      skip: 'Zum Ergebnis springen →', complete: 'Mission abgeschlossen', curveHandled: '1 Störfall gemeistert', replayTry: 'Nochmal, mit Störfall', replay: 'Wiederholen', addedLive: 'live ergänzt',
     },
     labs: {
       eyebrow: 'Labs', h2a: 'Ideen, die wir', h2b: 'offen testen.',
@@ -291,7 +291,7 @@ const STR = {
       foot: 'Reproducción determinista de una arquitectura de agentes real. Corre por completo en tu navegador, sin llamadas a APIs.',
       stackLine: 'En producción este bucle corre sobre modelos frontier con herramientas reales:',
       plan: 'Plan', liveRun: 'Ejecución en vivo', curveball: 'Bola curva', incoming: '⚡ Llegando…', adapted: '✓ Agente adaptado',
-      complete: 'Misión completada', curveHandled: '1 bola curva resuelta', replayTry: 'Repetir y probar la bola curva', replay: 'Repetir', addedLive: 'añadido en vivo',
+      skip: 'Saltar al resultado →', complete: 'Misión completada', curveHandled: '1 bola curva resuelta', replayTry: 'Repetir y probar la bola curva', replay: 'Repetir', addedLive: 'añadido en vivo',
     },
     labs: {
       eyebrow: 'Labs', h2a: 'Ideas que probamos', h2b: 'a la vista.',
@@ -400,7 +400,7 @@ const STR = {
       foot: "Rejeu déterministe d'une vraie architecture d'agents. Tourne entièrement dans votre navigateur, sans appel d'API.",
       stackLine: 'En production, cette boucle tourne sur des modèles frontier avec de vrais outils :',
       plan: 'Plan', liveRun: 'Exécution live', curveball: 'Imprévu', incoming: '⚡ Ça arrive…', adapted: '✓ Agent adapté',
-      complete: 'Mission accomplie', curveHandled: '1 imprévu géré', replayTry: "Rejouer et tenter l'imprévu", replay: 'Rejouer', addedLive: 'ajouté en direct',
+      skip: 'Aller au résultat →', complete: 'Mission accomplie', curveHandled: '1 imprévu géré', replayTry: "Rejouer et tenter l'imprévu", replay: 'Rejouer', addedLive: 'ajouté en direct',
     },
     labs: {
       eyebrow: 'Labs', h2a: 'Des idées testées', h2b: 'au grand jour.',

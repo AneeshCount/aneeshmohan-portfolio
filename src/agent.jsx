@@ -162,14 +162,18 @@ export function AgentConsole() {
     render();
   };
 
+  const applyCurve = () => {
+    const cb = S.scen.curveball;
+    const at = S.plan.findIndex((p) => p.st === 'active');
+    S.plan.splice(at < 0 ? S.plan.length : at + 1, 0, ...cb.steps.map((t, j) => ({ id: `c${j}`, t, st: 'pending', added: true })));
+    S.queue.unshift(...cb.events);
+    S.curve = 'used';
+  };
+
+  /* Pacing: deliberately unhurried so the agent's reasoning can be read,
+     with a skip control for visitors who want the outcome now. */
   const advance = () => {
-    if (S.curve === 'thrown') {
-      const cb = S.scen.curveball;
-      const at = S.plan.findIndex((p) => p.st === 'active');
-      S.plan.splice(at < 0 ? S.plan.length : at + 1, 0, ...cb.steps.map((t, j) => ({ id: `c${j}`, t, st: 'pending', added: true })));
-      S.queue.unshift(...cb.events);
-      S.curve = 'used';
-    }
+    if (S.curve === 'thrown') applyCurve();
     const e = S.queue.shift();
     if (!e || e.t === 'done') { finish(); return; }
 
@@ -179,32 +183,55 @@ export function AgentConsole() {
       if (reduced) { wait(advance, 200); return; }
       const t0 = Date.now(); // time-based so browser timer throttling can't stall it
       typing.current = setInterval(() => {
-        item.text = item.full.slice(0, Math.floor(((Date.now() - t0) / 1000) * 110));
+        item.text = item.full.slice(0, Math.floor(((Date.now() - t0) / 1000) * 60));
         render();
-        if (item.text.length >= item.full.length) { clearInterval(typing.current); wait(advance, 500); }
+        if (item.text.length >= item.full.length) { clearInterval(typing.current); wait(advance, 1100); }
       }, 24);
     } else if (e.t === 'step') {
       S.plan.forEach((p) => { if (p.st === 'active') p.st = 'done'; });
       const p = S.plan.find((p) => p.id === e.id);
       if (p) p.st = 'active';
       render();
-      wait(advance, 350);
+      wait(advance, 500);
     } else if (e.t === 'tool') {
-      const item = { k: 'tool', call: e.call, st: 'run' };
+      const item = { k: 'tool', call: e.call, st: 'run', _res: e.result, _art: e.art };
       S.feed.push(item); render();
       wait(() => {
         item.st = 'done'; item.result = e.result;
         if (e.art) S.feed.push({ k: 'art', art: e.art });
         render();
-        wait(advance, 550);
+        wait(advance, e.art ? 2000 : 1200);
       }, e.ms || 1100);
     } else if (e.t === 'alert') {
       S.feed.push({ k: 'alert', title: e.title, text: e.text });
       render();
-      wait(advance, 1100);
+      wait(advance, 2200);
     } else {
       wait(advance, 100);
     }
+  };
+
+  const skip = () => {
+    stop();
+    if (S.curve === 'thrown') applyCurve();
+    S.feed.forEach((item) => {
+      if (item.k === 'think') item.text = item.full;
+      if (item.k === 'tool' && item.st === 'run') {
+        item.st = 'done'; item.result = item._res;
+        if (item._art) S.feed.push({ k: 'art', art: item._art });
+      }
+    });
+    for (const e of S.queue) {
+      if (e.t === 'done') break;
+      if (e.t === 'think') S.feed.push({ k: 'think', full: e.text, text: e.text });
+      else if (e.t === 'tool') {
+        S.feed.push({ k: 'tool', call: e.call, st: 'done', result: e.result });
+        if (e.art) S.feed.push({ k: 'art', art: e.art });
+      } else if (e.t === 'alert') S.feed.push({ k: 'alert', title: e.title, text: e.text });
+    }
+    S.queue = [];
+    S.plan.forEach((p) => { p.st = 'done'; });
+    finish();
   };
 
   const start = (scen) => {
@@ -233,12 +260,18 @@ export function AgentConsole() {
         <div className="mt-8 grid sm:grid-cols-2 gap-4">
           {MISSIONS.map((m) => (
             <button key={m.id} onClick={() => start(m)}
-              className="group text-left rounded-xl border border-white/[0.08] p-6 hover:border-accent/40 hover:bg-accent/[0.03] transition-all duration-300">
-              <div className="flex items-center justify-between">
+              className={`group text-left rounded-xl border p-6 transition-all duration-300 ${
+                m.featured
+                  ? 'sm:col-span-2 border-accent/40 bg-accent/[0.04] hover:border-accent/70'
+                  : 'border-white/[0.08] hover:border-accent/40 hover:bg-accent/[0.03]'}`}>
+              <div className="flex items-center gap-3 flex-wrap">
                 <span className="text-2xl">{m.icon}</span>
-                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{m.domain}</span>
+                {m.badge && (
+                  <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-accent border border-accent/40 rounded-full px-2.5 py-1">{m.badge}</span>
+                )}
+                <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{m.domain}</span>
               </div>
-              <p className="mt-4 font-display italic text-[17px] text-ivory/90 leading-snug">“{m.goal}”</p>
+              <p className={`mt-4 font-display italic text-ivory/90 leading-snug ${m.featured ? 'text-[19px]' : 'text-[17px]'}`}>“{m.goal}”</p>
               {m.story && <p className="mt-3 text-[12.5px] text-muted leading-relaxed">{m.story}</p>}
               <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-accent opacity-60 group-hover:opacity-100 transition">{O.run}</div>
             </button>
@@ -271,13 +304,18 @@ export function AgentConsole() {
           <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{scen.icon} {scen.domain}</div>
           <h3 className="text-xl mt-1.5 font-display italic font-normal text-ivory/90">“{scen.goal}”</h3>
         </div>
-        {!done && S.curve !== 'none' && (
-          <button onClick={throwCurve} disabled={S.curve !== 'ready'}
-            className={`shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] rounded-full px-4 py-2 border transition ${
-              S.curve === 'ready' ? 'border-gold/50 text-gold hover:bg-gold/10' : 'border-white/10 text-muted/60'
-            }`}>
-            {S.curve === 'ready' ? `⚡ ${O.curveball}: ${scen.curveball.label}` : S.curve === 'thrown' ? O.incoming : O.adapted}
-          </button>
+        {!done && (
+          <div className="flex items-center gap-3 flex-wrap">
+            {S.curve !== 'none' && (
+              <button onClick={throwCurve} disabled={S.curve !== 'ready'}
+                className={`shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] rounded-full px-4 py-2 border transition ${
+                  S.curve === 'ready' ? 'border-gold/50 text-gold hover:bg-gold/10' : 'border-white/10 text-muted/60'
+                }`}>
+                {S.curve === 'ready' ? `⚡ ${O.curveball}: ${scen.curveball.label}` : S.curve === 'thrown' ? O.incoming : O.adapted}
+              </button>
+            )}
+            <button onClick={skip} className="font-mono text-[10px] text-muted/60 hover:text-ivory transition">{O.skip}</button>
+          </div>
         )}
       </div>
 

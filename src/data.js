@@ -136,7 +136,6 @@ export const PLATFORMS = [
 ];
 
 export const SOCIALS = [
-  { label: 'GitHub', href: 'https://github.com/AneeshCount', handle: 'AneeshCount' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/aneeshmohan3', handle: 'aneeshmohan3' },
   { label: 'X', href: 'https://x.com/aniche03', handle: '@aniche03' },
 ];
