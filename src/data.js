@@ -10,6 +10,15 @@ export const PROJECTS = [
     accent: 'from-violet-500 to-fuchsia-500',
   },
   {
+    name: 'Aurora Mentors',
+    tag: 'Live Product · Mentorship Marketplace',
+    blurb: 'A two-sided marketplace where students headed to Germany book verified mentors already studying there.',
+    tech: ['Next.js 14', 'Supabase', 'NextAuth', 'Razorpay', 'Marketplace'],
+    link: 'https://auroramentors.com',
+    linkLabel: 'auroramentors.com',
+    accent: 'from-amber-400 to-rose-500',
+  },
+  {
     name: 'RetailMind',
     tag: 'AI Retail Intelligence',
     blurb: 'An AI dashboard for supermarkets and chains: demand forecasting with confidence bands, an AI reorder engine ranking SKUs by days-of-cover, price-optimization recommendations, and an agentic insights assistant that answers questions and proposes the next action.',

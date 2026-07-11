@@ -192,7 +192,7 @@ function Work() {
           return (
             <article key={p.name} className="reveal pcard p-9 flex flex-col">
               <div className="flex items-start justify-between">
-                <span className="font-mono text-xs text-muted/60">{String(i + 1).padStart(2, '0')} / 04</span>
+                <span className="font-mono text-xs text-muted/60">{String(i + 1).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}</span>
                 {p.link && (
                   <a href={p.link} target="_blank" rel="noreferrer" className="text-muted hover:text-accent transition inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider">
                     {tr.label} <Arrow className="w-3.5 h-3.5" />
