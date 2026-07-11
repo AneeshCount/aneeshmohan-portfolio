@@ -365,6 +365,41 @@ function About() {
   );
 }
 
+/* ── Join: talent and open applications ─────────────────────────────────── */
+function Join() {
+  const { s } = useLang();
+  const ref = useReveal();
+  return (
+    <section id="join" ref={ref} className="border-t border-white/[0.05]">
+      <div className="mx-auto max-w-6xl px-8 py-16">
+        <div className="reveal max-w-2xl">
+          <div className="eyebrow">{s.join.eyebrow}</div>
+          <h2 className="text-3xl sm:text-4xl mt-5 leading-snug">{s.join.h2a}<br />{s.join.h2b}</h2>
+          <p className="text-muted mt-5 leading-relaxed">{s.join.p}</p>
+        </div>
+        <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {s.join.roles.map((r) => (
+            <div key={r.t} className="reveal rounded-xl border border-white/[0.08] p-5 hover:border-accent/40 transition-colors">
+              <div className="font-display text-[17px] text-ivory">{r.t}</div>
+              <div className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted">{r.d}</div>
+            </div>
+          ))}
+          <div className="reveal rounded-xl border border-gold/30 bg-gold/[0.04] p-5">
+            <div className="font-display text-[17px] text-gold">{s.join.openT}</div>
+            <p className="mt-1.5 text-[12.5px] text-muted leading-relaxed">{s.join.openD}</p>
+          </div>
+        </div>
+        <div className="reveal mt-8 flex flex-wrap items-center gap-5">
+          <button onClick={() => scrollTo('contact')} className="rounded-full bg-accent text-ink font-semibold text-sm px-7 py-3 hover:brightness-110 active:scale-[.98] transition">
+            {s.join.cta}
+          </button>
+          <p className="font-mono text-[10px] text-muted/60 max-w-md leading-relaxed">{s.join.note}</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── Contact ────────────────────────────────────────────────────────────── */
 
 /* Form relay: Web3Forms (https://web3forms.com). The access key is public by
@@ -481,6 +516,7 @@ export default function App() {
       <Labs />
       <Process />
       <About />
+      <Join />
       <Contact />
       <Footer />
     </>
