@@ -13,6 +13,7 @@ const STR = {
   EN: {
     nav: ['Work', 'Playground', 'Process', 'About', 'Contact'],
     cta: 'Start a project',
+    more: 'More',
     hero: {
       eyebrow: 'AI & Software Studio · Voice · Agents · Full-Stack',
       h1a: 'Fast, intelligent', h1b: 'software, built to ', ship: 'ship.',
@@ -39,13 +40,19 @@ const STR = {
       p: 'Start with a fixed-fee AI audit: a two-week deep dive that maps the highest-ROI automations in your operation, with a costed roadmap. The fee is credited against your first build.',
       cta: 'Book an audit →',
     },
-    work: { eyebrow: 'Selected Work', h2a: 'Products designed, built', h2b: 'and shipped from zero.' },
+    work: { eyebrow: 'Selected Work', h2a: 'Products designed, built', h2b: 'and shipped from zero.', howToCta: 'How to test this' },
     projects: [
       { tag: 'Flagship · Agentic AI', blurb: 'An EV charging and energy-management SaaS built from the ground up. Agentic watchdogs continuously monitor chargers, batteries and solar, while an LLM chat layer lets users control the system in plain language: start a vehicle charging, shift load to solar, or push a schedule, and the agents execute.', note: 'Proprietary codebase · private walkthrough on request', label: 'ridergy.com' },
       { tag: 'Live Product · Mentorship Marketplace', blurb: 'A two-sided mentorship marketplace: students planning to study abroad book verified mentors already at universities around the world, with paid sessions, contact unlock after checkout, document feedback, mentor earnings dashboards and multi-author guides. Built and run as our own product, expanding beyond study abroad.', label: 'auroramentors.com' },
       { tag: 'AI Retail Intelligence', blurb: 'An AI dashboard for supermarkets and chains: demand forecasting with confidence bands, an AI reorder engine ranking SKUs by days-of-cover, price-optimization recommendations, and an agentic insights assistant that answers questions and proposes the next action.', label: 'Live demo' },
       { tag: 'Logistics Platform', blurb: 'A modern logistics company site with a real-time shipment cost calculator (volumetric weight, multi-mode pricing, fuel and GST), a live tracking widget, and a validated lead-capture flow. Built as a conversion-focused marketing site.', label: 'Live demo' },
       { tag: 'Hyperlocal Marketplace PWA', blurb: 'A 33-service hyperlocal marketplace as an installable PWA: a multi-screen booking flow, masonry partner portfolios with verified badges, and a wallet and escrow payment model with a 30:70 split released by customer PIN.', label: 'Live demo' },
+      { tag: 'Event Registration & Management Portal', blurb: 'A full event platform built from an SRS in days: dual participant/exhibitor registration with real QR passes and calendar invites, a separate admin portal with a live dashboard, drag-free agenda management, camera-based QR check-in with duplicate detection, and CSV/Excel/PDF exports.', note: 'Admin demo: admin@solsticedynamics.com / ConnectAdmin@2026', label: 'Live demo', howTo: [
+        'Register as a participant or exhibitor on the homepage to get a real, scannable QR pass.',
+        'Go to /admin and log in with the demo credentials above.',
+        'Open QR Check-in, allow camera access, and scan the pass from step 1 for instant check-in feedback.',
+        'Browse the live dashboard, registrations, and agenda, all backed by a real database, not a static mockup.',
+      ] },
       { tag: 'IoT · AI Firmware Copilot', blurb: 'A local AI assistant that turns a plain-language description into working ESP32 firmware: it plans the project, generates the architecture and modular FreeRTOS code, writes the files into an Arduino project, builds locally and flashes the board only when a device is safely detected. IoT and microcontroller work, from prompt to hardware.', note: 'In development · private walkthrough on request', label: '' },
     ],
     pg: {
@@ -138,6 +145,7 @@ const STR = {
   DE: {
     nav: ['Arbeiten', 'Playground', 'Prozess', 'Über uns', 'Kontakt'],
     cta: 'Projekt starten',
+    more: 'Mehr',
     hero: {
       eyebrow: 'KI- & Software-Studio · Voice · Agenten · Full-Stack',
       h1a: 'Schnelle, intelligente', h1b: 'Software, gebaut zum ', ship: 'Liefern.',
@@ -164,13 +172,19 @@ const STR = {
       p: 'Starten Sie mit einem KI-Audit zum Festpreis: zwei Wochen Tiefenanalyse, die die Automationen mit dem höchsten ROI in Ihrem Betrieb kartiert, mit kalkulierter Roadmap. Die Gebühr wird auf Ihren ersten Build angerechnet.',
       cta: 'Audit buchen →',
     },
-    work: { eyebrow: 'Ausgewählte Arbeiten', h2a: 'Produkte entworfen, gebaut', h2b: 'und von null geliefert.' },
+    work: { eyebrow: 'Ausgewählte Arbeiten', h2a: 'Produkte entworfen, gebaut', h2b: 'und von null geliefert.', howToCta: 'So testen Sie es' },
     projects: [
       { tag: 'Flaggschiff · Agentische KI', blurb: 'Ein SaaS für EV-Laden und Energiemanagement, von Grund auf gebaut. Agentische Watchdogs überwachen Ladepunkte, Batterien und Solar, während eine LLM-Chat-Ebene das System in Alltagssprache steuert: Fahrzeug laden, Last auf Solar verschieben, Zeitplan setzen, die Agenten führen aus.', note: 'Proprietäre Codebasis · privater Walkthrough auf Anfrage', label: 'ridergy.com' },
       { tag: 'Live-Produkt · Mentoring-Marktplatz', blurb: 'Ein zweiseitiger Mentoring-Marktplatz: Studierende mit Auslandsplänen buchen verifizierte Mentoren, die bereits an Universitäten weltweit studieren, mit bezahlten Sessions, Kontaktfreigabe nach dem Checkout, Dokumenten-Feedback, Earnings-Dashboards und Guides mehrerer Autoren. Als eigenes Produkt gebaut und betrieben, mit Ausbau über das Auslandsstudium hinaus.', label: 'auroramentors.com' },
       { tag: 'KI-Retail-Intelligence', blurb: 'Ein KI-Dashboard für Supermärkte und Ketten: Nachfrageprognosen mit Konfidenzband, eine KI-Nachbestell-Engine, die SKUs nach Reichweite priorisiert, Preisoptimierung und ein agentischer Insights-Assistent, der Fragen beantwortet und die nächste Aktion vorschlägt.', label: 'Live-Demo' },
       { tag: 'Logistik-Plattform', blurb: 'Eine moderne Logistik-Website mit Echtzeit-Frachtkostenrechner (Volumengewicht, Multi-Mode-Preise, Kraftstoff und Steuern), Live-Tracking-Widget und validierter Lead-Erfassung. Gebaut als conversion-fokussierte Marketing-Site.', label: 'Live-Demo' },
       { tag: 'Hyperlokale Marktplatz-PWA', blurb: 'Ein hyperlokaler Marktplatz mit 33 Services als installierbare PWA: mehrstufiger Buchungsflow, Partner-Portfolios mit Verifizierungs-Badges und ein Wallet-/Escrow-Zahlungsmodell mit 30:70-Split per Kunden-PIN.', label: 'Live-Demo' },
+      { tag: 'Event-Registrierungs- und Verwaltungsportal', blurb: 'Eine komplette Event-Plattform, in wenigen Tagen aus einem Lastenheft gebaut: doppelte Registrierung für Teilnehmer und Aussteller mit echten QR-Pässen und Kalendereinladungen, ein separates Admin-Portal mit Live-Dashboard, drag-freie Agenda-Verwaltung, kamerabasierter QR-Check-in mit Duplikaterkennung und CSV-/Excel-/PDF-Exporte.', note: 'Admin-Demo: admin@solsticedynamics.com / ConnectAdmin@2026', label: 'Live-Demo', howTo: [
+        'Auf der Startseite als Teilnehmer oder Aussteller registrieren, um einen echten, scanbaren QR-Pass zu erhalten.',
+        'Unter /admin mit den Demo-Zugangsdaten oben anmelden.',
+        'QR-Check-in öffnen, Kamerazugriff erlauben und den Pass aus Schritt 1 scannen für sofortiges Check-in-Feedback.',
+        'Live-Dashboard, Registrierungen und Agenda durchsehen, alles gestützt auf eine echte Datenbank, kein statisches Mockup.',
+      ] },
       { tag: 'IoT · KI-Firmware-Copilot', blurb: 'Ein lokaler KI-Assistent, der eine Alltagssprache-Beschreibung in funktionierende ESP32-Firmware verwandelt: Er plant das Projekt, erzeugt Architektur und modularen FreeRTOS-Code, schreibt die Dateien in ein Arduino-Projekt, baut lokal und flasht das Board nur, wenn ein Gerät sicher erkannt wird. IoT- und Mikrocontroller-Arbeit, vom Prompt bis zur Hardware.', note: 'In Entwicklung · privater Walkthrough auf Anfrage', label: '' },
     ],
     pg: {
@@ -263,6 +277,7 @@ const STR = {
   ES: {
     nav: ['Trabajo', 'Playground', 'Proceso', 'Nosotros', 'Contacto'],
     cta: 'Iniciar un proyecto',
+    more: 'Más',
     hero: {
       eyebrow: 'Estudio de IA y Software · Voz · Agentes · Full-Stack',
       h1a: 'Software rápido e', h1b: 'inteligente, hecho para ', ship: 'entregar.',
@@ -289,13 +304,19 @@ const STR = {
       p: 'Empieza con una auditoría de IA a precio fijo: dos semanas de análisis que mapean las automatizaciones de mayor ROI en tu operación, con una hoja de ruta costeada. El importe se descuenta de tu primer proyecto.',
       cta: 'Reservar auditoría →',
     },
-    work: { eyebrow: 'Trabajo seleccionado', h2a: 'Productos diseñados, construidos', h2b: 'y entregados desde cero.' },
+    work: { eyebrow: 'Trabajo seleccionado', h2a: 'Productos diseñados, construidos', h2b: 'y entregados desde cero.', howToCta: 'Cómo probarlo' },
     projects: [
       { tag: 'Buque insignia · IA agéntica', blurb: 'Un SaaS de carga de vehículos eléctricos y gestión energética construido desde cero. Watchdogs agénticos vigilan cargadores, baterías y solar, mientras una capa de chat LLM permite controlar el sistema en lenguaje natural: cargar un vehículo, mover carga a solar o fijar un horario, y los agentes ejecutan.', note: 'Código propietario · demo privada bajo petición', label: 'ridergy.com' },
       { tag: 'Producto en vivo · Marketplace de mentores', blurb: 'Un marketplace de mentores de dos lados: estudiantes que planean estudiar en el extranjero reservan mentores verificados que ya están en universidades de todo el mundo, con sesiones de pago, desbloqueo de contacto tras el checkout, revisión de documentos, panel de ingresos y guías multiautor. Construido y operado como producto propio, en expansión más allá del estudio en el extranjero.', label: 'auroramentors.com' },
       { tag: 'Inteligencia retail con IA', blurb: 'Un dashboard de IA para supermercados y cadenas: pronóstico de demanda con bandas de confianza, un motor de reposición que prioriza SKUs por días de cobertura, optimización de precios y un asistente agéntico que responde preguntas y propone la siguiente acción.', label: 'Demo en vivo' },
       { tag: 'Plataforma logística', blurb: 'Una web logística moderna con calculadora de costes de envío en tiempo real (peso volumétrico, precios multimodales, combustible e impuestos), widget de tracking en vivo y captura de leads validada. Construida como site de marketing enfocado en conversión.', label: 'Demo en vivo' },
       { tag: 'PWA marketplace hiperlocal', blurb: 'Un marketplace hiperlocal de 33 servicios como PWA instalable: flujo de reserva multipantalla, portafolios de socios con insignias verificadas y un modelo de pago con wallet y escrow con reparto 30:70 liberado por PIN del cliente.', label: 'Demo en vivo' },
+      { tag: 'Portal de registro y gestión de eventos', blurb: 'Una plataforma de eventos completa construida desde un SRS en días: registro dual de participante y expositor con pases QR reales e invitaciones de calendario, un portal de administración separado con dashboard en vivo, gestión de agenda sin arrastrar, check-in por cámara con QR y detección de duplicados, y exportes en CSV/Excel/PDF.', note: 'Demo de admin: admin@solsticedynamics.com / ConnectAdmin@2026', label: 'Demo en vivo', howTo: [
+        'Regístrate como participante o expositor en la página de inicio para obtener un pase QR real y escaneable.',
+        'Ve a /admin e inicia sesión con las credenciales de la demo de arriba.',
+        'Abre QR Check-in, permite el acceso a la cámara y escanea el pase del paso 1 para feedback instantáneo de check-in.',
+        'Explora el dashboard en vivo, los registros y la agenda, todo respaldado por una base de datos real, no una maqueta estática.',
+      ] },
       { tag: 'IoT · Copiloto de firmware con IA', blurb: 'Un asistente de IA local que convierte una descripción en lenguaje natural en firmware ESP32 funcional: planifica el proyecto, genera la arquitectura y el código FreeRTOS modular, escribe los archivos en un proyecto Arduino, compila en local y flashea la placa solo cuando detecta un dispositivo de forma segura. Trabajo IoT y de microcontroladores, del prompt al hardware.', note: 'En desarrollo · demo privada bajo petición', label: '' },
     ],
     pg: {
@@ -388,6 +409,7 @@ const STR = {
   FR: {
     nav: ['Réalisations', 'Playground', 'Méthode', 'À propos', 'Contact'],
     cta: 'Lancer un projet',
+    more: 'Plus',
     hero: {
       eyebrow: 'Studio IA & Logiciel · Voix · Agents · Full-Stack',
       h1a: 'Des logiciels rapides,', h1b: 'intelligents, faits pour ', ship: 'livrer.',
@@ -414,13 +436,19 @@ const STR = {
       p: "Commencez par un audit IA à prix fixe : deux semaines d'analyse qui cartographient les automatisations au meilleur ROI dans votre activité, avec une feuille de route chiffrée. Le montant est déduit de votre premier projet.",
       cta: 'Réserver un audit →',
     },
-    work: { eyebrow: 'Réalisations choisies', h2a: 'Des produits conçus, construits', h2b: 'et livrés de zéro.' },
+    work: { eyebrow: 'Réalisations choisies', h2a: 'Des produits conçus, construits', h2b: 'et livrés de zéro.', howToCta: 'Comment le tester' },
     projects: [
       { tag: 'Vaisseau amiral · IA agentique', blurb: "Un SaaS de recharge VE et de gestion d'énergie construit de zéro. Des watchdogs agentiques surveillent bornes, batteries et solaire, tandis qu'une couche de chat LLM pilote le système en langage courant : lancer une charge, basculer sur le solaire, fixer un planning, et les agents exécutent.", note: 'Code propriétaire · démonstration privée sur demande', label: 'ridergy.com' },
       { tag: "Produit live · Marketplace de mentorat", blurb: "Une marketplace de mentorat à deux faces : les étudiants qui préparent des études à l'étranger réservent des mentors vérifiés déjà dans des universités du monde entier, avec sessions payantes, déblocage du contact après paiement, relecture de documents, tableau de gains et guides multi-auteurs. Construit et exploité comme notre propre produit, en expansion au-delà des études à l'étranger.", label: 'auroramentors.com' },
       { tag: 'Intelligence retail IA', blurb: "Un dashboard IA pour supermarchés et enseignes : prévision de demande avec bandes de confiance, moteur de réassort classant les SKU par jours de couverture, optimisation des prix et assistant agentique qui répond aux questions et propose l'action suivante.", label: 'Démo live' },
       { tag: 'Plateforme logistique', blurb: "Un site logistique moderne avec calculateur de coûts en temps réel (poids volumétrique, tarifs multimodaux, carburant et taxes), widget de suivi en direct et capture de leads validée. Conçu comme un site marketing orienté conversion.", label: 'Démo live' },
       { tag: 'PWA marketplace hyperlocale', blurb: "Une marketplace hyperlocale de 33 services en PWA installable : parcours de réservation multi-écrans, portfolios partenaires avec badges vérifiés et paiement wallet/escrow avec répartition 30:70 libérée par PIN client.", label: 'Démo live' },
+      { tag: "Portail d'inscription et de gestion d'événements", blurb: "Une plateforme événementielle complète construite à partir d'un cahier des charges en quelques jours : inscription participant/exposant avec vrais QR codes et invitations calendrier, un portail admin séparé avec dashboard live, gestion d'agenda sans glisser-déposer, check-in QR par caméra avec détection des doublons, et exports CSV/Excel/PDF.", note: 'Démo admin : admin@solsticedynamics.com / ConnectAdmin@2026', label: 'Démo live', howTo: [
+        "S'inscrire comme participant ou exposant sur la page d'accueil pour obtenir un vrai QR code scannable.",
+        'Aller sur /admin et se connecter avec les identifiants de démo ci-dessus.',
+        "Ouvrir QR Check-in, autoriser la caméra, et scanner le pass de l'étape 1 pour un retour instantané.",
+        "Parcourir le dashboard live, les inscriptions et l'agenda, le tout appuyé sur une vraie base de données, pas une maquette statique.",
+      ] },
       { tag: 'IoT · Copilote firmware IA', blurb: "Un assistant IA local qui transforme une description en langage courant en firmware ESP32 fonctionnel : il planifie le projet, génère l'architecture et le code FreeRTOS modulaire, écrit les fichiers dans un projet Arduino, compile en local et ne flashe la carte que lorsqu'un appareil est détecté en toute sécurité. Du prompt au matériel : IoT et microcontrôleurs.", note: 'En développement · démonstration privée sur demande', label: '' },
     ],
     pg: {

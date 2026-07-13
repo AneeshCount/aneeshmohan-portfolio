@@ -46,6 +46,22 @@ export const PROJECTS = [
     accent: 'from-emerald-500 to-teal-500',
   },
   {
+    name: 'Solstice CONNECT',
+    tag: 'Event Registration & Management Portal',
+    blurb: 'A full event platform built from an SRS in days: dual participant/exhibitor registration with real QR passes and calendar invites, a separate admin portal with a live dashboard, drag-free agenda management, camera-based QR check-in with duplicate detection, and CSV/Excel/PDF exports.',
+    tech: ['Next.js', 'Prisma', 'PostgreSQL', 'QR/Camera', 'Admin Portal'],
+    link: 'https://solstice-connect.vercel.app',
+    linkLabel: 'Live demo',
+    note: 'Admin demo: admin@solsticedynamics.com / ConnectAdmin@2026',
+    howTo: [
+      'Register as a participant or exhibitor on the homepage to get a real, scannable QR pass.',
+      'Go to /admin and log in with the demo credentials above.',
+      'Open QR Check-in, allow camera access, and scan the pass from step 1 for instant check-in feedback.',
+      'Browse the live dashboard, registrations, and agenda, all backed by a real database, not a static mockup.',
+    ],
+    accent: 'from-blue-500 to-orange-500',
+  },
+  {
     name: 'ESPAI',
     tag: 'IoT · AI Firmware Copilot',
     blurb: 'A local AI assistant that turns a plain-language description into working ESP32 firmware: planning, architecture, modular FreeRTOS code, local build and a safe flash flow.',

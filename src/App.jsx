@@ -85,7 +85,40 @@ function Nav() {
           <LangSwitch />
         </div>
       )}
+      <MobileQuickNav go={go} openMenu={() => setOpen(true)} labels={s.nav} more={s.more} />
     </header>
+  );
+}
+
+/* One-tap bottom bar on mobile: jumping to Work/Play/Contact by scrolling
+   past every section was the friction point, this skips straight there. */
+const QUICK_IDS = ['work', 'play', 'contact'];
+const QuickIcon = ({ id, className = 'w-5 h-5' }) => {
+  const common = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.5, strokeLinecap: 'round', strokeLinejoin: 'round', className };
+  if (id === 'work') return <svg {...common}><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>;
+  if (id === 'play') return <svg {...common}><circle cx="12" cy="12" r="9" /><path d="M10 8.5l6 3.5-6 3.5z" /></svg>;
+  if (id === 'contact') return <svg {...common}><path d="M4 5h16v14H4z" /><path d="M4 6l8 7 8-7" /></svg>;
+  return null;
+};
+
+function MobileQuickNav({ go, openMenu, labels, more }) {
+  return (
+    <div className="sm:hidden fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.08] bg-ink/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)]">
+      <div className="grid grid-cols-4">
+        {QUICK_IDS.map((id) => (
+          <button key={id} onClick={() => go(id)} className="flex flex-col items-center gap-1 py-2.5 text-muted hover:text-ivory active:text-accent transition">
+            <QuickIcon id={id} />
+            <span className="font-mono text-[9px] uppercase tracking-[0.12em]">{labels[NAV_IDS.indexOf(id)]}</span>
+          </button>
+        ))}
+        <button onClick={openMenu} className="flex flex-col items-center gap-1 py-2.5 text-muted hover:text-ivory active:text-accent transition">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-5 h-5">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <span className="font-mono text-[9px] uppercase tracking-[0.12em]">{more}</span>
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -179,6 +212,7 @@ function WhatIBuild() {
 function Work() {
   const { s } = useLang();
   const ref = useReveal();
+  const [openHow, setOpenHow] = useState(null);
   return (
     <section id="work" ref={ref} className="mx-auto max-w-6xl px-8 py-16">
       <div className="reveal max-w-2xl">
@@ -189,6 +223,8 @@ function Work() {
       <div className="mt-10 grid md:grid-cols-2 gap-6">
         {PROJECTS.map((p, i) => {
           const tr = s.projects[i];
+          const howTo = tr.howTo;
+          const expanded = openHow === i;
           return (
             <article key={p.name} className="reveal pcard p-7 flex flex-col">
               <div className="flex items-start justify-between">
@@ -203,6 +239,27 @@ function Work() {
               <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">{tr.tag}</p>
               <p className="mt-4 text-[15px] text-muted leading-relaxed flex-1">{tr.blurb}</p>
               {tr.note && <p className="mt-5 text-xs text-muted/70 italic">{tr.note}</p>}
+              {howTo && (
+                <div className="mt-4">
+                  <button
+                    onClick={() => setOpenHow(expanded ? null : i)}
+                    aria-expanded={expanded}
+                    className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-gold/80 hover:text-gold transition"
+                  >
+                    <span className={`inline-block transition-transform duration-300 ${expanded ? 'rotate-45' : ''}`}>+</span>
+                    {s.work.howToCta}
+                  </button>
+                  {expanded && (
+                    <ol className="mt-3 space-y-2 border-l border-gold/25 pl-4">
+                      {howTo.map((step, j) => (
+                        <li key={j} className="text-[13px] text-muted leading-relaxed">
+                          <span className="text-gold/70 font-mono text-[11px] mr-1.5">{j + 1}.</span>{step}
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                </div>
+              )}
               <div className="mt-5 flex flex-wrap gap-2">
                 {p.tech.map((t) => <span key={t} className="chip">{t}</span>)}
               </div>
@@ -495,7 +552,7 @@ function Contact() {
 function Footer() {
   const { s } = useLang();
   return (
-    <footer className="border-t border-white/[0.05]">
+    <footer className="border-t border-white/[0.05] pb-16 sm:pb-0">
       <div className="mx-auto max-w-6xl px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted/70">
         <span className="font-display text-ivory tracking-normal text-sm normal-case">Aneesh Mohan</span>
         <span>© {new Date().getFullYear()} · {s.footer}</span>
