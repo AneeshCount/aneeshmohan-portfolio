@@ -6,6 +6,31 @@
     <meta name="theme-color" content="#0a1014" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
 
+    <!-- Consent Mode v2 defaults: analytics stays denied until the visitor
+         accepts the cookie banner (src/consent.jsx). Must run before GTM loads. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+      });
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-5T3LF9SV');
+    </script>
+    <!-- End Google Tag Manager -->
+
     <title>a-niche · Voice AI Agents Studio & Agentic AI Development</title>
     <meta name="description" content="a-niche is a senior-led voice AI agents studio and agentic AI development team. We build voice agents, AI workforces, and secure web and mobile products from idea to production, for clients worldwide." />
     <meta name="keywords" content="voice AI agents studio, agentic AI development, AI agents for business, voice agent development, AI workforce automation" />
@@ -43,11 +68,15 @@
       ]
     }
     </script>
-    <script type="module" crossorigin src="./assets/main-Dlz-Sycz.js"></script>
+    <script type="module" crossorigin src="./assets/main-B_-FKJiM.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/index-T9V2fTi2.js">
-    <link rel="stylesheet" crossorigin href="./assets/style-Dxqdf1pC.css">
+    <link rel="stylesheet" crossorigin href="./assets/style-CCZr14nO.css">
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5T3LF9SV"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
   </body>
 </html>
