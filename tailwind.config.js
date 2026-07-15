@@ -18,6 +18,14 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
       },
+      boxShadow: {
+        // Tactile depth for a dark UI: a soft black drop plus a faint teal
+        // halo, so raised elements read as lit rather than just outlined.
+        elevated: '0 1px 0 0 rgba(255,255,255,0.06) inset, 0 18px 40px -14px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.05)',
+        'elevated-lg': '0 1px 0 0 rgba(255,255,255,0.07) inset, 0 30px 60px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05)',
+        glow: '0 10px 30px -8px rgba(47,227,190,0.45)',
+        'glow-lg': '0 20px 50px -12px rgba(47,227,190,0.35)',
+      },
     },
   },
   plugins: [],

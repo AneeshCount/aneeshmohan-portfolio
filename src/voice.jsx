@@ -287,6 +287,9 @@ export function VoiceAgent({ onOps }) {
           <p className="text-sm text-muted mt-2 leading-relaxed">
             {V.p1}<span className="text-ivory">{V.b1}</span>{V.p2}<span className="text-ivory">{V.b2}</span>{V.p3}
           </p>
+          <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-gold/25 bg-gold/[0.05] px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-gold/90">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />{V.voiceNote}
+          </p>
         </div>
         <div className="mt-8 grid sm:grid-cols-2 gap-4">
           {calls.map((c) => (

@@ -4,6 +4,7 @@ import { ParticleField } from './interactive.jsx';
 import { AgentConsole } from './agent.jsx';
 import { VoiceAgent } from './voice.jsx';
 import { LANGS, useLang } from './i18n.jsx';
+import ConsentBanner from './consent.jsx';
 
 const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
@@ -25,6 +26,22 @@ const Arrow = ({ className = 'w-4 h-4' }) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <path d="M7 17L17 7M9 7h8v8" />
   </svg>
+);
+
+/* The mark: an alcove/niche, the recessed space where one considered piece
+   is set. Literalizes the brand name; the dot is the work on display. */
+const Logomark = ({ className = 'w-6 h-6' }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className}>
+    <path d="M6.5 19V11.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 5.5 5.5V19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    <circle cx="12" cy="12.5" r="1.6" fill="#2FE3BE" />
+  </svg>
+);
+
+const Wordmark = ({ className = '' }) => (
+  <span className={`inline-flex items-center gap-2.5 ${className}`}>
+    <Logomark className="w-5 h-5 text-ivory/80" />
+    <span className="font-display tracking-tight">a<span className="text-accent">-</span>niche</span>
+  </span>
 );
 
 /* ── Nav ────────────────────────────────────────────────────────────────── */
@@ -57,7 +74,7 @@ function Nav() {
   return (
     <header className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${solid || open ? 'bg-ink/90 backdrop-blur-md border-b border-white/[0.05]' : ''}`}>
       <nav className="mx-auto max-w-6xl px-8 h-20 flex items-center justify-between">
-        <a href="#top" className="font-display text-ivory text-lg tracking-tight">Aneesh Mohan</a>
+        <a href="#top" className="text-ivory text-lg"><Wordmark /></a>
         <div className="hidden sm:flex items-center gap-10 font-mono text-[11px] uppercase tracking-[0.2em]">
           {NAV_IDS.map((id, i) => (
             <button key={id} onClick={() => go(id)} className="text-muted hover:text-ivory transition link-underline">{s.nav[i]}</button>
@@ -65,7 +82,7 @@ function Nav() {
         </div>
         <div className="flex items-center gap-6">
           <LangSwitch className="hidden md:flex" />
-          <button onClick={() => scrollTo('contact')} className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent border-b border-accent/40 pb-0.5 hover:text-ivory hover:border-ivory transition">{s.cta}</button>
+          <button onClick={() => scrollTo('contact')} className="hidden sm:inline-flex font-mono text-[11px] uppercase tracking-[0.2em] text-ink bg-accent rounded-full px-5 py-2.5 hover:bg-ivory transition">{s.cta}</button>
           <button
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
@@ -85,38 +102,43 @@ function Nav() {
           <LangSwitch />
         </div>
       )}
-      <MobileQuickNav go={go} openMenu={() => setOpen(true)} labels={s.nav} more={s.more} />
     </header>
   );
 }
 
-/* One-tap bottom bar on mobile: jumping to Work/Play/Contact by scrolling
-   past every section was the friction point, this skips straight there. */
-const QUICK_IDS = ['work', 'play', 'contact'];
-const QuickIcon = ({ id, className = 'w-5 h-5' }) => {
-  const common = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.5, strokeLinecap: 'round', strokeLinejoin: 'round', className };
-  if (id === 'work') return <svg {...common}><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>;
-  if (id === 'play') return <svg {...common}><circle cx="12" cy="12" r="9" /><path d="M10 8.5l6 3.5-6 3.5z" /></svg>;
-  if (id === 'contact') return <svg {...common}><path d="M4 5h16v14H4z" /><path d="M4 6l8 7 8-7" /></svg>;
-  return null;
-};
+/* Hero visual: a tilted stack of agent panels with a live waveform, the one
+   custom, ownable graphic on the page rather than another stock AI motif. */
+const WAVE_BARS = [0.5, 0.8, 0.4, 1, 0.6, 0.9, 0.45, 0.75, 0.55, 1, 0.5, 0.85, 0.4, 0.65];
 
-function MobileQuickNav({ go, openMenu, labels, more }) {
+function HeroStack() {
   return (
-    <div className="sm:hidden fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.08] bg-ink/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)]">
-      <div className="grid grid-cols-4">
-        {QUICK_IDS.map((id) => (
-          <button key={id} onClick={() => go(id)} className="flex flex-col items-center gap-1 py-2.5 text-muted hover:text-ivory active:text-accent transition">
-            <QuickIcon id={id} />
-            <span className="font-mono text-[9px] uppercase tracking-[0.12em]">{labels[NAV_IDS.indexOf(id)]}</span>
-          </button>
-        ))}
-        <button onClick={openMenu} className="flex flex-col items-center gap-1 py-2.5 text-muted hover:text-ivory active:text-accent transition">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-5 h-5">
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-          <span className="font-mono text-[9px] uppercase tracking-[0.12em]">{more}</span>
-        </button>
+    <div className="relative w-full max-w-sm mx-auto lg:mx-0" style={{ perspective: '1400px' }}>
+      <div className="glow w-[26rem] h-[26rem] -top-20 -right-10" />
+      <div
+        className="relative"
+        style={{ transformStyle: 'preserve-3d', transform: 'rotateX(8deg) rotateY(-14deg)', animation: 'floatY 6s ease-in-out infinite' }}
+      >
+        <div className="absolute inset-0 translate-x-6 translate-y-10 rounded-2xl bg-panel2/70 border border-white/[0.06] shadow-elevated" style={{ transform: 'translateZ(-60px)' }} />
+        <div className="absolute inset-0 translate-x-3 translate-y-5 rounded-2xl bg-panel/80 border border-white/[0.06] shadow-elevated" style={{ transform: 'translateZ(-30px)' }} />
+
+        <div className="relative rounded-2xl bg-panel border border-white/[0.08] shadow-elevated-lg p-7">
+          <div className="flex items-center justify-between mb-7">
+            <span className="eyebrow !text-[9px]">Live agent</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" style={{ animation: 'pulse2 2.4s infinite' }} />
+          </div>
+          <div className="flex items-end gap-1.5 h-20">
+            {WAVE_BARS.map((h, i) => (
+              <span key={i} className="flex-1 rounded-full bg-accent/70" style={{
+                height: `${h * 100}%`, transformOrigin: 'bottom',
+                animation: `bar ${1.1 + (i % 5) * 0.15}s ease-in-out ${i * 0.06}s infinite`,
+              }} />
+            ))}
+          </div>
+          <div className="mt-6 h-px bg-white/[0.06]" />
+          <div className="mt-5 flex items-center gap-2 font-mono text-[10px] text-muted uppercase tracking-[0.15em]">
+            <span className="text-gold">EN</span><span className="text-white/15">·</span><span>DE</span><span className="text-white/15">·</span><span>ES</span><span className="text-white/15">·</span><span>FR</span>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -131,27 +153,37 @@ function Hero() {
       <div className="glow w-[40rem] h-[40rem] -top-48 -right-56" />
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/30" />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-8 w-full">
-        <div style={{ animation: 'fadeIn .9s both' }} className="eyebrow">{s.hero.eyebrow}</div>
+      <div className="relative z-10 mx-auto max-w-6xl px-8 w-full grid lg:grid-cols-[1.1fr_.9fr] gap-16 items-center">
+        <div>
+          <div style={{ animation: 'fadeIn .9s both' }} className="eyebrow">{s.hero.eyebrow}</div>
 
-        <h1 style={{ animation: 'fadeUp 1s .1s both' }} className="mt-8 text-[3rem] sm:text-[4.75rem] leading-[1.04] tracking-tight">
-          {s.hero.h1a}<br />{s.hero.h1b}<span className="italic text-accent">{s.hero.ship}</span>
-        </h1>
+          <h1 style={{ animation: 'fadeUp 1s .1s both' }} className="mt-8 text-[3rem] sm:text-[4.75rem] leading-[1.04] tracking-tight">
+            {s.hero.h1a}<br />{s.hero.h1b}<span className="italic text-accent">{s.hero.ship}</span>
+          </h1>
 
-        <p style={{ animation: 'fadeUp 1s .22s both' }} className="mt-6 text-lg text-muted max-w-lg leading-relaxed">
-          {s.hero.p}
-        </p>
+          <p style={{ animation: 'fadeUp 1s .22s both' }} className="mt-6 text-lg text-muted max-w-lg leading-relaxed">
+            {s.hero.p}
+          </p>
 
-        <div style={{ animation: 'fadeUp 1s .32s both' }} className="mt-9 flex flex-wrap items-center gap-7">
-          <button onClick={() => scrollTo('work')} className="group font-mono text-[12px] uppercase tracking-[0.2em] text-ivory inline-flex items-center gap-3 border-b border-white/20 pb-1.5 hover:border-accent hover:text-accent transition">
-            {s.hero.view} <Arrow className="w-4 h-4 group-hover:translate-x-1 transition" />
-          </button>
-          <span className="inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
+          <div style={{ animation: 'fadeUp 1s .32s both' }} className="mt-9 flex flex-wrap items-center gap-7">
+            <button onClick={() => scrollTo('contact')} className="btn-primary">
+              {s.cta} <Arrow className="w-4 h-4" />
+            </button>
+            <button onClick={() => scrollTo('work')} className="group font-mono text-[12px] uppercase tracking-[0.2em] text-ivory inline-flex items-center gap-3 border-b border-white/20 pb-1.5 hover:border-accent hover:text-accent transition">
+              {s.hero.view} <Arrow className="w-4 h-4 group-hover:translate-x-1 transition" />
+            </button>
+          </div>
+
+          <div style={{ animation: 'fadeUp 1s .4s both' }} className="mt-7 inline-flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
             <span className="w-1.5 h-1.5 rounded-full bg-accent" style={{ animation: 'pulse2 2.4s infinite' }} /> {s.hero.avail}
-          </span>
+          </div>
+
+          <div style={{ animation: 'fadeUp 1s .5s both' }} className="mt-12 charge-track max-w-sm" />
         </div>
 
-        <div style={{ animation: 'fadeUp 1s .42s both' }} className="mt-12 charge-track max-w-sm" />
+        <div className="hidden lg:block" style={{ animation: 'fadeUp 1.1s .3s both' }}>
+          <HeroStack />
+        </div>
       </div>
     </section>
   );
@@ -201,7 +233,7 @@ function WhatIBuild() {
             <h3 className="font-display text-xl text-ivory">{s.audit.h}</h3>
             <p className="mt-2 text-[14px] text-muted leading-relaxed">{s.audit.p}</p>
           </div>
-          <button onClick={() => scrollTo('contact')} className="shrink-0 rounded-full border border-gold/50 text-gold font-mono text-[11px] uppercase tracking-[0.18em] px-6 py-3 hover:bg-gold/10 transition">{s.audit.cta}</button>
+          <button onClick={() => scrollTo('contact')} className="shrink-0 rounded-full bg-gold text-ink font-mono text-[11px] uppercase tracking-[0.18em] px-6 py-3 hover:bg-ivory transition">{s.audit.cta}</button>
         </div>
       </div>
     </section>
@@ -220,27 +252,29 @@ function Work() {
         <h2 className="text-3xl sm:text-4xl mt-5 leading-tight">{s.work.h2a}<br className="hidden sm:block" /> {s.work.h2b}</h2>
       </div>
 
-      <div className="mt-10 grid md:grid-cols-2 gap-6">
+      <p className="reveal mt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted/50 sm:hidden">{s.work.swipe}</p>
+
+      <div className="mt-6 sm:mt-10 flex gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-8 px-8 pb-2 sm:grid sm:grid-cols-2 sm:gap-8 sm:overflow-visible sm:mx-0 sm:px-0 sm:pb-0">
         {PROJECTS.map((p, i) => {
           const tr = s.projects[i];
           const howTo = tr.howTo;
           const expanded = openHow === i;
           return (
-            <article key={p.name} className="reveal pcard p-7 flex flex-col">
+            <article key={p.name} className="reveal pcard shrink-0 w-[86%] snap-center sm:w-auto sm:shrink p-7 sm:p-8 flex flex-col">
               <div className="flex items-start justify-between">
-                <span className="font-mono text-xs text-muted/60">{String(i + 1).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}</span>
+                <span className="font-mono text-xs text-muted/60">{String(i + 1).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}+</span>
                 {p.link && (
                   <a href={p.link} target="_blank" rel="noreferrer" className="text-muted hover:text-accent transition inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider">
                     {tr.label} <Arrow className="w-3.5 h-3.5" />
                   </a>
                 )}
               </div>
-              <h3 className="mt-5 text-3xl">{p.name}</h3>
-              <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">{tr.tag}</p>
-              <p className="mt-4 text-[15px] text-muted leading-relaxed flex-1">{tr.blurb}</p>
-              {tr.note && <p className="mt-5 text-xs text-muted/70 italic">{tr.note}</p>}
+              <h3 className="mt-6 text-3xl">{p.name}</h3>
+              <p className="mt-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">{tr.tag}</p>
+              <p className="mt-5 text-[15px] text-muted leading-relaxed flex-1">{tr.blurb}</p>
+              {tr.note && !howTo && <p className="mt-6 text-xs text-muted/70 italic">{tr.note}</p>}
               {howTo && (
-                <div className="mt-4">
+                <div className="mt-6 pt-5 border-t border-white/[0.06]">
                   <button
                     onClick={() => setOpenHow(expanded ? null : i)}
                     aria-expanded={expanded}
@@ -250,23 +284,27 @@ function Work() {
                     {s.work.howToCta}
                   </button>
                   {expanded && (
-                    <ol className="mt-3 space-y-2 border-l border-gold/25 pl-4">
-                      {howTo.map((step, j) => (
-                        <li key={j} className="text-[13px] text-muted leading-relaxed">
-                          <span className="text-gold/70 font-mono text-[11px] mr-1.5">{j + 1}.</span>{step}
-                        </li>
-                      ))}
-                    </ol>
+                    <div className="mt-4 space-y-4">
+                      {tr.note && <p className="text-xs text-muted/70 italic">{tr.note}</p>}
+                      <ol className="space-y-2.5 border-l border-gold/25 pl-4">
+                        {howTo.map((step, j) => (
+                          <li key={j} className="text-[13px] text-muted leading-relaxed">
+                            <span className="text-gold/70 font-mono text-[11px] mr-1.5">{j + 1}.</span>{step}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
                   )}
                 </div>
               )}
-              <div className="mt-5 flex flex-wrap gap-2">
+              <div className="mt-6 flex flex-wrap gap-2">
                 {p.tech.map((t) => <span key={t} className="chip">{t}</span>)}
               </div>
             </article>
           );
         })}
       </div>
+      <p className="reveal mt-8 font-mono text-[10px] uppercase tracking-[0.16em] text-muted/50">{s.work.more}</p>
     </section>
   );
 }
@@ -275,7 +313,10 @@ function Work() {
 function Playground() {
   const { s } = useLang();
   const ref = useReveal();
-  const [tab, setTab] = useState('voice');
+  const [tab, setTab] = useState(() => {
+    const t = new URLSearchParams(window.location.search).get('tab');
+    return t === 'agent' ? 'agent' : 'voice';
+  });
   const tabs = [['voice', s.pg.tabVoice], ['agent', s.pg.tabOps]];
   return (
     <section id="play" ref={ref} className="border-t border-white/[0.05]">
@@ -309,7 +350,7 @@ function Playground() {
 }
 
 /* ── Labs: working experiments from the idea pipeline ───────────────────── */
-const LAB_LINKS = ['labs/journal/', null, null];
+const LAB_LINKS = ['labs/journal/', null, null, null];
 
 function Labs() {
   const { s } = useLang();
@@ -476,7 +517,8 @@ function ContactForm() {
     if (data.get('botcheck')) return;
     if (WEB3FORMS_KEY.startsWith('REPLACE')) { setState('error'); return; }
     data.append('access_key', WEB3FORMS_KEY);
-    data.append('subject', 'New inquiry · studio site');
+    const senderName = data.get('name');
+    data.append('subject', senderName ? `a-niche New Enquiry from ${senderName}` : 'a-niche New Enquiry');
     setState('sending');
     try {
       const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data, headers: { Accept: 'application/json' } });
@@ -552,16 +594,23 @@ function Contact() {
 function Footer() {
   const { s } = useLang();
   return (
-    <footer className="border-t border-white/[0.05] pb-16 sm:pb-0">
+    <footer className="border-t border-white/[0.05]">
       <div className="mx-auto max-w-6xl px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted/70">
-        <span className="font-display text-ivory tracking-normal text-sm normal-case">Aneesh Mohan</span>
-        <span>© {new Date().getFullYear()} · {s.footer}</span>
+        <span className="text-ivory text-sm normal-case"><Wordmark /></span>
+        <span>© {new Date().getFullYear()} a-niche</span>
       </div>
     </footer>
   );
 }
 
 export default function App() {
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (!id) return;
+    const scroll = () => document.getElementById(id)?.scrollIntoView({ behavior: 'instant' });
+    const t = setTimeout(scroll, 150);
+    return () => clearTimeout(t);
+  }, []);
   return (
     <>
       <Nav />
@@ -576,6 +625,7 @@ export default function App() {
       <Join />
       <Contact />
       <Footer />
+      <ConsentBanner />
     </>
   );
 }

@@ -4,9 +4,9 @@ export const PROJECTS = [
     tag: 'Flagship · Agentic AI',
     blurb: 'An EV charging and energy-management SaaS built from the ground up. Agentic watchdogs continuously monitor chargers, batteries and solar, while an LLM chat layer lets users control the system in plain language: start a vehicle charging, shift load to solar, or push a schedule, and the agents execute.',
     tech: ['Agentic AI', 'LangGraph', 'LLMs', 'FastAPI', 'React', 'AWS'],
-    link: 'https://www.ridergy.com',
-    linkLabel: 'ridergy.com',
-    note: 'Proprietary codebase · private walkthrough on request',
+    link: 'https://demo.ridergy.com',
+    linkLabel: 'demo.ridergy.com',
+    note: 'Proprietary codebase · live demo shows full functionality',
     accent: 'from-violet-500 to-fuchsia-500',
   },
   {
@@ -71,6 +71,22 @@ export const PROJECTS = [
     note: 'In development · private walkthrough on request',
     accent: 'from-orange-500 to-amber-500',
   },
+  {
+    name: 'ScrapLine',
+    tag: 'Account & Payments Portal',
+    blurb: 'A scrap and recycling pickup platform built as a working prototype in a day: a password-protected customer portal with registration, login and profile editing, Stripe payments verified server-side, an admin panel for managing customers and pickup tickets, and a Postgres data model with row-level security so customers only ever see and edit their own records.',
+    tech: ['Next.js', 'TypeScript', 'Supabase', 'Stripe', 'RLS'],
+    link: 'https://scrapline-mvp.vercel.app',
+    linkLabel: 'Live demo',
+    note: 'Customer demo: test.buyer@scrapline-test.com / TestPass123! · Admin: demo.customer@scrapline-test.com / DemoPass123!',
+    howTo: [
+      'Click "Get started" to register your own account, or sign in with the seeded customer login above.',
+      'Browse the customer portal: edit your profile, book a pickup, and pay with Stripe in test mode.',
+      'Sign in with the seeded admin login, then go to /admin to manage customers and pickup tickets.',
+      'Row-level security means a signed-in customer only ever sees and edits their own data, never another account\'s.',
+    ],
+    accent: 'from-teal-400 to-lime-500',
+  },
 ];
 
 export const METRICS = [
@@ -132,7 +148,7 @@ export const SERVICES = [
 export const TRUST = [
   {
     t: 'Senior-led, always',
-    d: 'Every project is led end to end by the founder. Vetted specialist designers and engineers join as your scope grows, so capacity is never the bottleneck.',
+    d: 'Every project is led end to end by a senior engineer, never handed off to juniors. Vetted specialist designers and engineers join as your scope grows, so capacity is never the bottleneck.',
   },
   {
     t: 'Your IP, fully yours',

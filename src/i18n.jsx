@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 /* ════════════════════════════════════════════════════════════════════════
    I18N: all page copy in EN (primary), DE, ES, FR. The interactive demo
@@ -17,8 +17,8 @@ const STR = {
     hero: {
       eyebrow: 'AI & Software Studio · Voice · Agents · Full-Stack',
       h1a: 'Fast, intelligent', h1b: 'software, built to ', ship: 'ship.',
-      p: 'A founder-led studio that takes products from a blank page to production: precise interfaces, solid APIs and data layers, and AI that does real work. Agents that run operations. Voice agents that hold real conversations.',
-      view: 'View the work', avail: 'Accepting new clients',
+      p: 'A senior-led studio building voice agents, AI workforces, and production software, from blank page to ship.',
+      view: 'View the work', avail: 'Accepting new projects',
     },
     metrics: ['Products shipped from scratch', 'Agentic AI in production', 'Async delivery across timezones'],
     wb: {
@@ -40,9 +40,9 @@ const STR = {
       p: 'Start with a fixed-fee AI audit: a two-week deep dive that maps the highest-ROI automations in your operation, with a costed roadmap. The fee is credited against your first build.',
       cta: 'Book an audit →',
     },
-    work: { eyebrow: 'Selected Work', h2a: 'Products designed, built', h2b: 'and shipped from zero.', howToCta: 'How to test this' },
+    work: { eyebrow: 'Selected Work', h2a: 'Products designed, built', h2b: 'and shipped from zero.', howToCta: 'How to test this', swipe: 'Swipe to browse →', more: 'And more, on request.' },
     projects: [
-      { tag: 'Flagship · Agentic AI', blurb: 'An EV charging and energy-management SaaS built from the ground up. Agentic watchdogs continuously monitor chargers, batteries and solar, while an LLM chat layer lets users control the system in plain language: start a vehicle charging, shift load to solar, or push a schedule, and the agents execute.', note: 'Proprietary codebase · private walkthrough on request', label: 'ridergy.com' },
+      { tag: 'Flagship · Agentic AI', blurb: 'An EV charging and energy-management SaaS built from the ground up. Agentic watchdogs continuously monitor chargers, batteries and solar, while an LLM chat layer lets users control the system in plain language: start a vehicle charging, shift load to solar, or push a schedule, and the agents execute.', note: 'Proprietary codebase · live demo shows full functionality', label: 'demo.ridergy.com' },
       { tag: 'Live Product · Mentorship Marketplace', blurb: 'A two-sided mentorship marketplace: students planning to study abroad book verified mentors already at universities around the world, with paid sessions, contact unlock after checkout, document feedback, mentor earnings dashboards and multi-author guides. Built and run as our own product, expanding beyond study abroad.', label: 'auroramentors.com' },
       { tag: 'AI Retail Intelligence', blurb: 'An AI dashboard for supermarkets and chains: demand forecasting with confidence bands, an AI reorder engine ranking SKUs by days-of-cover, price-optimization recommendations, and an agentic insights assistant that answers questions and proposes the next action.', label: 'Live demo' },
       { tag: 'Logistics Platform', blurb: 'A modern logistics company site with a real-time shipment cost calculator (volumetric weight, multi-mode pricing, fuel and GST), a live tracking widget, and a validated lead-capture flow. Built as a conversion-focused marketing site.', label: 'Live demo' },
@@ -54,6 +54,12 @@ const STR = {
         'Browse the live dashboard, registrations, and agenda, all backed by a real database, not a static mockup.',
       ] },
       { tag: 'IoT · AI Firmware Copilot', blurb: 'A local AI assistant that turns a plain-language description into working ESP32 firmware: it plans the project, generates the architecture and modular FreeRTOS code, writes the files into an Arduino project, builds locally and flashes the board only when a device is safely detected. IoT and microcontroller work, from prompt to hardware.', note: 'In development · private walkthrough on request', label: '' },
+      { tag: 'Account & Payments Portal', blurb: 'A scrap and recycling pickup platform built as a working prototype in a day: a password-protected customer portal with registration, login and profile editing, Stripe payments verified server-side, an admin panel for managing customers and pickup tickets, and a Postgres data model with row-level security so customers only ever see and edit their own records.', note: 'Customer demo: test.buyer@scrapline-test.com / TestPass123! · Admin: demo.customer@scrapline-test.com / DemoPass123!', label: 'Live demo', howTo: [
+        'Click "Get started" to register your own account, or sign in with the seeded customer login above.',
+        'Browse the customer portal: edit your profile, book a pickup, and pay with Stripe in test mode.',
+        'Sign in with the seeded admin login, then go to /admin to manage customers and pickup tickets.',
+        'Row-level security means a signed-in customer only ever sees and edits their own data, never another account\'s.',
+      ] },
     ],
     pg: {
       eyebrow: 'Live demos', h2a: 'Give an agent a job.', h2b: 'Then interrupt it.',
@@ -93,6 +99,7 @@ const STR = {
         { t: 'Voice Journal', d: 'Speak for a minute and get a structured journal entry: title, mood, action items. Real microphone input, entirely in your browser.' },
         { t: 'AI Budgeter', d: 'A personal CFO that watches your spending, flags the overshoot and answers why in plain language.' },
         { t: 'GiftingAI', d: 'Give it a person, an occasion and a budget; it argues its way to the right gift.' },
+        { t: 'AI-to-AI Sales & Marketing', d: "Outbound and marketing agents that pitch, qualify and negotiate directly with a prospect's AI assistant, escalating to a human only once there is a real deal to sign." },
       ],
     },
     pr: {
@@ -101,7 +108,7 @@ const STR = {
       platforms: 'Built on platforms your business already trusts',
     },
     trust: [
-      { t: 'Senior-led, always', d: 'Every project is led end to end by the founder. Vetted specialist designers and engineers join as your scope grows, so capacity is never the bottleneck.' },
+      { t: 'Senior-led, always', d: 'Every project is led end to end by a senior engineer, never handed off to juniors. Vetted specialist designers and engineers join as your scope grows, so capacity is never the bottleneck.' },
       { t: 'Your IP, fully yours', d: 'Clean contracts, NDA before you share anything sensitive, and full source code and IP transfer on completion.' },
       { t: 'Security by default', d: 'Least-privilege access, encrypted secrets, audit trails and GDPR-aware data handling on every build.' },
       { t: 'Global, async-first', d: 'Clients across US, EU, Middle East and Asia get overlap hours, weekly demo videos and one accountable point of contact.' },
@@ -124,9 +131,9 @@ const STR = {
       cta: 'Apply now', note: 'Applications go through the contact form: mention the role and link your best work.',
     },
     ab: {
-      eyebrow: 'About', h2a: 'A studio with', h2b: 'founder attention.',
-      p1: 'The studio is led by founder Aneesh Mohan and backed by a network of vetted specialist designers and engineers who join as your scope grows. You always know who is accountable: one senior owner, hands on your build, with the capacity to scale behind it.',
-      p2: 'The flagship is RiDERgy, our own product: agentic AI running EV charging and energy management in production, where reliability is non-negotiable. Every client project is held to that standard, from the architecture and the interface to the API, the data and the intelligence layer that makes it useful.',
+      eyebrow: 'About', h2a: 'A studio built on', h2b: 'senior craft.',
+      p1: 'a-niche is a small studio of senior engineers and designers. The same accountable team stays on your project from kickoff to launch, with vetted specialists joining as your scope grows and the capacity to scale behind it.',
+      p2: 'Our own products, RiDERgy (agentic AI running EV charging and energy management) and Aurora Mentors (a live mentorship marketplace), run in production every day, where reliability is non-negotiable. Every client project is held to that same standard, from the architecture and the interface to the API, the data and the intelligence layer that makes it useful.',
     },
     ct: {
       eyebrow: 'Contact', h2a: 'Have something', h2b: 'worth building?',
@@ -139,7 +146,10 @@ const STR = {
       err: 'The form could not send just now. Please reach out via LinkedIn below instead.',
       nda: 'NDA-friendly · Milestone billing · Direct or platform escrow, your choice',
     },
-    footer: 'Built from scratch · React & Tailwind',
+    consent: {
+      p: 'We use cookies for analytics to understand how visitors use this site. No data is sold or used for ads.',
+      accept: 'Accept', decline: 'Decline',
+    },
   },
 
   DE: {
@@ -149,8 +159,8 @@ const STR = {
     hero: {
       eyebrow: 'KI- & Software-Studio · Voice · Agenten · Full-Stack',
       h1a: 'Schnelle, intelligente', h1b: 'Software, gebaut zum ', ship: 'Liefern.',
-      p: 'Ein gründergeführtes Studio, das Produkte vom leeren Blatt bis in die Produktion bringt: präzise Interfaces, solide APIs und Datenebenen, und KI, die echte Arbeit leistet. Agenten, die Abläufe steuern. Voice-Agenten, die echte Gespräche führen.',
-      view: 'Arbeiten ansehen', avail: 'Wir nehmen neue Kunden an',
+      p: 'Ein senior-geführtes Studio für Voice-Agenten, KI-Workforces und Produktionssoftware, vom leeren Blatt bis zum Launch.',
+      view: 'Arbeiten ansehen', avail: 'Wir nehmen neue Projekte an',
     },
     metrics: ['Produkte von null gebaut', 'Agentische KI in Produktion', 'Asynchrone Lieferung über Zeitzonen'],
     wb: {
@@ -172,9 +182,9 @@ const STR = {
       p: 'Starten Sie mit einem KI-Audit zum Festpreis: zwei Wochen Tiefenanalyse, die die Automationen mit dem höchsten ROI in Ihrem Betrieb kartiert, mit kalkulierter Roadmap. Die Gebühr wird auf Ihren ersten Build angerechnet.',
       cta: 'Audit buchen →',
     },
-    work: { eyebrow: 'Ausgewählte Arbeiten', h2a: 'Produkte entworfen, gebaut', h2b: 'und von null geliefert.', howToCta: 'So testen Sie es' },
+    work: { eyebrow: 'Ausgewählte Arbeiten', h2a: 'Produkte entworfen, gebaut', h2b: 'und von null geliefert.', howToCta: 'So testen Sie es', swipe: 'Zum Durchblättern wischen →', more: 'Und mehr, auf Anfrage.' },
     projects: [
-      { tag: 'Flaggschiff · Agentische KI', blurb: 'Ein SaaS für EV-Laden und Energiemanagement, von Grund auf gebaut. Agentische Watchdogs überwachen Ladepunkte, Batterien und Solar, während eine LLM-Chat-Ebene das System in Alltagssprache steuert: Fahrzeug laden, Last auf Solar verschieben, Zeitplan setzen, die Agenten führen aus.', note: 'Proprietäre Codebasis · privater Walkthrough auf Anfrage', label: 'ridergy.com' },
+      { tag: 'Flaggschiff · Agentische KI', blurb: 'Ein SaaS für EV-Laden und Energiemanagement, von Grund auf gebaut. Agentische Watchdogs überwachen Ladepunkte, Batterien und Solar, während eine LLM-Chat-Ebene das System in Alltagssprache steuert: Fahrzeug laden, Last auf Solar verschieben, Zeitplan setzen, die Agenten führen aus.', note: 'Proprietäre Codebasis · Live-Demo zeigt vollen Funktionsumfang', label: 'demo.ridergy.com' },
       { tag: 'Live-Produkt · Mentoring-Marktplatz', blurb: 'Ein zweiseitiger Mentoring-Marktplatz: Studierende mit Auslandsplänen buchen verifizierte Mentoren, die bereits an Universitäten weltweit studieren, mit bezahlten Sessions, Kontaktfreigabe nach dem Checkout, Dokumenten-Feedback, Earnings-Dashboards und Guides mehrerer Autoren. Als eigenes Produkt gebaut und betrieben, mit Ausbau über das Auslandsstudium hinaus.', label: 'auroramentors.com' },
       { tag: 'KI-Retail-Intelligence', blurb: 'Ein KI-Dashboard für Supermärkte und Ketten: Nachfrageprognosen mit Konfidenzband, eine KI-Nachbestell-Engine, die SKUs nach Reichweite priorisiert, Preisoptimierung und ein agentischer Insights-Assistent, der Fragen beantwortet und die nächste Aktion vorschlägt.', label: 'Live-Demo' },
       { tag: 'Logistik-Plattform', blurb: 'Eine moderne Logistik-Website mit Echtzeit-Frachtkostenrechner (Volumengewicht, Multi-Mode-Preise, Kraftstoff und Steuern), Live-Tracking-Widget und validierter Lead-Erfassung. Gebaut als conversion-fokussierte Marketing-Site.', label: 'Live-Demo' },
@@ -186,6 +196,12 @@ const STR = {
         'Live-Dashboard, Registrierungen und Agenda durchsehen, alles gestützt auf eine echte Datenbank, kein statisches Mockup.',
       ] },
       { tag: 'IoT · KI-Firmware-Copilot', blurb: 'Ein lokaler KI-Assistent, der eine Alltagssprache-Beschreibung in funktionierende ESP32-Firmware verwandelt: Er plant das Projekt, erzeugt Architektur und modularen FreeRTOS-Code, schreibt die Dateien in ein Arduino-Projekt, baut lokal und flasht das Board nur, wenn ein Gerät sicher erkannt wird. IoT- und Mikrocontroller-Arbeit, vom Prompt bis zur Hardware.', note: 'In Entwicklung · privater Walkthrough auf Anfrage', label: '' },
+      { tag: 'Konten- & Zahlungsportal', blurb: 'Eine Recycling- und Schrottabholungsplattform, als funktionierender Prototyp in einem Tag gebaut: passwortgeschütztes Kundenportal mit Registrierung, Login und Profilbearbeitung, serverseitig verifizierte Stripe-Zahlungen, ein Admin-Panel zur Verwaltung von Kunden und Abholtickets, und ein Postgres-Datenmodell mit Row-Level-Security, sodass Kunden nur ihre eigenen Datensätze sehen und bearbeiten.', note: 'Kunden-Demo: test.buyer@scrapline-test.com / TestPass123! · Admin: demo.customer@scrapline-test.com / DemoPass123!', label: 'Live-Demo', howTo: [
+        'Auf "Get started" klicken, um ein eigenes Konto zu registrieren, oder mit dem Demo-Kundenlogin oben anmelden.',
+        'Das Kundenportal erkunden: Profil bearbeiten, eine Abholung buchen und im Stripe-Testmodus bezahlen.',
+        'Mit dem Demo-Admin-Login anmelden und dann zu /admin gehen, um Kunden und Abholtickets zu verwalten.',
+        'Row-Level-Security bedeutet: Ein angemeldeter Kunde sieht und bearbeitet immer nur seine eigenen Daten, nie die eines anderen Kontos.',
+      ] },
     ],
     pg: {
       eyebrow: 'Live-Demos', h2a: 'Geben Sie einem Agenten einen Job.', h2b: 'Dann unterbrechen Sie ihn.',
@@ -225,6 +241,7 @@ const STR = {
         { t: 'Voice Journal', d: 'Eine Minute sprechen, ein strukturierter Journal-Eintrag: Titel, Stimmung, Action Items. Echte Mikrofon-Eingabe, komplett im Browser.' },
         { t: 'AI Budgeter', d: 'Ein persönlicher CFO, der Ihre Ausgaben beobachtet, Überschreitungen meldet und das Warum in klarer Sprache erklärt.' },
         { t: 'GiftingAI', d: 'Person, Anlass und Budget angeben; die KI argumentiert sich zum richtigen Geschenk.' },
+        { t: 'KI-zu-KI Sales & Marketing', d: 'Outbound- und Marketing-Agenten, die direkt mit dem KI-Assistenten eines Interessenten pitchen, qualifizieren und verhandeln, und erst eskalieren, wenn es wirklich etwas zu unterschreiben gibt.' },
       ],
     },
     pr: {
@@ -233,7 +250,7 @@ const STR = {
       platforms: 'Gebaut auf Plattformen, denen Ihr Unternehmen bereits vertraut',
     },
     trust: [
-      { t: 'Senior-geführt, immer', d: 'Jedes Projekt führt der Gründer Ende-zu-Ende. Geprüfte Spezialisten für Design und Engineering stoßen dazu, wenn der Umfang wächst. Kapazität ist nie der Engpass.' },
+      { t: 'Senior-geführt, immer', d: 'Jedes Projekt führt ein Senior-Engineer Ende-zu-Ende, nie an Junioren abgegeben. Geprüfte Spezialisten für Design und Engineering stoßen dazu, wenn der Umfang wächst. Kapazität ist nie der Engpass.' },
       { t: 'Ihre IP, vollständig', d: 'Saubere Verträge, NDA bevor Sie Sensibles teilen, und vollständige Übertragung von Quellcode und IP bei Abschluss.' },
       { t: 'Sicherheit als Standard', d: 'Least-Privilege-Zugriffe, verschlüsselte Secrets, Audit-Trails und DSGVO-bewusster Umgang mit Daten in jedem Build.' },
       { t: 'Global, async-first', d: 'Kunden in den USA, der EU, dem Nahen Osten und Asien erhalten Überlappungszeiten, wöchentliche Demo-Videos und einen verantwortlichen Ansprechpartner.' },
@@ -256,9 +273,9 @@ const STR = {
       cta: 'Jetzt bewerben', note: 'Bewerbungen laufen über das Kontaktformular: Rolle nennen und beste Arbeit verlinken.',
     },
     ab: {
-      eyebrow: 'Über uns', h2a: 'Ein Studio mit', h2b: 'Gründer-Aufmerksamkeit.',
-      p1: 'Das Studio wird vom Gründer Aneesh Mohan geführt, gestützt auf ein Netzwerk geprüfter Spezialisten für Design und Engineering, die dazustoßen, wenn Ihr Umfang wächst. Sie wissen immer, wer verantwortlich ist: ein Senior-Owner, selbst am Build, mit skalierbarer Kapazität dahinter.',
-      p2: 'Das Flaggschiff ist RiDERgy, unser eigenes Produkt: agentische KI, die EV-Laden und Energiemanagement in Produktion betreibt, wo Zuverlässigkeit nicht verhandelbar ist. Jedes Kundenprojekt wird an diesem Standard gemessen, von Architektur und Interface bis zu API, Daten und der Intelligenz-Ebene, die alles nützlich macht.',
+      eyebrow: 'Über uns', h2a: 'Ein Studio, gebaut auf', h2b: 'Senior-Handwerk.',
+      p1: 'a-niche ist ein kleines Studio aus Senior-Engineers und -Designern. Dasselbe verantwortliche Team bleibt vom Kickoff bis zum Launch an Ihrem Projekt, geprüfte Spezialisten stoßen dazu, wenn Ihr Umfang wächst, mit skalierbarer Kapazität dahinter.',
+      p2: 'Unsere eigenen Produkte, RiDERgy (agentische KI für EV-Laden und Energiemanagement) und Aurora Mentors (ein live betriebener Mentoring-Marktplatz), laufen täglich in Produktion, wo Zuverlässigkeit nicht verhandelbar ist. Jedes Kundenprojekt wird an demselben Standard gemessen, von Architektur und Interface bis zu API, Daten und der Intelligenz-Ebene, die alles nützlich macht.',
     },
     ct: {
       eyebrow: 'Kontakt', h2a: 'Etwas, das es wert ist,', h2b: 'gebaut zu werden?',
@@ -271,7 +288,10 @@ const STR = {
       err: 'Das Formular konnte gerade nicht senden. Bitte melden Sie sich stattdessen unten über LinkedIn.',
       nda: 'NDA-freundlich · Meilenstein-Abrechnung · Direkt oder Plattform-Escrow, Ihre Wahl',
     },
-    footer: 'Von Grund auf gebaut · React & Tailwind',
+    consent: {
+      p: 'Wir verwenden Cookies für Analytics, um zu verstehen, wie Besucher diese Seite nutzen. Keine Daten werden verkauft oder für Werbung genutzt.',
+      accept: 'Akzeptieren', decline: 'Ablehnen',
+    },
   },
 
   ES: {
@@ -281,8 +301,8 @@ const STR = {
     hero: {
       eyebrow: 'Estudio de IA y Software · Voz · Agentes · Full-Stack',
       h1a: 'Software rápido e', h1b: 'inteligente, hecho para ', ship: 'entregar.',
-      p: 'Un estudio dirigido por su fundador que lleva productos del papel en blanco a producción: interfaces precisas, APIs y capas de datos sólidas, e IA que hace trabajo real. Agentes que operan procesos. Agentes de voz que sostienen conversaciones reales.',
-      view: 'Ver el trabajo', avail: 'Aceptamos nuevos clientes',
+      p: 'Un estudio senior que construye agentes de voz, plantillas de IA y software de producción, del papel en blanco al lanzamiento.',
+      view: 'Ver el trabajo', avail: 'Aceptamos nuevos proyectos',
     },
     metrics: ['Productos creados desde cero', 'IA agéntica en producción', 'Entrega asíncrona entre husos horarios'],
     wb: {
@@ -304,9 +324,9 @@ const STR = {
       p: 'Empieza con una auditoría de IA a precio fijo: dos semanas de análisis que mapean las automatizaciones de mayor ROI en tu operación, con una hoja de ruta costeada. El importe se descuenta de tu primer proyecto.',
       cta: 'Reservar auditoría →',
     },
-    work: { eyebrow: 'Trabajo seleccionado', h2a: 'Productos diseñados, construidos', h2b: 'y entregados desde cero.', howToCta: 'Cómo probarlo' },
+    work: { eyebrow: 'Trabajo seleccionado', h2a: 'Productos diseñados, construidos', h2b: 'y entregados desde cero.', howToCta: 'Cómo probarlo', swipe: 'Desliza para ver más →', more: 'Y más, bajo petición.' },
     projects: [
-      { tag: 'Buque insignia · IA agéntica', blurb: 'Un SaaS de carga de vehículos eléctricos y gestión energética construido desde cero. Watchdogs agénticos vigilan cargadores, baterías y solar, mientras una capa de chat LLM permite controlar el sistema en lenguaje natural: cargar un vehículo, mover carga a solar o fijar un horario, y los agentes ejecutan.', note: 'Código propietario · demo privada bajo petición', label: 'ridergy.com' },
+      { tag: 'Buque insignia · IA agéntica', blurb: 'Un SaaS de carga de vehículos eléctricos y gestión energética construido desde cero. Watchdogs agénticos vigilan cargadores, baterías y solar, mientras una capa de chat LLM permite controlar el sistema en lenguaje natural: cargar un vehículo, mover carga a solar o fijar un horario, y los agentes ejecutan.', note: 'Código propietario · la demo en vivo muestra toda la funcionalidad', label: 'demo.ridergy.com' },
       { tag: 'Producto en vivo · Marketplace de mentores', blurb: 'Un marketplace de mentores de dos lados: estudiantes que planean estudiar en el extranjero reservan mentores verificados que ya están en universidades de todo el mundo, con sesiones de pago, desbloqueo de contacto tras el checkout, revisión de documentos, panel de ingresos y guías multiautor. Construido y operado como producto propio, en expansión más allá del estudio en el extranjero.', label: 'auroramentors.com' },
       { tag: 'Inteligencia retail con IA', blurb: 'Un dashboard de IA para supermercados y cadenas: pronóstico de demanda con bandas de confianza, un motor de reposición que prioriza SKUs por días de cobertura, optimización de precios y un asistente agéntico que responde preguntas y propone la siguiente acción.', label: 'Demo en vivo' },
       { tag: 'Plataforma logística', blurb: 'Una web logística moderna con calculadora de costes de envío en tiempo real (peso volumétrico, precios multimodales, combustible e impuestos), widget de tracking en vivo y captura de leads validada. Construida como site de marketing enfocado en conversión.', label: 'Demo en vivo' },
@@ -318,6 +338,12 @@ const STR = {
         'Explora el dashboard en vivo, los registros y la agenda, todo respaldado por una base de datos real, no una maqueta estática.',
       ] },
       { tag: 'IoT · Copiloto de firmware con IA', blurb: 'Un asistente de IA local que convierte una descripción en lenguaje natural en firmware ESP32 funcional: planifica el proyecto, genera la arquitectura y el código FreeRTOS modular, escribe los archivos en un proyecto Arduino, compila en local y flashea la placa solo cuando detecta un dispositivo de forma segura. Trabajo IoT y de microcontroladores, del prompt al hardware.', note: 'En desarrollo · demo privada bajo petición', label: '' },
+      { tag: 'Portal de cuentas y pagos', blurb: 'Una plataforma de recogida de chatarra y reciclaje construida como prototipo funcional en un día: portal de cliente protegido con contraseña con registro, inicio de sesión y edición de perfil, pagos con Stripe verificados en el servidor, un panel de administración para gestionar clientes y tickets de recogida, y un modelo de datos en Postgres con seguridad a nivel de fila para que cada cliente solo vea y edite sus propios registros.', note: 'Demo de cliente: test.buyer@scrapline-test.com / TestPass123! · Admin: demo.customer@scrapline-test.com / DemoPass123!', label: 'Demo en vivo', howTo: [
+        'Haz clic en "Get started" para registrar tu propia cuenta, o inicia sesión con el login de cliente de demo de arriba.',
+        'Explora el portal del cliente: edita tu perfil, reserva una recogida y paga en modo de prueba de Stripe.',
+        'Inicia sesión con el login de admin de demo y ve a /admin para gestionar clientes y tickets de recogida.',
+        'La seguridad a nivel de fila significa que un cliente conectado solo ve y edita sus propios datos, nunca los de otra cuenta.',
+      ] },
     ],
     pg: {
       eyebrow: 'Demos en vivo', h2a: 'Dale un trabajo a un agente.', h2b: 'Luego interrúmpelo.',
@@ -357,6 +383,7 @@ const STR = {
         { t: 'Voice Journal', d: 'Habla un minuto y recibe una entrada de diario estructurada: título, ánimo, acciones. Micrófono real, todo en tu navegador.' },
         { t: 'AI Budgeter', d: 'Un CFO personal que vigila tus gastos, avisa del exceso y explica el porqué en lenguaje claro.' },
         { t: 'GiftingAI', d: 'Dale una persona, una ocasión y un presupuesto; argumenta hasta dar con el regalo correcto.' },
+        { t: 'Ventas y marketing IA a IA', d: 'Agentes de ventas y marketing que presentan, califican y negocian directamente con el asistente de IA de un cliente potencial, y solo escalan a una persona cuando hay un trato real que firmar.' },
       ],
     },
     pr: {
@@ -365,7 +392,7 @@ const STR = {
       platforms: 'Construido sobre plataformas en las que tu negocio ya confía',
     },
     trust: [
-      { t: 'Liderazgo senior, siempre', d: 'Cada proyecto lo dirige el fundador de principio a fin. Diseñadores e ingenieros especialistas verificados se suman cuando el alcance crece; la capacidad nunca es el cuello de botella.' },
+      { t: 'Liderazgo senior, siempre', d: 'Cada proyecto lo dirige de principio a fin un ingeniero senior, nunca se delega a juniors. Diseñadores e ingenieros especialistas verificados se suman cuando el alcance crece; la capacidad nunca es el cuello de botella.' },
       { t: 'Tu IP, completamente tuya', d: 'Contratos limpios, NDA antes de compartir nada sensible, y transferencia total de código fuente e IP al finalizar.' },
       { t: 'Seguridad por defecto', d: 'Accesos de privilegio mínimo, secretos cifrados, trazas de auditoría y manejo de datos consciente del RGPD en cada proyecto.' },
       { t: 'Global y asíncrono', d: 'Clientes en EE. UU., Europa, Oriente Medio y Asia reciben horas de solape, videos demo semanales y un único punto de contacto responsable.' },
@@ -388,9 +415,9 @@ const STR = {
       cta: 'Postúlate', note: 'Las candidaturas van por el formulario de contacto: menciona el rol y enlaza tu mejor trabajo.',
     },
     ab: {
-      eyebrow: 'Nosotros', h2a: 'Un estudio con', h2b: 'atención del fundador.',
-      p1: 'El estudio lo dirige su fundador, Aneesh Mohan, respaldado por una red de especialistas verificados en diseño e ingeniería que se suman cuando tu alcance crece. Siempre sabes quién responde: un owner senior, con las manos en tu proyecto y capacidad para escalar detrás.',
-      p2: 'El buque insignia es RiDERgy, nuestro propio producto: IA agéntica operando carga de vehículos eléctricos y gestión energética en producción, donde la fiabilidad no es negociable. Cada proyecto de cliente se mide con ese estándar, de la arquitectura y la interfaz a la API, los datos y la capa de inteligencia que lo hace útil.',
+      eyebrow: 'Nosotros', h2a: 'Un estudio construido con', h2b: 'oficio senior.',
+      p1: 'a-niche es un estudio pequeño de ingenieros y diseñadores senior. El mismo equipo responsable se queda en tu proyecto desde el kickoff hasta el lanzamiento, con especialistas verificados que se suman cuando tu alcance crece y capacidad para escalar detrás.',
+      p2: 'Nuestros propios productos, RiDERgy (IA agéntica para carga de vehículos eléctricos y gestión energética) y Aurora Mentors (un marketplace de mentores en vivo), funcionan a diario en producción, donde la fiabilidad no es negociable. Cada proyecto de cliente se mide con ese mismo estándar, de la arquitectura y la interfaz a la API, los datos y la capa de inteligencia que lo hace útil.',
     },
     ct: {
       eyebrow: 'Contacto', h2a: '¿Tienes algo que', h2b: 'valga la pena construir?',
@@ -403,7 +430,10 @@ const STR = {
       err: 'El formulario no pudo enviarse ahora. Escríbenos por LinkedIn, aquí abajo.',
       nda: 'NDA disponible · Facturación por hitos · Directo o escrow de plataforma, tú eliges',
     },
-    footer: 'Construido desde cero · React & Tailwind',
+    consent: {
+      p: 'Usamos cookies de analítica para entender cómo los visitantes usan este sitio. No vendemos datos ni los usamos para publicidad.',
+      accept: 'Aceptar', decline: 'Rechazar',
+    },
   },
 
   FR: {
@@ -413,8 +443,8 @@ const STR = {
     hero: {
       eyebrow: 'Studio IA & Logiciel · Voix · Agents · Full-Stack',
       h1a: 'Des logiciels rapides,', h1b: 'intelligents, faits pour ', ship: 'livrer.',
-      p: 'Un studio dirigé par son fondateur, qui mène les produits de la page blanche à la production : interfaces précises, APIs et couches de données solides, et une IA qui fait un vrai travail. Des agents qui pilotent les opérations. Des agents vocaux qui tiennent de vraies conversations.',
-      view: 'Voir les réalisations', avail: 'Nouveaux clients bienvenus',
+      p: 'Un studio senior qui construit agents vocaux, effectifs IA et logiciels de production, de la page blanche à la livraison.',
+      view: 'Voir les réalisations', avail: 'Nouveaux projets bienvenus',
     },
     metrics: ['Produits créés de zéro', 'IA agentique en production', 'Livraison asynchrone, tous fuseaux'],
     wb: {
@@ -436,9 +466,9 @@ const STR = {
       p: "Commencez par un audit IA à prix fixe : deux semaines d'analyse qui cartographient les automatisations au meilleur ROI dans votre activité, avec une feuille de route chiffrée. Le montant est déduit de votre premier projet.",
       cta: 'Réserver un audit →',
     },
-    work: { eyebrow: 'Réalisations choisies', h2a: 'Des produits conçus, construits', h2b: 'et livrés de zéro.', howToCta: 'Comment le tester' },
+    work: { eyebrow: 'Réalisations choisies', h2a: 'Des produits conçus, construits', h2b: 'et livrés de zéro.', howToCta: 'Comment le tester', swipe: 'Balayez pour parcourir →', more: 'Et bien plus, sur demande.' },
     projects: [
-      { tag: 'Vaisseau amiral · IA agentique', blurb: "Un SaaS de recharge VE et de gestion d'énergie construit de zéro. Des watchdogs agentiques surveillent bornes, batteries et solaire, tandis qu'une couche de chat LLM pilote le système en langage courant : lancer une charge, basculer sur le solaire, fixer un planning, et les agents exécutent.", note: 'Code propriétaire · démonstration privée sur demande', label: 'ridergy.com' },
+      { tag: 'Vaisseau amiral · IA agentique', blurb: "Un SaaS de recharge VE et de gestion d'énergie construit de zéro. Des watchdogs agentiques surveillent bornes, batteries et solaire, tandis qu'une couche de chat LLM pilote le système en langage courant : lancer une charge, basculer sur le solaire, fixer un planning, et les agents exécutent.", note: 'Code propriétaire · la démo en direct montre toutes les fonctionnalités', label: 'demo.ridergy.com' },
       { tag: "Produit live · Marketplace de mentorat", blurb: "Une marketplace de mentorat à deux faces : les étudiants qui préparent des études à l'étranger réservent des mentors vérifiés déjà dans des universités du monde entier, avec sessions payantes, déblocage du contact après paiement, relecture de documents, tableau de gains et guides multi-auteurs. Construit et exploité comme notre propre produit, en expansion au-delà des études à l'étranger.", label: 'auroramentors.com' },
       { tag: 'Intelligence retail IA', blurb: "Un dashboard IA pour supermarchés et enseignes : prévision de demande avec bandes de confiance, moteur de réassort classant les SKU par jours de couverture, optimisation des prix et assistant agentique qui répond aux questions et propose l'action suivante.", label: 'Démo live' },
       { tag: 'Plateforme logistique', blurb: "Un site logistique moderne avec calculateur de coûts en temps réel (poids volumétrique, tarifs multimodaux, carburant et taxes), widget de suivi en direct et capture de leads validée. Conçu comme un site marketing orienté conversion.", label: 'Démo live' },
@@ -450,6 +480,12 @@ const STR = {
         "Parcourir le dashboard live, les inscriptions et l'agenda, le tout appuyé sur une vraie base de données, pas une maquette statique.",
       ] },
       { tag: 'IoT · Copilote firmware IA', blurb: "Un assistant IA local qui transforme une description en langage courant en firmware ESP32 fonctionnel : il planifie le projet, génère l'architecture et le code FreeRTOS modulaire, écrit les fichiers dans un projet Arduino, compile en local et ne flashe la carte que lorsqu'un appareil est détecté en toute sécurité. Du prompt au matériel : IoT et microcontrôleurs.", note: 'En développement · démonstration privée sur demande', label: '' },
+      { tag: 'Portail comptes et paiements', blurb: "Une plateforme de collecte de ferraille et de recyclage construite comme prototype fonctionnel en une journée : portail client protégé par mot de passe avec inscription, connexion et édition de profil, paiements Stripe vérifiés côté serveur, un panneau d'administration pour gérer les clients et les tickets de collecte, et un modèle de données Postgres avec sécurité au niveau des lignes pour que chaque client ne voie et ne modifie que ses propres données.", note: 'Démo client : test.buyer@scrapline-test.com / TestPass123! · Admin : demo.customer@scrapline-test.com / DemoPass123!', label: 'Démo live', howTo: [
+        'Cliquez sur "Get started" pour créer votre propre compte, ou connectez-vous avec les identifiants client de démo ci-dessus.',
+        'Explorez le portail client : modifiez votre profil, réservez une collecte et payez en mode test Stripe.',
+        'Connectez-vous avec les identifiants admin de démo puis allez sur /admin pour gérer les clients et les tickets de collecte.',
+        "La sécurité au niveau des lignes signifie qu'un client connecté ne voit et ne modifie que ses propres données, jamais celles d'un autre compte.",
+      ] },
     ],
     pg: {
       eyebrow: 'Démos live', h2a: 'Donnez un travail à un agent.', h2b: 'Puis interrompez-le.',
@@ -489,6 +525,7 @@ const STR = {
         { t: 'Voice Journal', d: 'Parlez une minute et recevez une entrée de journal structurée : titre, humeur, actions. Vrai micro, entièrement dans votre navigateur.' },
         { t: 'AI Budgeter', d: 'Un directeur financier personnel qui surveille vos dépenses, signale les excès et explique pourquoi en langage clair.' },
         { t: 'GiftingAI', d: "Donnez-lui une personne, une occasion et un budget ; il argumente jusqu'au bon cadeau." },
+        { t: 'Ventes et marketing IA à IA', d: "Des agents commerciaux et marketing qui présentent, qualifient et négocient directement avec l'assistant IA d'un prospect, et n'escaladent vers un humain que lorsqu'il y a un vrai contrat à signer." },
       ],
     },
     pr: {
@@ -497,7 +534,7 @@ const STR = {
       platforms: 'Construit sur des plateformes que votre entreprise connaît déjà',
     },
     trust: [
-      { t: 'Direction senior, toujours', d: "Chaque projet est mené de bout en bout par le fondateur. Des designers et ingénieurs spécialistes vérifiés rejoignent quand le périmètre grandit ; la capacité n'est jamais le goulot." },
+      { t: 'Direction senior, toujours', d: "Chaque projet est mené de bout en bout par un ingénieur senior, jamais délégué à des juniors. Des designers et ingénieurs spécialistes vérifiés rejoignent quand le périmètre grandit ; la capacité n'est jamais le goulot." },
       { t: 'Votre PI, entièrement à vous', d: 'Contrats propres, NDA avant tout partage sensible, et transfert complet du code source et de la PI à la livraison.' },
       { t: 'Sécurité par défaut', d: 'Accès au moindre privilège, secrets chiffrés, journaux d\'audit et gestion des données conforme RGPD sur chaque projet.' },
       { t: 'Global, async d\'abord', d: 'Clients aux États-Unis, en Europe, au Moyen-Orient et en Asie : heures de recouvrement, vidéos de démo hebdomadaires et un interlocuteur responsable unique.' },
@@ -520,9 +557,9 @@ const STR = {
       cta: 'Postuler', note: 'Les candidatures passent par le formulaire de contact : indiquez le rôle et un lien vers votre meilleur travail.',
     },
     ab: {
-      eyebrow: 'À propos', h2a: 'Un studio avec', h2b: "l'attention du fondateur.",
-      p1: "Le studio est dirigé par son fondateur, Aneesh Mohan, appuyé par un réseau de spécialistes vérifiés en design et ingénierie qui rejoignent quand votre périmètre grandit. Vous savez toujours qui est responsable : un owner senior, les mains dans votre projet, avec la capacité de monter en charge derrière.",
-      p2: "Le vaisseau amiral est RiDERgy, notre propre produit : une IA agentique qui opère recharge VE et gestion d'énergie en production, là où la fiabilité ne se négocie pas. Chaque projet client est tenu à ce standard, de l'architecture et l'interface jusqu'à l'API, les données et la couche d'intelligence qui rend le tout utile.",
+      eyebrow: 'À propos', h2a: 'Un studio bâti sur', h2b: "un savoir-faire senior.",
+      p1: "a-niche est un petit studio d'ingénieurs et designers senior. La même équipe responsable reste sur votre projet du lancement à la livraison, avec des spécialistes vérifiés qui rejoignent quand votre périmètre grandit et la capacité de monter en charge derrière.",
+      p2: "Nos propres produits, RiDERgy (IA agentique pour la recharge VE et la gestion d'énergie) et Aurora Mentors (une marketplace de mentorat en direct), tournent chaque jour en production, là où la fiabilité ne se négocie pas. Chaque projet client est tenu au même standard, de l'architecture et l'interface jusqu'à l'API, les données et la couche d'intelligence qui rend le tout utile.",
     },
     ct: {
       eyebrow: 'Contact', h2a: 'Quelque chose qui mérite', h2b: "d'être construit ?",
@@ -535,22 +572,34 @@ const STR = {
       err: "Le formulaire n'a pas pu envoyer. Contactez-nous plutôt via LinkedIn, ci-dessous.",
       nda: 'NDA possible · Facturation au jalon · Direct ou escrow de plateforme, au choix',
     },
-    footer: 'Construit de zéro · React & Tailwind',
+    consent: {
+      p: "Nous utilisons des cookies d'analyse pour comprendre comment les visiteurs utilisent ce site. Aucune donnée n'est vendue ni utilisée pour la publicité.",
+      accept: 'Accepter', decline: 'Refuser',
+    },
   },
 };
 
 const Ctx = createContext(null);
 
+function initialLang() {
+  try {
+    const fromUrl = new URLSearchParams(window.location.search).get('lang')?.toUpperCase();
+    if (LANGS.includes(fromUrl)) return fromUrl;
+  } catch { /* no-op */ }
+  try {
+    const stored = localStorage.getItem('lang');
+    if (LANGS.includes(stored)) return stored;
+  } catch { /* private mode */ }
+  return 'EN';
+}
+
 export function LangProvider({ children }) {
-  const [lang, setLangState] = useState(() => {
-    try { return LANGS.includes(localStorage.getItem('lang')) ? localStorage.getItem('lang') : 'EN'; }
-    catch { return 'EN'; }
-  });
-  const setLang = (l) => {
-    setLangState(l);
-    try { localStorage.setItem('lang', l); } catch { /* private mode */ }
-    document.documentElement.lang = l.toLowerCase();
-  };
+  const [lang, setLangState] = useState(initialLang);
+  useEffect(() => {
+    document.documentElement.lang = lang.toLowerCase();
+    try { localStorage.setItem('lang', lang); } catch { /* private mode */ }
+  }, [lang]);
+  const setLang = (l) => setLangState(l);
   return <Ctx.Provider value={{ lang, setLang, s: STR[lang] }}>{children}</Ctx.Provider>;
 }
 
