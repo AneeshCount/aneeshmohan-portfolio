@@ -8,17 +8,18 @@ import ConsentBanner from './consent.jsx';
 
 const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
-function useReveal() {
+function useReveal(deps = []) {
   const ref = useRef(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    const els = ref.current?.querySelectorAll('.reveal') ?? [];
+    const els = ref.current?.querySelectorAll('.reveal:not(.in)') ?? [];
     const io = new IntersectionObserver(
       (es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }),
       { threshold: 0.14 }
     );
     els.forEach((el, i) => { el.style.animationDelay = `${(i % 4) * 0.1}s`; io.observe(el); });
     return () => io.disconnect();
-  }, []);
+  }, deps);
   return ref;
 }
 
@@ -241,10 +242,15 @@ function WhatIBuild() {
 }
 
 /* ── Work ───────────────────────────────────────────────────────────────── */
+const WORK_PREVIEW_COUNT = 2;
+
 function Work() {
   const { s } = useLang();
-  const ref = useReveal();
   const [openHow, setOpenHow] = useState(null);
+  const [showAll, setShowAll] = useState(false);
+  const ref = useReveal([showAll]);
+  const visibleProjects = showAll ? PROJECTS : PROJECTS.slice(0, WORK_PREVIEW_COUNT);
+
   return (
     <section id="work" ref={ref} className="mx-auto max-w-6xl px-8 py-16">
       <div className="reveal max-w-2xl">
@@ -255,7 +261,7 @@ function Work() {
       <p className="reveal mt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted/50 sm:hidden">{s.work.swipe}</p>
 
       <div className="mt-6 sm:mt-10 flex gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-8 px-8 pb-2 sm:grid sm:grid-cols-2 sm:gap-8 sm:overflow-visible sm:mx-0 sm:px-0 sm:pb-0">
-        {PROJECTS.map((p, i) => {
+        {visibleProjects.map((p, i) => {
           const tr = s.projects[i];
           const howTo = tr.howTo;
           const expanded = openHow === i;
@@ -304,7 +310,17 @@ function Work() {
           );
         })}
       </div>
-      <p className="reveal mt-8 font-mono text-[10px] uppercase tracking-[0.16em] text-muted/50">{s.work.more}</p>
+      <div className="reveal mt-8 flex items-center gap-4">
+        <button
+          onClick={() => setShowAll(!showAll)}
+          aria-expanded={showAll}
+          className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-gold/80 hover:text-gold transition"
+        >
+          <span className={`inline-block transition-transform duration-300 ${showAll ? 'rotate-45' : ''}`}>+</span>
+          {showAll ? s.work.showLess : `${s.work.showAll} (${PROJECTS.length})`}
+        </button>
+        {!showAll && <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted/50">{s.work.more}</p>}
+      </div>
     </section>
   );
 }
