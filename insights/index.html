@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a1014" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Consent Mode v2 defaults: analytics stays denied until the visitor
+         accepts the cookie banner (src/consent.jsx). Must run before GTM loads. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+      });
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-5T3LF9SV');
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <title>Insights · Why AI projects fail and what a head start buys · a-niche</title>
+    <meta name="description" content="Field notes from shipping AI into production: why most companies get no results from AI, and the compounding cost of being late to it. Written by the a-niche studio." />
+    <meta name="keywords" content="why AI projects fail, AI adoption, AI ROI, agentic AI strategy, AI competitive advantage, AI pilot to production" />
+
+    <link rel="canonical" href="https://a-niche.com/insights/" />
+
+    <!-- Open Graph (LinkedIn, WhatsApp, Slack link previews) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://a-niche.com/insights/" />
+    <meta property="og:title" content="Insights · Why AI projects fail and what a head start buys" />
+    <meta property="og:description" content="Field notes from shipping AI into production: why most companies get nothing back from AI, and the compounding cost of being late." />
+    <meta property="og:image" content="https://a-niche.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Insights · Why AI projects fail and what a head start buys" />
+    <meta name="twitter:description" content="Field notes from shipping AI into production, from the a-niche studio." />
+    <meta name="twitter:image" content="https://a-niche.com/og-image.png" />
+    <meta name="twitter:creator" content="@aniche03" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "a-niche Insights",
+      "url": "https://a-niche.com/insights/",
+      "description": "Field notes from building and running AI in production.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "a-niche",
+        "url": "https://a-niche.com/",
+        "logo": "https://a-niche.com/favicon.svg"
+      },
+      "blogPost": [
+        {
+          "@type": "BlogPosting",
+          "headline": "Why most companies get nothing back from AI",
+          "description": "Model quality stopped being the bottleneck a while ago. Six reasons the pilot never turned into a line on the P&L.",
+          "url": "https://a-niche.com/insights/#why-ai-fails",
+          "datePublished": "2026-07-20",
+          "inLanguage": ["en", "de", "es", "fr"],
+          "author": { "@type": "Organization", "name": "a-niche" }
+        },
+        {
+          "@type": "BlogPosting",
+          "headline": "The compounding cost of being late to AI",
+          "description": "Being ahead is not about buying the newest model. It is about the two years of process, data and fluency a competitor cannot buy later.",
+          "url": "https://a-niche.com/insights/#ai-advantage",
+          "datePublished": "2026-07-24",
+          "inLanguage": ["en", "de", "es", "fr"],
+          "author": { "@type": "Organization", "name": "a-niche" }
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5T3LF9SV"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div id="root"></div>
+    <script type="module" src="/src/insights/main.jsx"></script>
+  </body>
+</html>

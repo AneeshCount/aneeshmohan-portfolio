@@ -13,6 +13,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        insights: resolve(__dirname, 'insights/index.html'),
         journal: resolve(__dirname, 'labs/journal/index.html'),
       },
     },

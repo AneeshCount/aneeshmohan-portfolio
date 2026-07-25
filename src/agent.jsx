@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { MISSIONS } from './missions.js';
 import { useLang } from './i18n.jsx';
 import { locDemo } from './demo-i18n.js';
@@ -191,8 +191,8 @@ export function AgentConsole() {
       }, 24);
     } else if (e.t === 'step') {
       S.plan.forEach((p) => { if (p.st === 'active') p.st = 'done'; });
-      const p = S.plan.find((p) => p.id === e.id);
-      if (p) p.st = 'active';
+      const next = S.plan.find((step) => step.id === e.id);
+      if (next) next.st = 'active';
       render();
       wait(advance, 500);
     } else if (e.t === 'tool') {

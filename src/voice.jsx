@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CALLS } from './calls.js';
 import { FeedItem } from './agent.jsx';
 import { useLang } from './i18n.jsx';
@@ -29,8 +29,8 @@ function pickVoice(lang) {
   const vs = window.speechSynthesis.getVoices();
   if (!vs.length) return null;
   for (const p of VOICE_PREFS[lang] || VOICE_PREFS.EN) {
-    const v = vs.find((v) => p.test(v.name) || p.test(v.lang));
-    if (v) return v;
+    const match = vs.find((voice) => p.test(voice.name) || p.test(voice.lang));
+    if (match) return match;
   }
   return vs[0];
 }
@@ -295,8 +295,10 @@ export function VoiceAgent({ onOps }) {
           {calls.map((c) => (
             <button key={c.id} onClick={() => start(c)}
               className="group text-left rounded-xl border border-white/[0.08] p-6 hover:border-accent/40 hover:bg-accent/[0.03] transition-all duration-300">
-              <div className="flex items-center justify-between">
-                <span className="text-2xl">{c.icon}</span>
+              {/* Wraps rather than squeezes: on a narrow card the label
+                  drops to its own line instead of colliding with the icon. */}
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                <span className="text-2xl shrink-0">{c.icon}</span>
                 <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{c.direction} · {c.domain}</span>
               </div>
               <p className="mt-4 font-display italic text-[17px] text-ivory/90 leading-snug">“{c.goal}”</p>

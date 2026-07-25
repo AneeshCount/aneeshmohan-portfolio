@@ -1,0 +1,45 @@
+name: Verify
+
+# The single definition of "is this shippable". CI calls it on every push and
+# pull request; Deploy calls it before publishing, so the exact checks that
+# went green on the PR are the ones that gate a-niche.com.
+on:
+  workflow_call:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Editorial and content rules
+        run: npm run rules
+
+      - name: Tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+      - name: Check the built pages
+        run: node scripts/check-build.mjs
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 5

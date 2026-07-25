@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { LANG_KEY } from './config.js';
 
 /* ════════════════════════════════════════════════════════════════════════
    I18N: all page copy in EN (primary), DE, ES, FR. The interactive demo
@@ -9,16 +10,18 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 export const LANGS = ['EN', 'DE', 'ES', 'FR'];
 
-const STR = {
+/* Exported so the test suite can assert key parity across all four
+   languages. Components should read copy through useLang(), not STR. */
+export const STR = {
   EN: {
-    nav: ['Work', 'Playground', 'Process', 'About', 'Contact'],
+    nav: ['Work', 'Playground', 'Insights', 'Process', 'About', 'Contact'],
     cta: 'Start a project',
     more: 'More',
     hero: {
       eyebrow: 'AI & Software Studio · Voice · Agents · Full-Stack',
       h1a: 'Fast, intelligent', h1b: 'software, built to ', ship: 'ship.',
       p: 'A senior-led studio building voice agents, AI workforces, and production software, from blank page to ship.',
-      view: 'View the work', avail: 'Accepting new projects',
+      view: 'View the work', avail: 'Accepting new projects', panel: 'Live agent',
     },
     metrics: ['Products shipped from scratch', 'Agentic AI in production', 'Async delivery across timezones'],
     wb: {
@@ -53,7 +56,7 @@ const STR = {
         'Open QR Check-in, allow camera access, and scan the pass from step 1 for instant check-in feedback.',
         'Browse the live dashboard, registrations, and agenda, all backed by a real database, not a static mockup.',
       ] },
-      { tag: 'IoT · AI Firmware Copilot', blurb: 'A local AI assistant that turns a plain-language description into working ESP32 firmware: it plans the project, generates the architecture and modular FreeRTOS code, writes the files into an Arduino project, builds locally and flashes the board only when a device is safely detected. IoT and microcontroller work, from prompt to hardware.', note: 'In development · private walkthrough on request', label: '' },
+      { tag: 'IoT · AI Firmware Copilot', blurb: 'A local AI assistant that turns a plain-language description into working ESP32 firmware: it plans the project, generates the architecture and modular FreeRTOS code, writes the files into an Arduino project, builds locally and flashes the board only when a device is safely detected. IoT and microcontroller work, from prompt to hardware.', note: 'In development · private walkthrough on request' },
       { tag: 'Account & Payments Portal', blurb: 'A scrap and recycling pickup platform built as a working prototype in a day: a password-protected customer portal with registration, login and profile editing, Stripe payments verified server-side, an admin panel for managing customers and pickup tickets, and a Postgres data model with row-level security so customers only ever see and edit their own records.', note: 'Customer demo: test.buyer@scrapline-test.com / TestPass123! · Admin: demo.customer@scrapline-test.com / DemoPass123!', label: 'Live demo', howTo: [
         'Click "Get started" to register your own account, or sign in with the seeded customer login above.',
         'Browse the customer portal: edit your profile, book a pickup, and pay with Stripe in test mode.',
@@ -68,18 +71,18 @@ const STR = {
       ] },
       { tag: 'Field Collections App', blurb: 'A field-collections app built for a client outreach: employees log in, pick a collection mode, and log an amount that saves instantly to a real database, each person only ever seeing their own entries. Built on Vercel and Supabase so it runs on real data, not a mockup.', note: 'Demo link logs you straight in with a passkey, no signup needed', label: 'Live demo (auto login)' },
       { tag: 'Crypto Analytics Prototype', blurb: 'A dashboard tracking a public Binance Futures "Smart Money" trader profile: ROI, PnL, margin balance, win rate, drawdown and net transfer, refreshed daily by a scheduled scraper and stored in Supabase. Built after reverse-engineering the target\'s network traffic to confirm which stats are public versus login-gated.', label: 'Live demo' },
-      { tag: 'Live City Treasure Hunt PWA', blurb: 'A mobile-first PWA for running live, time-based city treasure hunt events: team leaders register with an event code, teams solve location-based clues about real places, and prove they found each spot via GPS, photo or an answer code before the next stop unlocks, all tracked on a live shared leaderboard.', note: 'In development · private walkthrough on request', label: '' },
-      { tag: 'AI Gifting Platform', blurb: 'A premium gifting platform: create a universal wishlist, share one link or QR code anywhere, and let anyone gift you, either by buying an item directly or sending cash that Giftr\'s AI converts into the best possible gift across vendors, purchased and shipped automatically, with the recipient\'s address never revealed to givers.', note: 'In development · private walkthrough on request', label: '' },
-      { tag: 'AI Recruiting Platform', blurb: 'An internal recruiting platform: upload or email-intake resumes, auto-tag them by industry, function and seniority, then search or ask natural-language questions across the whole candidate pool using RAG over embedded resume data. Works fully offline with a tagging fallback when no LLM key is configured.', note: 'In development · private walkthrough on request', label: '' },
-      { tag: 'RBAC Wallet & Payments Portal', blurb: 'A dependency-free reseller storefront panel: client and admin dashboards, a wallet system with manual QR-based top-ups and admin-approved credit, a pluggable upstream-provider API for auto-fulfilment, and a token-based password reset flow, all on a plain PHP/MySQL stack built to run on ordinary shared hosting.', note: 'In development · private walkthrough on request', label: '' },
-      { tag: 'Network Scanning Dashboard', blurb: 'A browser dashboard that wraps the real nmap binary: enter targets, pick TCP SYN, TCP Connect or UDP scans, watch progress live, then search, sort and export results as CSV or JSON. Runs locally against your own network, since scanning needs a real network-facing host and often root privileges.', note: 'Self-hosted tool · runs against your own network, private walkthrough on request', label: '' },
+      { tag: 'Live City Treasure Hunt PWA', blurb: 'A mobile-first PWA for running live, time-based city treasure hunt events: team leaders register with an event code, teams solve location-based clues about real places, and prove they found each spot via GPS, photo or an answer code before the next stop unlocks, all tracked on a live shared leaderboard.', note: 'In development · private walkthrough on request' },
+      { tag: 'AI Gifting Platform', blurb: 'A premium gifting platform: create a universal wishlist, share one link or QR code anywhere, and let anyone gift you, either by buying an item directly or sending cash that Giftr\'s AI converts into the best possible gift across vendors, purchased and shipped automatically, with the recipient\'s address never revealed to givers.', note: 'In development · private walkthrough on request' },
+      { tag: 'AI Recruiting Platform', blurb: 'An internal recruiting platform: upload or email-intake resumes, auto-tag them by industry, function and seniority, then search or ask natural-language questions across the whole candidate pool using RAG over embedded resume data. Works fully offline with a tagging fallback when no LLM key is configured.', note: 'In development · private walkthrough on request' },
+      { tag: 'RBAC Wallet & Payments Portal', blurb: 'A dependency-free reseller storefront panel: client and admin dashboards, a wallet system with manual QR-based top-ups and admin-approved credit, a pluggable upstream-provider API for auto-fulfilment, and a token-based password reset flow, all on a plain PHP/MySQL stack built to run on ordinary shared hosting.', note: 'In development · private walkthrough on request' },
+      { tag: 'Network Scanning Dashboard', blurb: 'A browser dashboard that wraps the real nmap binary: enter targets, pick TCP SYN, TCP Connect or UDP scans, watch progress live, then search, sort and export results as CSV or JSON. Runs locally against your own network, since scanning needs a real network-facing host and often root privileges.', note: 'Self-hosted tool · runs against your own network, private walkthrough on request' },
     ],
     pg: {
       eyebrow: 'Live demos', h2a: 'Give an agent a job.', h2b: 'Then interrupt it.',
       p1: 'This is what we build: AI that does real work, not chat. Take a live call with a ', voice: 'voice agent',
       p2: ' that speaks, books, and recovers when you cut it off mid-sentence. Or run an ', ops: 'operations agent',
       p3: ' on a mission and throw it a curveball. The same loop we ship to production on frontier models, replayed right in your browser.',
-      tabVoice: 'Voice agent · live call', tabOps: 'Ops agent · missions', demoNote: '',
+      tabVoice: 'Voice agent · live call', tabOps: 'Ops agent · missions',
     },
     va: {
       title: 'Voice Agent', roleAgent: 'Agent', roleCaller: 'Caller', cutTag: 'interrupted',
@@ -166,14 +169,14 @@ const STR = {
   },
 
   DE: {
-    nav: ['Arbeiten', 'Playground', 'Prozess', 'Über uns', 'Kontakt'],
+    nav: ['Arbeiten', 'Playground', 'Insights', 'Prozess', 'Über uns', 'Kontakt'],
     cta: 'Projekt starten',
     more: 'Mehr',
     hero: {
       eyebrow: 'KI- & Software-Studio · Voice · Agenten · Full-Stack',
       h1a: 'Schnelle, intelligente', h1b: 'Software, gebaut zum ', ship: 'Liefern.',
       p: 'Ein senior-geführtes Studio für Voice-Agenten, KI-Workforces und Produktionssoftware, vom leeren Blatt bis zum Launch.',
-      view: 'Arbeiten ansehen', avail: 'Wir nehmen neue Projekte an',
+      view: 'Arbeiten ansehen', avail: 'Wir nehmen neue Projekte an', panel: 'Live-Agent',
     },
     metrics: ['Produkte von null gebaut', 'Agentische KI in Produktion', 'Asynchrone Lieferung über Zeitzonen'],
     wb: {
@@ -208,7 +211,7 @@ const STR = {
         'QR-Check-in öffnen, Kamerazugriff erlauben und den Pass aus Schritt 1 scannen für sofortiges Check-in-Feedback.',
         'Live-Dashboard, Registrierungen und Agenda durchsehen, alles gestützt auf eine echte Datenbank, kein statisches Mockup.',
       ] },
-      { tag: 'IoT · KI-Firmware-Copilot', blurb: 'Ein lokaler KI-Assistent, der eine Alltagssprache-Beschreibung in funktionierende ESP32-Firmware verwandelt: Er plant das Projekt, erzeugt Architektur und modularen FreeRTOS-Code, schreibt die Dateien in ein Arduino-Projekt, baut lokal und flasht das Board nur, wenn ein Gerät sicher erkannt wird. IoT- und Mikrocontroller-Arbeit, vom Prompt bis zur Hardware.', note: 'In Entwicklung · privater Walkthrough auf Anfrage', label: '' },
+      { tag: 'IoT · KI-Firmware-Copilot', blurb: 'Ein lokaler KI-Assistent, der eine Alltagssprache-Beschreibung in funktionierende ESP32-Firmware verwandelt: Er plant das Projekt, erzeugt Architektur und modularen FreeRTOS-Code, schreibt die Dateien in ein Arduino-Projekt, baut lokal und flasht das Board nur, wenn ein Gerät sicher erkannt wird. IoT- und Mikrocontroller-Arbeit, vom Prompt bis zur Hardware.', note: 'In Entwicklung · privater Walkthrough auf Anfrage' },
       { tag: 'Konten- & Zahlungsportal', blurb: 'Eine Recycling- und Schrottabholungsplattform, als funktionierender Prototyp in einem Tag gebaut: passwortgeschütztes Kundenportal mit Registrierung, Login und Profilbearbeitung, serverseitig verifizierte Stripe-Zahlungen, ein Admin-Panel zur Verwaltung von Kunden und Abholtickets, und ein Postgres-Datenmodell mit Row-Level-Security, sodass Kunden nur ihre eigenen Datensätze sehen und bearbeiten.', note: 'Kunden-Demo: test.buyer@scrapline-test.com / TestPass123! · Admin: demo.customer@scrapline-test.com / DemoPass123!', label: 'Live-Demo', howTo: [
         'Auf "Get started" klicken, um ein eigenes Konto zu registrieren, oder mit dem Demo-Kundenlogin oben anmelden.',
         'Das Kundenportal erkunden: Profil bearbeiten, eine Abholung buchen und im Stripe-Testmodus bezahlen.',
@@ -223,18 +226,18 @@ const STR = {
       ] },
       { tag: 'App für Felddaten-Inkasso', blurb: 'Eine Inkasso-App für den Außendienst, gebaut für eine Kundenanfrage: Mitarbeiter melden sich an, wählen einen Inkassomodus und erfassen einen Betrag, der sofort in einer echten Datenbank gespeichert wird, jede Person sieht dabei nur ihre eigenen Einträge. Gebaut auf Vercel und Supabase, damit es auf echten Daten läuft, kein Mockup.', note: 'Der Demo-Link meldet Sie direkt per Passkey an, keine Registrierung nötig', label: 'Live-Demo (Auto-Login)' },
       { tag: 'Krypto-Analytics-Prototyp', blurb: 'Ein Dashboard, das ein öffentliches Binance-Futures-"Smart-Money"-Traderprofil verfolgt: ROI, PnL, Margin-Guthaben, Trefferquote, Drawdown und Nettotransfer, täglich aktualisiert durch einen geplanten Scraper und in Supabase gespeichert. Gebaut, nachdem der Netzwerkverkehr des Ziels analysiert wurde, um zu klären, welche Werte öffentlich und welche login-geschützt sind.', label: 'Live-Demo' },
-      { tag: 'Live-Schnitzeljagd-PWA für Städte', blurb: 'Eine Mobile-First-PWA für zeitbasierte Live-Schnitzeljagden in Städten: Teamleiter registrieren sich mit einem Eventcode, Teams lösen ortsbezogene Rätsel zu echten Orten und weisen nach, dass sie den Ort gefunden haben, per GPS, Foto oder Antwortcode, bevor die nächste Station freigeschaltet wird, alles auf einer live geteilten Bestenliste verfolgt.', note: 'In Entwicklung · privater Walkthrough auf Anfrage', label: '' },
-      { tag: 'KI-Geschenkplattform', blurb: 'Eine Premium-Geschenkplattform: eine universelle Wunschliste erstellen, mit einem Link oder QR-Code überall teilen und sich beschenken lassen, entweder direkt durch Kauf eines Artikels oder durch Geldsenden, das Giftrs KI in das bestmögliche Geschenk über mehrere Anbieter hinweg umwandelt, automatisch gekauft und versendet, ohne dass die Adresse des Empfängers je an Schenkende weitergegeben wird.', note: 'In Entwicklung · privater Walkthrough auf Anfrage', label: '' },
-      { tag: 'KI-Recruiting-Plattform', blurb: 'Eine interne Recruiting-Plattform: Lebensläufe hochladen oder per E-Mail einlesen, automatisch nach Branche, Funktion und Senioritätsstufe taggen, dann per RAG über eingebettete Lebenslaufdaten den gesamten Kandidatenpool durchsuchen oder in natürlicher Sprache befragen. Funktioniert auch vollständig offline mit einem Tagging-Fallback, wenn kein LLM-Key konfiguriert ist.', note: 'In Entwicklung · privater Walkthrough auf Anfrage', label: '' },
-      { tag: 'RBAC-Wallet- & Zahlungsportal', blurb: 'Ein abhängigkeitsfreies Reseller-Storefront-Panel: Kunden- und Admin-Dashboards, ein Wallet-System mit manuellen QR-basierten Aufladungen und admin-genehmigtem Guthaben, eine anbindbare Upstream-Provider-API für die automatische Auftragserfüllung und ein tokenbasierter Passwort-Reset-Flow, alles auf einem einfachen PHP/MySQL-Stack, gebaut für gewöhnliches Shared Hosting.', note: 'In Entwicklung · privater Walkthrough auf Anfrage', label: '' },
-      { tag: 'Netzwerk-Scan-Dashboard', blurb: 'Ein Browser-Dashboard, das den echten nmap-Befehl umhüllt: Ziele eingeben, TCP-SYN-, TCP-Connect- oder UDP-Scans wählen, den Fortschritt live verfolgen, dann Ergebnisse durchsuchen, sortieren und als CSV oder JSON exportieren. Läuft lokal gegen das eigene Netzwerk, da Scanning einen echten netzwerkzugänglichen Host und oft Root-Rechte braucht.', note: 'Selbst gehostetes Tool · läuft gegen das eigene Netzwerk, privater Walkthrough auf Anfrage', label: '' },
+      { tag: 'Live-Schnitzeljagd-PWA für Städte', blurb: 'Eine Mobile-First-PWA für zeitbasierte Live-Schnitzeljagden in Städten: Teamleiter registrieren sich mit einem Eventcode, Teams lösen ortsbezogene Rätsel zu echten Orten und weisen nach, dass sie den Ort gefunden haben, per GPS, Foto oder Antwortcode, bevor die nächste Station freigeschaltet wird, alles auf einer live geteilten Bestenliste verfolgt.', note: 'In Entwicklung · privater Walkthrough auf Anfrage' },
+      { tag: 'KI-Geschenkplattform', blurb: 'Eine Premium-Geschenkplattform: eine universelle Wunschliste erstellen, mit einem Link oder QR-Code überall teilen und sich beschenken lassen, entweder direkt durch Kauf eines Artikels oder durch Geldsenden, das Giftrs KI in das bestmögliche Geschenk über mehrere Anbieter hinweg umwandelt, automatisch gekauft und versendet, ohne dass die Adresse des Empfängers je an Schenkende weitergegeben wird.', note: 'In Entwicklung · privater Walkthrough auf Anfrage' },
+      { tag: 'KI-Recruiting-Plattform', blurb: 'Eine interne Recruiting-Plattform: Lebensläufe hochladen oder per E-Mail einlesen, automatisch nach Branche, Funktion und Senioritätsstufe taggen, dann per RAG über eingebettete Lebenslaufdaten den gesamten Kandidatenpool durchsuchen oder in natürlicher Sprache befragen. Funktioniert auch vollständig offline mit einem Tagging-Fallback, wenn kein LLM-Key konfiguriert ist.', note: 'In Entwicklung · privater Walkthrough auf Anfrage' },
+      { tag: 'RBAC-Wallet- & Zahlungsportal', blurb: 'Ein abhängigkeitsfreies Reseller-Storefront-Panel: Kunden- und Admin-Dashboards, ein Wallet-System mit manuellen QR-basierten Aufladungen und admin-genehmigtem Guthaben, eine anbindbare Upstream-Provider-API für die automatische Auftragserfüllung und ein tokenbasierter Passwort-Reset-Flow, alles auf einem einfachen PHP/MySQL-Stack, gebaut für gewöhnliches Shared Hosting.', note: 'In Entwicklung · privater Walkthrough auf Anfrage' },
+      { tag: 'Netzwerk-Scan-Dashboard', blurb: 'Ein Browser-Dashboard, das den echten nmap-Befehl umhüllt: Ziele eingeben, TCP-SYN-, TCP-Connect- oder UDP-Scans wählen, den Fortschritt live verfolgen, dann Ergebnisse durchsuchen, sortieren und als CSV oder JSON exportieren. Läuft lokal gegen das eigene Netzwerk, da Scanning einen echten netzwerkzugänglichen Host und oft Root-Rechte braucht.', note: 'Selbst gehostetes Tool · läuft gegen das eigene Netzwerk, privater Walkthrough auf Anfrage' },
     ],
     pg: {
       eyebrow: 'Live-Demos', h2a: 'Geben Sie einem Agenten einen Job.', h2b: 'Dann unterbrechen Sie ihn.',
       p1: 'Das ist, was wir bauen: KI, die echte Arbeit leistet, nicht Chat. Führen Sie ein Live-Telefonat mit einem ', voice: 'Voice-Agenten',
       p2: ', der spricht, bucht und sich fängt, wenn Sie ihn mitten im Satz unterbrechen. Oder schicken Sie einen ', ops: 'Operations-Agenten',
       p3: ' auf Mission und werfen Sie ihm einen Störfall dazwischen. Dieselbe Schleife liefern wir mit Frontier-Modellen in Produktion, hier im Browser wiedergegeben.',
-      tabVoice: 'Voice-Agent · Live-Anruf', tabOps: 'Ops-Agent · Missionen', demoNote: '',
+      tabVoice: 'Voice-Agent · Live-Anruf', tabOps: 'Ops-Agent · Missionen',
     },
     va: {
       title: 'Voice-Agent', roleAgent: 'Agent', roleCaller: 'Anrufer', cutTag: 'unterbrochen',
@@ -321,14 +324,14 @@ const STR = {
   },
 
   ES: {
-    nav: ['Trabajo', 'Playground', 'Proceso', 'Nosotros', 'Contacto'],
+    nav: ['Trabajo', 'Playground', 'Insights', 'Proceso', 'Nosotros', 'Contacto'],
     cta: 'Iniciar un proyecto',
     more: 'Más',
     hero: {
       eyebrow: 'Estudio de IA y Software · Voz · Agentes · Full-Stack',
       h1a: 'Software rápido e', h1b: 'inteligente, hecho para ', ship: 'entregar.',
       p: 'Un estudio senior que construye agentes de voz, plantillas de IA y software de producción, del papel en blanco al lanzamiento.',
-      view: 'Ver el trabajo', avail: 'Aceptamos nuevos proyectos',
+      view: 'Ver el trabajo', avail: 'Aceptamos nuevos proyectos', panel: 'Agente en vivo',
     },
     metrics: ['Productos creados desde cero', 'IA agéntica en producción', 'Entrega asíncrona entre husos horarios'],
     wb: {
@@ -363,7 +366,7 @@ const STR = {
         'Abre QR Check-in, permite el acceso a la cámara y escanea el pase del paso 1 para feedback instantáneo de check-in.',
         'Explora el dashboard en vivo, los registros y la agenda, todo respaldado por una base de datos real, no una maqueta estática.',
       ] },
-      { tag: 'IoT · Copiloto de firmware con IA', blurb: 'Un asistente de IA local que convierte una descripción en lenguaje natural en firmware ESP32 funcional: planifica el proyecto, genera la arquitectura y el código FreeRTOS modular, escribe los archivos en un proyecto Arduino, compila en local y flashea la placa solo cuando detecta un dispositivo de forma segura. Trabajo IoT y de microcontroladores, del prompt al hardware.', note: 'En desarrollo · demo privada bajo petición', label: '' },
+      { tag: 'IoT · Copiloto de firmware con IA', blurb: 'Un asistente de IA local que convierte una descripción en lenguaje natural en firmware ESP32 funcional: planifica el proyecto, genera la arquitectura y el código FreeRTOS modular, escribe los archivos en un proyecto Arduino, compila en local y flashea la placa solo cuando detecta un dispositivo de forma segura. Trabajo IoT y de microcontroladores, del prompt al hardware.', note: 'En desarrollo · demo privada bajo petición' },
       { tag: 'Portal de cuentas y pagos', blurb: 'Una plataforma de recogida de chatarra y reciclaje construida como prototipo funcional en un día: portal de cliente protegido con contraseña con registro, inicio de sesión y edición de perfil, pagos con Stripe verificados en el servidor, un panel de administración para gestionar clientes y tickets de recogida, y un modelo de datos en Postgres con seguridad a nivel de fila para que cada cliente solo vea y edite sus propios registros.', note: 'Demo de cliente: test.buyer@scrapline-test.com / TestPass123! · Admin: demo.customer@scrapline-test.com / DemoPass123!', label: 'Demo en vivo', howTo: [
         'Haz clic en "Get started" para registrar tu propia cuenta, o inicia sesión con el login de cliente de demo de arriba.',
         'Explora el portal del cliente: edita tu perfil, reserva una recogida y paga en modo de prueba de Stripe.',
@@ -378,18 +381,18 @@ const STR = {
       ] },
       { tag: 'App de cobros de campo', blurb: 'Una app de cobros de campo construida para una propuesta a un cliente: los empleados inician sesión, eligen un modo de cobro y registran un importe que se guarda al instante en una base de datos real, cada persona ve solo sus propios registros. Construida sobre Vercel y Supabase para funcionar con datos reales, no una maqueta.', note: 'El enlace de demo inicia sesión directamente con una clave de acceso, sin necesidad de registro', label: 'Demo en vivo (login automático)' },
       { tag: 'Prototipo de analítica cripto', blurb: 'Un dashboard que sigue un perfil público de trader "Smart Money" de Binance Futures: ROI, PnL, balance de margen, tasa de acierto, drawdown y transferencia neta, actualizado a diario por un scraper programado y guardado en Supabase. Construido tras analizar el tráfico de red del perfil para confirmar qué datos son públicos y cuáles requieren sesión.', label: 'Demo en vivo' },
-      { tag: 'PWA de búsqueda del tesoro urbana en vivo', blurb: 'Una PWA mobile-first para organizar búsquedas del tesoro urbanas en vivo y por tiempo: los líderes de equipo se registran con un código de evento, los equipos resuelven pistas ligadas a lugares reales y demuestran que los encontraron por GPS, foto o código de respuesta antes de desbloquear la siguiente parada, todo seguido en una clasificación en vivo compartida.', note: 'En desarrollo · demo privada bajo petición', label: '' },
-      { tag: 'Plataforma de regalos con IA', blurb: 'Una plataforma de regalos premium: crea una lista de deseos universal, compártela con un enlace o código QR en cualquier sitio, y deja que cualquiera te regale, ya sea comprando un artículo directamente o enviando dinero que la IA de Giftr convierte en el mejor regalo posible entre varios proveedores, comprado y enviado automáticamente, sin revelar nunca la dirección del destinatario a quien regala.', note: 'En desarrollo · demo privada bajo petición', label: '' },
-      { tag: 'Plataforma de reclutamiento con IA', blurb: 'Una plataforma interna de reclutamiento: sube currículums o recíbelos por correo, etiquétalos automáticamente por sector, función y nivel de seniority, y luego busca o haz preguntas en lenguaje natural sobre todo el pool de candidatos usando RAG sobre datos de currículums embebidos. Funciona totalmente offline con un etiquetado alternativo cuando no hay clave de LLM configurada.', note: 'En desarrollo · demo privada bajo petición', label: '' },
-      { tag: 'Portal RBAC de wallet y pagos', blurb: 'Un panel de tienda para revendedores sin dependencias: dashboards de cliente y admin, un sistema de wallet con recargas manuales por QR y crédito aprobado por el admin, una API de proveedor upstream conectable para el cumplimiento automático, y un flujo de restablecimiento de contraseña basado en token, todo sobre un stack simple de PHP/MySQL pensado para hosting compartido normal.', note: 'En desarrollo · demo privada bajo petición', label: '' },
-      { tag: 'Dashboard de escaneo de red', blurb: 'Un dashboard de navegador que envuelve el binario real de nmap: introduce objetivos, elige escaneos TCP SYN, TCP Connect o UDP, observa el progreso en vivo, y luego busca, ordena y exporta los resultados como CSV o JSON. Funciona en local contra tu propia red, ya que escanear requiere un host con acceso real a la red y a menudo privilegios de root.', note: 'Herramienta autoalojada · funciona contra tu propia red, demo privada bajo petición', label: '' },
+      { tag: 'PWA de búsqueda del tesoro urbana en vivo', blurb: 'Una PWA mobile-first para organizar búsquedas del tesoro urbanas en vivo y por tiempo: los líderes de equipo se registran con un código de evento, los equipos resuelven pistas ligadas a lugares reales y demuestran que los encontraron por GPS, foto o código de respuesta antes de desbloquear la siguiente parada, todo seguido en una clasificación en vivo compartida.', note: 'En desarrollo · demo privada bajo petición' },
+      { tag: 'Plataforma de regalos con IA', blurb: 'Una plataforma de regalos premium: crea una lista de deseos universal, compártela con un enlace o código QR en cualquier sitio, y deja que cualquiera te regale, ya sea comprando un artículo directamente o enviando dinero que la IA de Giftr convierte en el mejor regalo posible entre varios proveedores, comprado y enviado automáticamente, sin revelar nunca la dirección del destinatario a quien regala.', note: 'En desarrollo · demo privada bajo petición' },
+      { tag: 'Plataforma de reclutamiento con IA', blurb: 'Una plataforma interna de reclutamiento: sube currículums o recíbelos por correo, etiquétalos automáticamente por sector, función y nivel de seniority, y luego busca o haz preguntas en lenguaje natural sobre todo el pool de candidatos usando RAG sobre datos de currículums embebidos. Funciona totalmente offline con un etiquetado alternativo cuando no hay clave de LLM configurada.', note: 'En desarrollo · demo privada bajo petición' },
+      { tag: 'Portal RBAC de wallet y pagos', blurb: 'Un panel de tienda para revendedores sin dependencias: dashboards de cliente y admin, un sistema de wallet con recargas manuales por QR y crédito aprobado por el admin, una API de proveedor upstream conectable para el cumplimiento automático, y un flujo de restablecimiento de contraseña basado en token, todo sobre un stack simple de PHP/MySQL pensado para hosting compartido normal.', note: 'En desarrollo · demo privada bajo petición' },
+      { tag: 'Dashboard de escaneo de red', blurb: 'Un dashboard de navegador que envuelve el binario real de nmap: introduce objetivos, elige escaneos TCP SYN, TCP Connect o UDP, observa el progreso en vivo, y luego busca, ordena y exporta los resultados como CSV o JSON. Funciona en local contra tu propia red, ya que escanear requiere un host con acceso real a la red y a menudo privilegios de root.', note: 'Herramienta autoalojada · funciona contra tu propia red, demo privada bajo petición' },
     ],
     pg: {
       eyebrow: 'Demos en vivo', h2a: 'Dale un trabajo a un agente.', h2b: 'Luego interrúmpelo.',
       p1: 'Esto es lo que construimos: IA que hace trabajo real, no chat. Atiende una llamada en vivo con un ', voice: 'agente de voz',
       p2: ' que habla, agenda y se recupera cuando lo cortas a mitad de frase. O lanza un ', ops: 'agente de operaciones',
       p3: ' a una misión y tírale una bola curva. El mismo bucle que llevamos a producción con modelos frontier, reproducido en tu navegador.',
-      tabVoice: 'Agente de voz · llamada en vivo', tabOps: 'Agente de ops · misiones', demoNote: '',
+      tabVoice: 'Agente de voz · llamada en vivo', tabOps: 'Agente de ops · misiones',
     },
     va: {
       title: 'Agente de voz', roleAgent: 'Agente', roleCaller: 'Cliente', cutTag: 'interrumpido',
@@ -476,14 +479,14 @@ const STR = {
   },
 
   FR: {
-    nav: ['Réalisations', 'Playground', 'Méthode', 'À propos', 'Contact'],
+    nav: ['Réalisations', 'Playground', 'Insights', 'Méthode', 'À propos', 'Contact'],
     cta: 'Lancer un projet',
     more: 'Plus',
     hero: {
       eyebrow: 'Studio IA & Logiciel · Voix · Agents · Full-Stack',
       h1a: 'Des logiciels rapides,', h1b: 'intelligents, faits pour ', ship: 'livrer.',
       p: 'Un studio senior qui construit agents vocaux, effectifs IA et logiciels de production, de la page blanche à la livraison.',
-      view: 'Voir les réalisations', avail: 'Nouveaux projets bienvenus',
+      view: 'Voir les réalisations', avail: 'Nouveaux projets bienvenus', panel: 'Agent live',
     },
     metrics: ['Produits créés de zéro', 'IA agentique en production', 'Livraison asynchrone, tous fuseaux'],
     wb: {
@@ -518,7 +521,7 @@ const STR = {
         "Ouvrir QR Check-in, autoriser la caméra, et scanner le pass de l'étape 1 pour un retour instantané.",
         "Parcourir le dashboard live, les inscriptions et l'agenda, le tout appuyé sur une vraie base de données, pas une maquette statique.",
       ] },
-      { tag: 'IoT · Copilote firmware IA', blurb: "Un assistant IA local qui transforme une description en langage courant en firmware ESP32 fonctionnel : il planifie le projet, génère l'architecture et le code FreeRTOS modulaire, écrit les fichiers dans un projet Arduino, compile en local et ne flashe la carte que lorsqu'un appareil est détecté en toute sécurité. Du prompt au matériel : IoT et microcontrôleurs.", note: 'En développement · démonstration privée sur demande', label: '' },
+      { tag: 'IoT · Copilote firmware IA', blurb: "Un assistant IA local qui transforme une description en langage courant en firmware ESP32 fonctionnel : il planifie le projet, génère l'architecture et le code FreeRTOS modulaire, écrit les fichiers dans un projet Arduino, compile en local et ne flashe la carte que lorsqu'un appareil est détecté en toute sécurité. Du prompt au matériel : IoT et microcontrôleurs.", note: 'En développement · démonstration privée sur demande' },
       { tag: 'Portail comptes et paiements', blurb: "Une plateforme de collecte de ferraille et de recyclage construite comme prototype fonctionnel en une journée : portail client protégé par mot de passe avec inscription, connexion et édition de profil, paiements Stripe vérifiés côté serveur, un panneau d'administration pour gérer les clients et les tickets de collecte, et un modèle de données Postgres avec sécurité au niveau des lignes pour que chaque client ne voie et ne modifie que ses propres données.", note: 'Démo client : test.buyer@scrapline-test.com / TestPass123! · Admin : demo.customer@scrapline-test.com / DemoPass123!', label: 'Démo live', howTo: [
         'Cliquez sur "Get started" pour créer votre propre compte, ou connectez-vous avec les identifiants client de démo ci-dessus.',
         'Explorez le portail client : modifiez votre profil, réservez une collecte et payez en mode test Stripe.',
@@ -533,18 +536,18 @@ const STR = {
       ] },
       { tag: 'App de collecte terrain', blurb: "Une app de collecte terrain construite pour une prospection client : les employés se connectent, choisissent un mode de collecte et saisissent un montant enregistré instantanément dans une vraie base de données, chaque personne ne voyant que ses propres entrées. Construite sur Vercel et Supabase pour fonctionner sur des données réelles, pas une maquette.", note: 'Le lien de démo vous connecte directement via une clé d\'accès, sans inscription', label: 'Démo live (connexion auto)' },
       { tag: 'Prototype analytics crypto', blurb: "Un dashboard qui suit un profil trader public \"Smart Money\" de Binance Futures : ROI, PnL, solde de marge, taux de réussite, drawdown et transfert net, actualisé chaque jour par un scraper planifié et stocké dans Supabase. Construit après rétro-ingénierie du trafic réseau du profil pour confirmer quelles statistiques sont publiques et lesquelles nécessitent une connexion.", label: 'Démo live' },
-      { tag: "PWA de chasse au trésor urbaine en direct", blurb: "Une PWA mobile-first pour organiser des chasses au trésor urbaines en direct et chronométrées : les chefs d'équipe s'inscrivent avec un code d'événement, les équipes résolvent des indices liés à de vrais lieux et prouvent qu'elles les ont trouvés par GPS, photo ou code réponse avant de débloquer l'étape suivante, le tout suivi sur un classement live partagé.", note: 'En développement · démonstration privée sur demande', label: '' },
-      { tag: 'Plateforme de cadeaux IA', blurb: "Une plateforme de cadeaux premium : créez une liste de souhaits universelle, partagez-la via un lien ou un QR code n'importe où, et laissez n'importe qui vous offrir un cadeau, soit en achetant un article directement, soit en envoyant de l'argent que l'IA de Giftr transforme dans le meilleur cadeau possible parmi plusieurs fournisseurs, acheté et expédié automatiquement, sans jamais révéler l'adresse du destinataire à qui offre.", note: 'En développement · démonstration privée sur demande', label: '' },
-      { tag: 'Plateforme de recrutement IA', blurb: "Une plateforme de recrutement interne : importez des CV ou recevez-les par e-mail, étiquetez-les automatiquement par secteur, fonction et ancienneté, puis recherchez ou posez des questions en langage naturel sur l'ensemble du vivier de candidats via du RAG sur des données de CV vectorisées. Fonctionne entièrement hors ligne avec un étiquetage de secours quand aucune clé LLM n'est configurée.", note: 'En développement · démonstration privée sur demande', label: '' },
-      { tag: 'Portail RBAC wallet et paiements', blurb: "Un panneau boutique revendeur sans dépendances : dashboards client et admin, un système de wallet avec recharges manuelles par QR et crédit approuvé par l'admin, une API fournisseur amont connectable pour l'exécution automatique, et un flux de réinitialisation de mot de passe par jeton, le tout sur un stack PHP/MySQL simple pensé pour un hébergement mutualisé classique.", note: 'En développement · démonstration privée sur demande', label: '' },
-      { tag: 'Dashboard de scan réseau', blurb: "Un dashboard navigateur qui encapsule le vrai binaire nmap : saisissez des cibles, choisissez un scan TCP SYN, TCP Connect ou UDP, suivez la progression en direct, puis recherchez, triez et exportez les résultats en CSV ou JSON. Fonctionne en local sur votre propre réseau, un scan nécessitant un hôte réellement exposé au réseau et souvent des privilèges root.", note: 'Outil auto-hébergé · fonctionne sur votre propre réseau, démonstration privée sur demande', label: '' },
+      { tag: "PWA de chasse au trésor urbaine en direct", blurb: "Une PWA mobile-first pour organiser des chasses au trésor urbaines en direct et chronométrées : les chefs d'équipe s'inscrivent avec un code d'événement, les équipes résolvent des indices liés à de vrais lieux et prouvent qu'elles les ont trouvés par GPS, photo ou code réponse avant de débloquer l'étape suivante, le tout suivi sur un classement live partagé.", note: 'En développement · démonstration privée sur demande' },
+      { tag: 'Plateforme de cadeaux IA', blurb: "Une plateforme de cadeaux premium : créez une liste de souhaits universelle, partagez-la via un lien ou un QR code n'importe où, et laissez n'importe qui vous offrir un cadeau, soit en achetant un article directement, soit en envoyant de l'argent que l'IA de Giftr transforme dans le meilleur cadeau possible parmi plusieurs fournisseurs, acheté et expédié automatiquement, sans jamais révéler l'adresse du destinataire à qui offre.", note: 'En développement · démonstration privée sur demande' },
+      { tag: 'Plateforme de recrutement IA', blurb: "Une plateforme de recrutement interne : importez des CV ou recevez-les par e-mail, étiquetez-les automatiquement par secteur, fonction et ancienneté, puis recherchez ou posez des questions en langage naturel sur l'ensemble du vivier de candidats via du RAG sur des données de CV vectorisées. Fonctionne entièrement hors ligne avec un étiquetage de secours quand aucune clé LLM n'est configurée.", note: 'En développement · démonstration privée sur demande' },
+      { tag: 'Portail RBAC wallet et paiements', blurb: "Un panneau boutique revendeur sans dépendances : dashboards client et admin, un système de wallet avec recharges manuelles par QR et crédit approuvé par l'admin, une API fournisseur amont connectable pour l'exécution automatique, et un flux de réinitialisation de mot de passe par jeton, le tout sur un stack PHP/MySQL simple pensé pour un hébergement mutualisé classique.", note: 'En développement · démonstration privée sur demande' },
+      { tag: 'Dashboard de scan réseau', blurb: "Un dashboard navigateur qui encapsule le vrai binaire nmap : saisissez des cibles, choisissez un scan TCP SYN, TCP Connect ou UDP, suivez la progression en direct, puis recherchez, triez et exportez les résultats en CSV ou JSON. Fonctionne en local sur votre propre réseau, un scan nécessitant un hôte réellement exposé au réseau et souvent des privilèges root.", note: 'Outil auto-hébergé · fonctionne sur votre propre réseau, démonstration privée sur demande' },
     ],
     pg: {
       eyebrow: 'Démos live', h2a: 'Donnez un travail à un agent.', h2b: 'Puis interrompez-le.',
       p1: "Voilà ce que nous construisons : une IA qui fait un vrai travail, pas du chat. Prenez un appel en direct avec un ", voice: 'agent vocal',
       p2: " qui parle, réserve et se rattrape quand vous le coupez en pleine phrase. Ou envoyez un ", ops: "agent d'opérations",
       p3: " en mission et lancez-lui un imprévu. La même boucle que nous livrons en production sur des modèles frontier, rejouée dans votre navigateur.",
-      tabVoice: 'Agent vocal · appel live', tabOps: "Agent d'ops · missions", demoNote: '',
+      tabVoice: 'Agent vocal · appel live', tabOps: "Agent d'ops · missions",
     },
     va: {
       title: 'Agent vocal', roleAgent: 'Agent', roleCaller: 'Client', cutTag: 'interrompu',
@@ -639,7 +642,7 @@ function initialLang() {
     if (LANGS.includes(fromUrl)) return fromUrl;
   } catch { /* no-op */ }
   try {
-    const stored = localStorage.getItem('lang');
+    const stored = localStorage.getItem(LANG_KEY);
     if (LANGS.includes(stored)) return stored;
   } catch { /* private mode */ }
   return 'EN';
@@ -649,7 +652,7 @@ export function LangProvider({ children }) {
   const [lang, setLangState] = useState(initialLang);
   useEffect(() => {
     document.documentElement.lang = lang.toLowerCase();
-    try { localStorage.setItem('lang', lang); } catch { /* private mode */ }
+    try { localStorage.setItem(LANG_KEY, lang); } catch { /* private mode */ }
   }, [lang]);
   const setLang = (l) => setLangState(l);
   return <Ctx.Provider value={{ lang, setLang, s: STR[lang] }}>{children}</Ctx.Provider>;

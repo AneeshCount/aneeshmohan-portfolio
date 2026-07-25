@@ -2,83 +2,246 @@
 @tailwind components;
 @tailwind utilities;
 
-html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
-body { @apply bg-ink text-muted font-sans antialiased; }
-section { scroll-margin-top: 88px; }
-::selection { background: rgba(47,227,190,.22); color: #fff; }
+/* ════════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM
 
-/* Editorial serif display, ivory, generous and precise */
-h1,h2,h3 { @apply font-display text-ivory; letter-spacing: -0.01em; font-weight: 600; }
+   Structure borrowed from the engineered end of the spectrum (Linear):
+   a near-black canvas, hairline geometry, surfaces lit from the top edge,
+   restrained accent, and type that carries the hierarchy on its own.
 
-/* ── Motion: slow and elegant ───────────────────────────────────────────── */
-@keyframes fadeUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+   The voice stays ours: an editorial serif display against mono utility
+   text, so the page reads as a studio rather than as a dev tool.
+
+   Every size here is fluid. The phone is the default case, not the
+   breakpoint we remember last.
+   ════════════════════════════════════════════════════════════════════════ */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+body { @apply bg-ink text-muted font-sans antialiased; overflow-x: hidden; }
+
+/* A slow wash over the canvas so it is never flat black. Painted by a fixed
+   pseudo-element rather than background-attachment, which iOS Safari
+   repaints on every scroll frame. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(47, 227, 190, 0.055), transparent 60%),
+    radial-gradient(80% 40% at 100% 0%, rgba(203, 180, 137, 0.03), transparent 55%);
+}
+
+section { scroll-margin-top: 80px; }
+::selection { background: rgba(47, 227, 190, 0.22); color: #fff; }
+
+/* ── Type ───────────────────────────────────────────────────────────────
+   One fluid scale, no breakpoint jumps. clamp() means a 360px phone and a
+   1600px display each get a size that was designed for them rather than
+   the nearest sm:/lg: guess.
+   ──────────────────────────────────────────────────────────────────────── */
+h1, h2, h3 { @apply font-display text-ivory; letter-spacing: -0.015em; font-weight: 600; }
+
+.display-1 { font-size: clamp(2.5rem, 8.5vw, 4.75rem); line-height: 1.04; letter-spacing: -0.03em; }
+.display-2 { font-size: clamp(1.875rem, 5.2vw, 2.75rem); line-height: 1.12; letter-spacing: -0.02em; }
+.display-3 { font-size: clamp(1.5rem, 3.6vw, 2rem); line-height: 1.2; letter-spacing: -0.015em; }
+
+.lede { font-size: clamp(1rem, 2.4vw, 1.125rem); line-height: 1.7; }
+
+/* The accent word in a headline. A gradient rather than flat teal so the
+   one place we raise our voice still feels lit rather than highlighted. */
+.gradient-text {
+  background: linear-gradient(100deg, #2FE3BE 10%, #9df0dc 55%, #CBB489 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Layout ─────────────────────────────────────────────────────────────
+   Gutters scale with the viewport. 32px of padding on a 360px phone spends
+   18% of the screen on nothing.
+   ──────────────────────────────────────────────────────────────────────── */
+.shell { @apply mx-auto w-full max-w-6xl; padding-inline: clamp(1.25rem, 5vw, 2rem); }
+.shell-narrow { @apply mx-auto w-full max-w-3xl; padding-inline: clamp(1.25rem, 5vw, 2rem); }
+.section-y { padding-block: clamp(3.5rem, 9vw, 6rem); }
+
+/* ── Motion ─────────────────────────────────────────────────────────────── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes flow { 0% { transform: translateX(-120%); } 100% { transform: translateX(340%); } }
 @keyframes flowdash { to { stroke-dashoffset: -11; } }
-@keyframes pulse2 { 0%,100% { opacity: .35; } 50% { opacity: 1; } }
-@keyframes floatY { 0%,100% { transform: rotateX(8deg) rotateY(-14deg) translateY(0); } 50% { transform: rotateX(8deg) rotateY(-14deg) translateY(-10px); } }
-@keyframes bar { 0%,100% { transform: scaleY(.35); } 50% { transform: scaleY(1); } }
+@keyframes pulse2 { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+@keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes bar { 0%, 100% { transform: scaleY(.35); } 50% { transform: scaleY(1); } }
+@keyframes drift { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(2%, -3%, 0); } }
 
 .reveal { opacity: 0; }
-.reveal.in { animation: fadeUp 1s cubic-bezier(.16,.8,.24,1) both; }
+.reveal.in { animation: fadeUp .9s cubic-bezier(.16, .8, .24, 1) both; }
 
-/* Keyboard focus: visible teal ring (mouse clicks stay clean) */
-a:focus-visible, button:focus-visible { outline: 2px solid #2FE3BE; outline-offset: 3px; border-radius: 2px; }
-
-/* Reduced motion: show everything immediately, stop ambient animation */
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-  .reveal { opacity: 1; }
-  .charge-track::after { display: none; }
+/* Keyboard focus stays visible and unmistakable; pointer clicks stay clean. */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid #2FE3BE;
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
-/* Eyebrow: mono, uppercase, wide tracking, with a hairline tick */
-.eyebrow { @apply font-mono text-[10px] font-medium uppercase text-gold inline-flex items-center gap-3; letter-spacing: 0.34em; }
-.eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; display: inline-block; opacity: .6; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .reveal { opacity: 1; }
+  .charge-track::after, .aurora { display: none; }
+}
 
-/* Hairline divider */
-.rule { height: 1px; background: rgba(236,231,220,.10); }
+/* ── Chrome ─────────────────────────────────────────────────────────────── */
 
-/* Energy "charge" line: a slow highlight that flows across (speed, restrained) */
-.charge-track { position: relative; height: 1px; background: rgba(236,231,220,.10); overflow: hidden; }
+/* Eyebrow: mono, uppercase, wide, with a hairline tick that ties it to the
+   rules used everywhere else. */
+.eyebrow { @apply font-mono text-[10px] font-medium uppercase text-gold inline-flex items-center gap-3; letter-spacing: 0.32em; }
+.eyebrow::before { content: ''; width: 24px; height: 1px; background: currentColor; display: inline-block; opacity: .6; }
+
+/* Hairlines that fade out at both ends, so a divider reads as a light
+   source rather than a border drawn to the edge of the container. */
+.rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(236, 231, 220, .14), transparent);
+}
+
+.charge-track { position: relative; height: 1px; background: rgba(236, 231, 220, .08); overflow: hidden; }
 .charge-track::after {
   content: ''; position: absolute; top: 0; left: 0; width: 28%; height: 100%;
   background: linear-gradient(90deg, transparent, #2FE3BE, transparent);
   animation: flow 4.5s ease-in-out infinite;
 }
 
-/* Surfaces: warm dark, hairline border, lots of internal room */
-.surface { @apply bg-panel border border-white/[0.06] rounded-xl; }
-
-/* Project entry: editorial, hairline top accent that draws on hover */
-.pcard { @apply relative bg-panel/60 border border-white/[0.06] rounded-xl overflow-hidden transition-all duration-500; }
-.pcard::before {
-  content: ''; position: absolute; top: 0; left: 0; height: 1px; width: 0;
-  background: linear-gradient(90deg, #2FE3BE, transparent); transition: width .7s cubic-bezier(.16,.8,.24,1);
+/* Status pill: a live dot and a short claim. Used once, at the top. */
+.badge {
+  @apply inline-flex items-center gap-2.5 rounded-full font-mono text-[10px] uppercase tracking-[0.16em] text-muted;
+  padding: 0.4rem 0.85rem 0.4rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
 }
-.pcard:hover { @apply border-white/15 shadow-elevated; background: #131316; transform: translateY(-3px); }
-.pcard:hover::before { width: 100%; }
+.badge:hover { border-color: rgba(47, 227, 190, 0.35); color: #EAF0EE; }
 
-/* Primary CTA: filled, lit, and pressable, the one "solid" object on the page */
+/* ── Surfaces ───────────────────────────────────────────────────────────
+   Every raised element is lit from its top edge: a 1px inset highlight
+   above a hairline border. It is the detail that makes a dark UI read as
+   material rather than as boxes drawn on a background.
+   ──────────────────────────────────────────────────────────────────────── */
+.surface {
+  @apply relative rounded-xl;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  transition: border-color .4s, box-shadow .4s, transform .4s cubic-bezier(.16, .8, .24, 1);
+}
+
+.pcard {
+  @apply relative rounded-xl overflow-hidden;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  transition: border-color .5s, box-shadow .5s, transform .5s cubic-bezier(.16, .8, .24, 1);
+}
+.pcard::after {
+  content: ''; position: absolute; top: 0; left: 0; height: 1px; width: 0;
+  background: linear-gradient(90deg, #2FE3BE, transparent);
+  transition: width .7s cubic-bezier(.16, .8, .24, 1);
+}
+.pcard:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.09), 0 22px 50px -22px rgba(0, 0, 0, .85);
+  transform: translateY(-3px);
+}
+.pcard:hover::after { width: 100%; }
+
+/* Cursor spotlight. The card lights up where the pointer is, which is the
+   one piece of ambient motion tied to the visitor rather than to a timer.
+   Coordinates come from a single delegated listener (useSpotlight). */
+.spot > * { position: relative; }
+.spot::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; border-radius: inherit;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), rgba(47, 227, 190, 0.10), transparent 62%);
+  opacity: 0; transition: opacity .4s; pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .spot:hover::before { opacity: 1; }
+}
+
+/* ── Controls ───────────────────────────────────────────────────────────
+   Minimum 44px tall so every primary action clears the touch target floor
+   without needing a separate mobile rule.
+   ──────────────────────────────────────────────────────────────────────── */
 .btn-primary {
-  @apply inline-flex items-center gap-3 rounded-full bg-accent text-ink font-mono text-[12px] uppercase tracking-[0.2em] px-7 py-3.5 shadow-glow transition-all duration-300;
+  @apply inline-flex items-center justify-center gap-3 rounded-full bg-accent text-ink font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.18em] px-6 sm:px-7 shadow-glow transition-all duration-300;
+  min-height: 46px;
 }
 .btn-primary:hover { @apply shadow-glow-lg; filter: brightness(1.06); transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0) scale(.98); box-shadow: 0 4px 14px -6px rgba(47,227,190,.45); }
+.btn-primary:active { transform: translateY(0) scale(.98); box-shadow: 0 4px 14px -6px rgba(47, 227, 190, .45); }
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-3 rounded-full font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.18em] text-ivory px-6 transition-all duration-300;
+  min-height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+}
+.btn-ghost:hover { border-color: rgba(47, 227, 190, 0.45); color: #2FE3BE; }
 
 .chip { @apply font-mono text-[10px] tracking-wide rounded px-2 py-1 bg-white/[0.03] border border-white/[0.06] text-muted; }
 
-/* Faint blueprint grid, very subtle */
-.grid-bg { background-image: linear-gradient(rgba(236,231,220,.018) 1px, transparent 1px), linear-gradient(90deg, rgba(236,231,220,.018) 1px, transparent 1px); background-size: 72px 72px; }
-.glow { position: absolute; border-radius: 9999px; background: radial-gradient(circle, rgba(47,227,190,.10), transparent 70%); filter: blur(30px); pointer-events: none; }
+/* ── Atmosphere ─────────────────────────────────────────────────────────── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(236, 231, 220, .018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(236, 231, 220, .018) 1px, transparent 1px);
+  background-size: 72px 72px;
+  /* Fade the grid out rather than cutting it, so it reads as depth. */
+  -webkit-mask-image: radial-gradient(110% 80% at 50% 0%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(110% 80% at 50% 0%, #000 20%, transparent 75%);
+}
 
-.link-underline { background-image: linear-gradient(#2FE3BE,#2FE3BE); background-size: 0% 1px; background-repeat: no-repeat; background-position: 0 100%; transition: background-size .4s; }
+.glow {
+  position: absolute; border-radius: 9999px; pointer-events: none;
+  background: radial-gradient(circle, rgba(47, 227, 190, .10), transparent 70%);
+  filter: blur(30px);
+}
+
+/* The hero light field: two slow, oversized washes that never quite repeat. */
+.aurora { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.aurora::before, .aurora::after {
+  content: ''; position: absolute; border-radius: 9999px; filter: blur(80px);
+}
+.aurora::before {
+  width: 46rem; height: 46rem; top: -18rem; right: -14rem;
+  background: radial-gradient(circle, rgba(47, 227, 190, .16), transparent 65%);
+  animation: drift 18s ease-in-out infinite;
+}
+.aurora::after {
+  width: 34rem; height: 34rem; bottom: -16rem; left: -10rem;
+  background: radial-gradient(circle, rgba(203, 180, 137, .10), transparent 65%);
+  animation: drift 22s ease-in-out infinite reverse;
+}
+
+.link-underline {
+  background-image: linear-gradient(#2FE3BE, #2FE3BE);
+  background-size: 0% 1px; background-repeat: no-repeat; background-position: 0 100%;
+  transition: background-size .4s;
+}
 .link-underline:hover { background-size: 100% 1px; }
 
-*::-webkit-scrollbar { width: 9px; }
+/* ── Scrollbars and carousels ───────────────────────────────────────────── */
+*::-webkit-scrollbar { width: 9px; height: 9px; }
 *::-webkit-scrollbar-thumb { background: #26262b; border-radius: 8px; }
+*::-webkit-scrollbar-thumb:hover { background: #33333a; }
 
-/* Mobile card carousels (Work): native scroll-snap, no visible scrollbar */
 .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
