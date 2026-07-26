@@ -12,7 +12,7 @@ import { getPreviews, uiFor } from '../insights/meta.js';
 
    The live agent panel that sat beside it is the studio's best asset and was
    the worst thing for this screen: it halved the headline's width and filled
-   the remaining space with a second focal point. It now opens the dusk half,
+   the remaining space with a second focal point. It now sits on its own,
    at full width, immediately above the demos it belongs to.
    ════════════════════════════════════════════════════════════════════════ */
 
@@ -27,6 +27,7 @@ export function Hero() {
       id="top"
       className="relative overflow-hidden flex items-center pt-32 pb-20 sm:pt-40 sm:pb-28 lg:min-h-[94vh]"
     >
+      <div className="hero-glow" aria-hidden="true" />
       <Lattice />
       {/* The constellation is the one piece of hero motion, and only where the
           device and connection can carry it without costing battery. */}
@@ -98,10 +99,11 @@ export function Metrics() {
   );
 }
 
-/* The live agent panel, promoted out of the hero. It opens the dusk half of the
-   page as a full-width instrument: a waveform running in four languages, not a
-   screenshot, and it appears on phones too. Hiding the one ownable graphic
-   below `lg:` meant most visitors never saw it. */
+/* The live agent panel, promoted out of the hero. It sits as a full-width
+   instrument between the capability strip and the work it introduces: a
+   waveform running in four languages, not a screenshot, and it appears on
+   phones too. Hiding the one ownable graphic below `lg:` meant most visitors
+   never saw it. */
 const WAVE_BARS = [0.4, 0.62, 0.35, 0.85, 0.5, 1, 0.45, 0.72, 0.38, 0.9, 0.55, 0.8, 0.42, 0.68, 0.36, 0.95, 0.48, 0.75, 0.4, 0.6];
 
 export function AgentBanner() {
@@ -109,7 +111,7 @@ export function AgentBanner() {
   const { moving } = useMotion();
   const ref = useReveal();
   return (
-    <section ref={ref}>
+    <section ref={ref} className="border-t border-hair/8">
       <div className="shell section-y">
         <button
           onClick={() => scrollTo('play')}

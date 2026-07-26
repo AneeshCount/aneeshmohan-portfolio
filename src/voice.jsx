@@ -91,7 +91,7 @@ function Turn({ item }) {
       <span className={`shrink-0 w-12 pt-[3px] font-mono text-[9px] uppercase tracking-[0.18em] ${agent ? 'text-accent' : 'text-gold'}`}>
         {agent ? s.va.roleAgent : s.va.roleCaller}
       </span>
-      <p className={`text-[13.5px] leading-relaxed ${agent ? 'text-ivory/95' : 'text-muted'}`}>
+      <p className={`transcript-body ${agent ? 'text-ivory/95' : 'text-muted'}`}>
         {item.text}
         {item.live && <span className={`ml-0.5 inline-block w-1.5 h-3.5 align-middle ${agent ? 'bg-accent/80' : 'bg-gold/70'}`} style={{ animation: 'pulse2 .9s infinite' }} />}
         {item.cut && <span className="ml-2 font-mono text-[9px] uppercase tracking-[0.14em] text-gold border border-gold/30 rounded px-1 py-px align-middle">{s.va.cutTag}</span>}
@@ -287,8 +287,8 @@ export function VoiceAgent({ onOps }) {
     return (
       <div className="surface p-6 sm:p-10">
         <div className="max-w-xl">
-          <h3 className="text-2xl">{V.title}</h3>
-          <p className="text-sm text-muted mt-2 leading-relaxed">
+          <h3 className="display-3">{V.title}</h3>
+          <p className="card-body mt-2">
             {V.p1}<span className="text-ivory">{V.b1}</span>{V.p2}<span className="text-ivory">{V.b2}</span>{V.p3}
           </p>
           <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-gold/25 bg-gold/[0.05] px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-gold/90">
@@ -305,7 +305,7 @@ export function VoiceAgent({ onOps }) {
                 <span className="text-2xl shrink-0">{c.icon}</span>
                 <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{c.direction} · {c.domain}</span>
               </div>
-              <p className="mt-4 font-display italic text-[17px] text-ivory/90 leading-snug">“{c.goal}”</p>
+              <p className="mt-4 quote leading-snug">”{c.goal}”</p>
               <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-accent opacity-60 group-hover:opacity-100 transition">
                 {synthOK ? `🔊 ${V.answer}` : V.answer}
               </div>
@@ -342,7 +342,7 @@ export function VoiceAgent({ onOps }) {
             </span>
             <span>{scen.icon} {scen.domain}</span>
           </div>
-          <h3 className="text-lg mt-1.5 font-display italic font-normal text-ivory/90">{scen.persona}</h3>
+          <h3 className="mt-1.5 quote">{scen.persona}</h3>
         </div>
         {synthOK && (
           <button onClick={toggleSound}
@@ -380,8 +380,8 @@ export function VoiceAgent({ onOps }) {
         {!live && S.outcome && (
           <div className="rounded-xl border border-accent/30 bg-accent/[0.04] p-5 mt-4">
             <div className="font-mono text-[9px] uppercase tracking-[0.22em] text-accent">{V.complete} · {fmt(S.clock)} · {V.summary}</div>
-            <div className="font-display text-2xl text-ivory mt-2.5">{S.outcome.headline}</div>
-            <p className="text-[13px] text-muted mt-2 leading-relaxed">{S.outcome.detail}</p>
+            <div className="display-3 mt-2.5">{S.outcome.headline}</div>
+            <p className="card-body mt-2">{S.outcome.detail}</p>
             <div className="mt-4 max-w-[320px] font-mono text-[10.5px] divide-y divide-hair/8">
               {S.outcome.extract.map(([k, v]) => (
                 <div key={k} className="flex justify-between gap-4 py-1">

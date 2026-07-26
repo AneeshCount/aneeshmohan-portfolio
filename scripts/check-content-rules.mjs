@@ -59,6 +59,8 @@ const TYPE_EXCEPTIONS = [
   'placeholder:text-muted/50',               // form field styling (contact FIELD_CLS)
   'role="status"',                           // form error/confirmation line
   'font-display text-2xl ${active === id',   // mobile nav sheet: large touch targets
+  'text-[13px] leading-snug">',              // ops console plan list: a checklist row, not prose
+  'font-display text-lg text-accent',        // outcome stat figure: small sibling of Metrics' big one
 ];
 
 const RULES = [
@@ -110,7 +112,12 @@ const RULES = [
       + 'Headings: display-1/2/3 or card-title. Body: lede or card-body. Mono captions (9-11px) '
       + 'are their own scale and are fine. Add to TYPE_EXCEPTIONS only for a genuinely new role.',
     test(line, file) {
-      if (!file.startsWith('src/sections/')) return null;
+      /* The voice and ops consoles (src/voice.jsx, src/agent.jsx) render full
+         page sections just as much as anything under src/sections/, and are
+         exactly where this drifted unnoticed before: two sibling demo panels
+         each inventing their own heading size. */
+      const inScope = file.startsWith('src/sections/') || file === 'src/voice.jsx' || file === 'src/agent.jsx';
+      if (!inScope) return null;
       if (TYPE_EXCEPTIONS.some((ok) => line.includes(ok))) return null;
       /* Arbitrary pixel sizes at body scale and up. Below 12px is the mono
          caption scale, which is consistent already and would be noise here. */

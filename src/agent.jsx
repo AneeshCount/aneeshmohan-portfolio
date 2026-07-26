@@ -81,7 +81,7 @@ function Msg({ title, body }) {
   return (
     <div className="max-w-[380px] rounded-lg border border-hair/10 bg-hair/[0.03] p-3.5">
       <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-gold">{title}</div>
-      <p className="mt-2 text-[13px] text-ivory/90 leading-relaxed font-display italic">{body}</p>
+      <p className="mt-2 transcript-body text-ivory/90 font-display italic">{body}</p>
     </div>
   );
 }
@@ -105,12 +105,12 @@ export function ToolRow({ item }) {
 export function FeedItem({ item }) {
   if (item.k === 'tool') return <ToolRow item={item} />;
   if (item.k === 'think')
-    return <p className="text-[13px] text-muted italic leading-relaxed border-l border-gold/30 pl-3">{item.text}<span className="text-gold/60">{item.text.length < item.full.length ? '▎' : ''}</span></p>;
+    return <p className="transcript-body text-muted italic border-l border-gold/30 pl-3">{item.text}<span className="text-gold/60">{item.text.length < item.full.length ? '▎' : ''}</span></p>;
   if (item.k === 'alert')
     return (
       <div className="rounded-lg border border-danger/40 bg-danger/[0.06] px-3.5 py-2.5">
         <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-danger">⚡ {item.title}</div>
-        <p className="mt-1 text-[12px] text-ivory/85">{item.text}</p>
+        <p className="mt-1 transcript-body text-ivory/85">{item.text}</p>
       </div>
     );
   if (item.k === 'art') {
@@ -256,8 +256,8 @@ export function AgentConsole() {
     return (
       <div className="surface p-6 sm:p-10">
         <div className="max-w-xl">
-          <h3 className="text-2xl">{O.title}</h3>
-          <p className="text-sm text-muted mt-2 leading-relaxed">
+          <h3 className="display-3">{O.title}</h3>
+          <p className="card-body mt-2">
             {O.p1}<span className="text-ivory">{O.loop}</span>{O.p2}
           </p>
         </div>
@@ -275,8 +275,8 @@ export function AgentConsole() {
                 )}
                 <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{m.domain}</span>
               </div>
-              <p className={`mt-4 font-display italic text-ivory/90 leading-snug ${m.featured ? 'text-[19px]' : 'text-[17px]'}`}>“{m.goal}”</p>
-              {m.story && <p className="mt-3 text-[12.5px] text-muted leading-relaxed">{m.story}</p>}
+              <p className={`mt-4 quote leading-snug ${m.featured ? 'quote-lg' : ''}`}>“{m.goal}”</p>
+              {m.story && <p className="mt-3 transcript-body text-muted">{m.story}</p>}
               <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-accent opacity-60 group-hover:opacity-100 transition">{O.run}</div>
             </button>
           ))}
@@ -306,7 +306,7 @@ export function AgentConsole() {
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div className="min-w-0">
           <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{scen.icon} {scen.domain}</div>
-          <h3 className="text-xl mt-1.5 font-display italic font-normal text-ivory/90">“{scen.goal}”</h3>
+          <h3 className="mt-1.5 quote">“{scen.goal}”</h3>
         </div>
         {!done && (
           <div className="flex items-center gap-3 flex-wrap">
@@ -338,8 +338,8 @@ export function AgentConsole() {
             {done && (
               <div className="rounded-xl border border-accent/30 bg-accent/[0.04] p-5 mt-4">
                 <div className="font-mono text-[9px] uppercase tracking-[0.22em] text-accent">{O.complete} · {elapsed}s{S.curve === 'used' && ` · ${O.curveHandled}`}</div>
-                <div className="font-display text-2xl text-ivory mt-2.5">{scen.outcome.headline}</div>
-                <p className="text-[13px] text-muted mt-2 leading-relaxed">{scen.outcome.detail}</p>
+                <div className="display-3 mt-2.5">{scen.outcome.headline}</div>
+                <p className="card-body mt-2">{scen.outcome.detail}</p>
                 <div className="mt-4 flex flex-wrap gap-x-7 gap-y-2">
                   {scen.outcome.stats.map(([v, l]) => (
                     <div key={l}>

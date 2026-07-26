@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLang } from '../i18n.jsx';
-import { Arrow, LangSwitch, MotionToggle, Rollup, Wordmark, scrollTo, useActiveSection, useRegimeAtTop } from '../ui.jsx';
+import { Arrow, LangSwitch, MotionToggle, Rollup, Wordmark, scrollTo, useActiveSection } from '../ui.jsx';
 import { Lattice } from '../ornament.jsx';
 import { SOCIALS } from '../data.js';
 import { NAV_IDS } from '../config.js';
@@ -11,10 +11,7 @@ import { NAV_IDS } from '../config.js';
    chrome on it rather than as an app frame.
 
    It is transparent over the first screen and resolves into glass once the
-   page moves. Because the page runs light at the top and dark below, the bar
-   also has to change side: `useRegimeAtTop` reports whichever zone is under
-   the header right now, and the bar inherits that zone's tokens so it never
-   goes light-on-light or dark-on-dark across the horizon.
+   page moves.
 
    On a phone the six nav items do not fit, and a cramped dropdown is worse
    than no menu at all. They get a full sheet instead: large targets, the
@@ -26,7 +23,6 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const active = useActiveSection(NAV_IDS);
-  const regime = useRegimeAtTop();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -50,9 +46,7 @@ export function Nav() {
 
   return (
     <>
-      {/* data-regime here is what makes every token below resolve to the half
-          of the page the bar is currently over. */}
-      <header data-regime={regime} className="fixed inset-x-0 top-0 z-50 pt-3 sm:pt-4">
+      <header className="fixed inset-x-0 top-0 z-50 pt-3 sm:pt-4">
         <div className="shell">
           {/* The bar always carries its own surface, never sits directly on the
               gradient. Mono nav labels at 11px over full-strength saffron do not
@@ -115,7 +109,6 @@ export function Nav() {
           blurred bar would be trapped inside a 64px tall box. */}
       {open && (
         <div
-          data-regime={regime}
           className="md:hidden fixed inset-0 z-40 bg-ink/95 backdrop-blur-xl overflow-y-auto pt-20"
           style={{ animation: 'fadeIn .25s ease both' }}
         >

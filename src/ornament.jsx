@@ -3,15 +3,12 @@ import { useId } from 'react';
 /* ════════════════════════════════════════════════════════════════════════
    ORNAMENT
 
-   Authored geometry, drawn with `currentColor` so one component serves both
-   theme regimes and nothing is fetched at runtime.
+   Authored geometry, drawn with `currentColor` so it always tracks the
+   page's own palette tokens and nothing is fetched at runtime.
 
-   The register here is deliberately engineered rather than cultural. The
-   studio is made in India and the palette carries that on its own, quietly:
-   a sunrise running from saffron into indigo. Everything in this file is
-   instrument-panel geometry instead, in the vein of Linear: hairline
-   construction, exact repeats, nothing decorative that is not also precise.
-   Read as a set of tolerances, not as heritage ornament.
+   The register is deliberately engineered rather than decorative, in the
+   vein of Linear: hairline construction, exact repeats, nothing here that is
+   not also precise. Read as a set of tolerances, not as ornament.
    ════════════════════════════════════════════════════════════════════════ */
 
 /* A fine interlaced lattice: an upright square crossed by a 45-degree square,

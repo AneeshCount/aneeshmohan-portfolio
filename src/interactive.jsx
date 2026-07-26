@@ -23,10 +23,11 @@ export function ParticleField() {
        style recalc, which is not something to do 60 times a second.
 
        The drifting field uses the secondary colour and the cursor threads use
-       the accent, not the other way round. On the dawn half the field sits on
-       saffron, where saffron-on-saffron dots read as dust; indigo threads read
-       as instrumentation. It also means the part of the field the visitor is
-       steering is a different signal from the part that is only drifting. */
+       the accent, not the other way round: periwinkle dots on indigo-black
+       read as a quiet constellation, marigold threads read as instrumentation
+       the visitor is steering. It also means the part of the field the
+       visitor is steering is a different signal from the part that is only
+       drifting. */
     let line, dot, near;
     const readPalette = () => {
       line = (a) => tokenColor(canvas, '--c-second', a);

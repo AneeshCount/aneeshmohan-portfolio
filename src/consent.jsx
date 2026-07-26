@@ -58,10 +58,7 @@ export default function ConsentBanner() {
   if (!visible) return null;
 
   return (
-    /* Dusk regardless of where the page is scrolled to: the banner is an
-       overlay on top of everything, so it needs one fixed identity rather than
-       inheriting whichever half happens to be behind it. */
-    <div data-regime="dusk" className="fixed inset-x-0 bottom-0 z-[60] p-4 sm:p-6">
+    <div className="fixed inset-x-0 bottom-0 z-[60] p-4 sm:p-6">
       <div className="mx-auto max-w-2xl rounded-2xl border border-hair/10 bg-panel/95 backdrop-blur-md p-5 sm:p-6 shadow-2xl">
         <p className="text-[13px] text-muted leading-relaxed">{s.consent.p}</p>
         <div className="mt-4 flex flex-wrap gap-3">

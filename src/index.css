@@ -5,23 +5,15 @@
 /* ════════════════════════════════════════════════════════════════════════
    DESIGN SYSTEM
 
-   The page runs a single arc from dawn to dusk. The upper third is a warm
-   saffron gradient dissolving through ivory into periwinkle: light, spacious,
-   almost nothing on screen. It then resolves into an indigo-black studio for
-   the work, the live demos and the close, where a dark surface genuinely
-   helps a glowing orbit and a waveform read as instruments.
+   One register, top to bottom: an indigo-black canvas, a single restrained
+   accent, and hairline construction throughout, in the vein of Linear.
+   Instrument-panel precision rather than a mood board, so a glowing orbit
+   and a waveform read as real instruments rather than as illustrations, and
+   the same is true of the very first screen.
 
-   Two regimes, one set of classes. `[data-regime]` swaps the colour tokens;
-   every `.surface`, `.btn-*`, `.eyebrow` and Tailwind `text-ivory` below is
-   written against those tokens, so a section changes side of the page by
-   changing one attribute.
-
-   The register is international and engineered. Sarvam supplies the warmth and
-   the air: a sunrise palette, one enormous serif line, almost nothing else on
-   the first screen. Linear supplies the precision: hairline construction,
-   glass surfaces, mono utility labels, and interactions that answer instantly
-   and physically. The studio is made in India and the palette carries that
-   quietly, in saffron resolving into indigo. Nothing here is folk ornament.
+   One set of colour tokens. Every `.surface`, `.btn-*`, `.eyebrow` and
+   Tailwind `text-ivory` below is written against them, so nothing hardcodes
+   a hex and the whole page moves together if a token changes.
 
    Every size is fluid. The phone is the default case, not the breakpoint we
    remember last.
@@ -29,44 +21,15 @@
 
 /* ── Colour tokens ──────────────────────────────────────────────────────
    Space-separated RGB triples so Tailwind's `/opacity` modifiers work.
-   Contrast against each regime's own canvas, all clearing WCAG AA:
-     dawn  fg 15.9:1   muted 6.9:1   accent 4.9:1   second 7.5:1
-     dusk  fg 15.4:1   muted 7.9:1   accent 9.1:1   second 9.7:1
+   Contrast against the canvas, all clearing WCAG AA:
+     fg 15.4:1   muted 7.9:1   accent 9.1:1   second 9.7:1
    ──────────────────────────────────────────────────────────────────────── */
-/* Dawn is also the baseline on :root, so anything rendered outside a zone
-   wrapper (the consent banner, a portal, an error boundary) still resolves to a
-   real colour instead of falling back to initial black. */
-:root,
-[data-regime='dawn'] {
-  --c-bg: 250 248 245;     /* #FAF8F5 warm ivory */
-  --c-panel: 255 255 255;
-  --c-fg: 26 23 20;        /* #1A1714 warm near-black */
-  --c-muted: 90 85 80;     /* #5A5550 */
-  --c-accent: 194 65 12;   /* #C2410C deep saffron, dark enough to read */
-  --c-second: 67 56 202;   /* #4338CA indigo */
-  --c-hair: 26 23 20;
-
-  --surface-bg: rgb(255 255 255 / 0.72);
-  --surface-brd: rgb(26 23 20 / 0.09);
-  --surface-shadow: 0 1px 2px rgb(26 23 20 / 0.04), 0 12px 32px -12px rgb(26 23 20 / 0.1);
-  --surface-shadow-lift: 0 2px 4px rgb(26 23 20 / 0.05), 0 28px 60px -20px rgb(26 23 20 / 0.16);
-  --btn-fg: 250 248 245;
-  --btn-bg: 26 23 20;
-  /* Lower than dusk: the same stroke over a light saffron field reads much
-     heavier than it does over indigo-black. */
-  --lattice: 0.035;
-  /* A whisper of grain over the sunrise. Enough to make a wide gradient read as
-     paper rather than as a CSS gradient, which is where a light page usually
-     gives itself away. */
-  --grain: 0.13;
-}
-
-[data-regime='dusk'] {
+:root {
   --c-bg: 11 14 26;        /* #0B0E1A indigo-black */
   --c-panel: 19 23 40;
   --c-fg: 237 234 246;     /* #EDEAF6 */
   --c-muted: 167 163 188;  /* #A7A3BC */
-  --c-accent: 240 161 75;  /* #F0A14B marigold */
+  --c-accent: 240 161 75;  /* #F0A14B marigold: the one raised voice */
   --c-second: 165 180 252; /* #A5B4FC periwinkle */
   --c-hair: 237 234 246;
 
@@ -77,14 +40,17 @@
   --btn-fg: 11 14 26;
   --btn-bg: var(--c-accent);
   --lattice: 0.14;
-  --grain: 0.3;
+  /* A very fine grain over the whole page. Flat dark panels band visibly on
+     cheap displays; restrained enough that it reads as a surface, not as
+     texture calling attention to itself. */
+  --grain: 0.16;
 }
 
 html {
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
-  background: #FAF8F5;
+  background: #0B0E1A;
 }
 
 body { @apply text-muted font-sans antialiased; overflow-x: hidden; }
@@ -92,62 +58,18 @@ body { @apply text-muted font-sans antialiased; overflow-x: hidden; }
 section { scroll-margin-top: 88px; }
 ::selection { background: rgb(var(--c-accent) / 0.24); color: rgb(var(--c-fg)); }
 
-/* ── The arc ────────────────────────────────────────────────────────────
-   `.zone-dawn` paints the sunrise behind everything above the transition:
-   saffron at the very top edge, settling into ivory across the hero, picking
-   up periwinkle as it approaches the handover. The gradient spans the whole
-   zone rather than each section, so it reads as one sky.
-
-   Painted on a pseudo-element rather than via background-attachment, which
-   iOS Safari repaints on every scroll frame.
-   ──────────────────────────────────────────────────────────────────────── */
-.zone-dawn, .zone-dusk { position: relative; isolation: isolate; }
-.zone-dawn > *, .zone-dusk > * { position: relative; z-index: 1; }
-
-.zone-dawn::before {
-  content: '';
+/* One quiet signature for the opening screen: a soft glow behind the mark
+   and headline, the one place the page raises its voice before settling
+   into the flat instrument-panel canvas everything else sits on. */
+.hero-glow {
   position: absolute;
-  inset: 0;
+  inset: -8% -10% auto -10%;
+  height: 68vh;
   z-index: 0;
   pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    #E8833A 0%,
-    #EE9A55 8%,
-    #F4BE93 18%,
-    #FAF8F5 31%,
-    #FAF8F5 58%,
-    #F2F1F7 68%,
-    #E9ECFC 80%,
-    #D9DFFA 92%,
-    #C7D2FE 100%
-  );
-}
-
-.zone-dusk { background: rgb(var(--c-bg)); position: relative; }
-
-/* A long, gentle afterglow bled over the top of the dusk zone's own solid
-   background, sitting behind its real content (the agent banner, the start
-   of Work) rather than in a gap before it. This is what actually reads as
-   gradual: a stretch of content that keeps settling into full dark as you
-   scroll it, not a longer empty band, which just reads as a page with
-   nothing on it. */
-.zone-dusk::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  height: clamp(34rem, 85vh, 64rem);
-  background: linear-gradient(180deg, rgba(199, 210, 254, 0.55) 0%, rgba(142, 155, 216, 0.4) 16%, rgba(91, 98, 143, 0.28) 34%, rgba(59, 65, 107, 0.16) 54%, rgba(23, 25, 58, 0.07) 75%, rgba(11, 14, 26, 0) 100%);
-}
-
-/* The horizon. Periwinkle resolving into indigo over a short band: legible
-   as a deliberate seam, not a section of its own. The afterglow above picks
-   up the rest of the crossing once real content starts. */
-.zone-seam {
-  height: clamp(9rem, 18vh, 15rem);
-  background: linear-gradient(180deg, #C7D2FE 0%, #A8B3E0 26%, #8E9BD8 52%, #5B628F 76%, #3B416B 92%, #17193A 100%);
+  background:
+    radial-gradient(ellipse 58% 55% at 50% 4%, rgb(var(--c-accent) / 0.16), transparent 65%),
+    radial-gradient(ellipse 42% 38% at 82% 16%, rgb(var(--c-second) / 0.12), transparent 70%);
 }
 
 /* ── Type ───────────────────────────────────────────────────────────────
@@ -175,18 +97,21 @@ h1, h2, h3 { @apply font-display text-ivory; font-weight: 500; letter-spacing: -
 .card-title { @apply font-display text-xl text-ivory; line-height: 1.3; letter-spacing: -0.012em; }
 .card-body { @apply text-[14px] text-muted; line-height: 1.62; }
 
-/* The accent word in a headline. A gradient rather than flat saffron so the
+/* Two more roles, shared by the voice and ops consoles specifically, so
+   switching tabs never lands a visitor on a different scale for the same
+   kind of text: a spoken or quoted line, and small copy inside a transcript
+   or feed. */
+.quote { @apply font-display italic text-ivory/90; font-weight: 400; font-size: 1.0625rem; line-height: 1.4; }
+.quote-lg { font-size: 1.1875rem; }
+.transcript-body { font-size: 0.875rem; line-height: 1.62; }
+
+/* The accent word in a headline. A gradient rather than flat marigold so the
    one place we raise our voice reads as lit rather than highlighted. */
 .gradient-text {
-  background: linear-gradient(100deg, #C2410C 0%, #E8833A 45%, #4338CA 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-[data-regime='dusk'] .gradient-text {
   background: linear-gradient(100deg, #F0A14B 0%, #F6C99B 45%, #A5B4FC 100%);
   -webkit-background-clip: text;
   background-clip: text;
+  color: transparent;
 }
 
 /* ── Layout ─────────────────────────────────────────────────────────────
@@ -289,12 +214,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 /* Centred variant: a rule on both sides, the way a title page sets a label.
    Used in the hero and above the closing headline.
 
-   Full-strength ink, not the secondary colour and not faded. In the hero this
-   label sits on saffron, where indigo at 10px manages about 3.5:1 and ink at
-   0.68 alpha only reaches 3.7:1; both miss AA for text this small. Solid ink is
-   6.6:1. Restraint comes from the size and the tracking instead of from opacity,
-   which is the right lever anyway. Elsewhere on the dawn half the ground is
-   ivory and `.eyebrow` can stay indigo. */
+   Full-strength ivory, not the secondary colour and not faded: at 10px, a
+   faded label misses AA, and this is the one line on the page that has to
+   read from across the room. Restraint comes from the size and the tracking
+   instead of from opacity, which is the right lever anyway. */
 .eyebrow-centred {
   @apply font-mono text-[10px] font-medium uppercase text-ivory inline-flex items-center gap-4 justify-center;
   letter-spacing: 0.3em;
@@ -480,9 +403,9 @@ button:focus-visible .rollup > span { transform: translateY(-100%); }
 [data-motion='still'] .rollup { height: auto; }
 [data-motion='still'] .rollup > span:last-child { display: none; }
 
-/* A very fine grain over the dusk half. Flat dark panels band visibly on
-   cheap displays; a little noise breaks the gradient into something that
-   looks like a surface. SVG turbulence, so it costs no request. */
+/* A very fine grain over the page. Flat dark panels band visibly on cheap
+   displays; a little noise breaks a gradient into something that looks like
+   a surface. SVG turbulence, so it costs no request. */
 .grain::after {
   content: '';
   position: absolute; inset: 0; z-index: 0; pointer-events: none;

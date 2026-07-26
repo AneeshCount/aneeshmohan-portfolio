@@ -17,8 +17,8 @@ export const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ be
    --c-accent in one place and the canvas follows, rather than drifting to
    whatever hex was hardcoded when it was written.
 
-   `el` must be inside the regime whose colour is wanted, since the variable is
-   scoped to the zone wrapper rather than to :root. */
+   Reads the variable off the element rather than a hardcoded fallback, so a
+   token change to :root is picked up without touching this file. */
 export function tokenColor(el, name, alpha = 1) {
   const fallback = '167 163 188';
   let triple = fallback;
@@ -202,71 +202,6 @@ export function useActiveSection(ids) {
     return () => io.disconnect();
   }, [ids]);
   return active;
-}
-
-/* Which theme regime is under the header right now, so the fixed nav can invert
-   as it crosses the dawn/dusk horizon instead of going light-on-light.
-
-   Answered from scroll position against the zones' measured offsets rather than
-   from an IntersectionObserver. The question is literally "which zone contains
-   the point `offset` below the top of the viewport", which is arithmetic; an
-   observer answers it indirectly, only when it decides to fire, and not at all
-   for the programmatic jump that a `#hash` landing performs.
-
-   Reads `[data-zone]`, not `[data-regime]`: the latter is also on the header
-   itself and on the consent banner, both of which are fixed, so their offsets
-   are meaningless and one of them is the element asking the question. */
-/* The decision itself, kept pure so it can be tested without a layout engine.
-   `zones` are document-space spans, in document order. */
-export function regimeForProbe(probe, zones, fallback = 'dawn') {
-  if (!zones.length) return fallback;
-  const hit = zones.find((z) => probe >= z.top && probe < z.bottom);
-  /* Above the first zone, or past the last: take the nearest one. */
-  if (!hit) return probe < zones[0].top ? zones[0].zone : zones.at(-1).zone;
-  /* The horizon band is neither regime. It starts periwinkle and ends
-     indigo-black, so the bar switches partway down it, at the point where the
-     ground behind it stops being light. */
-  if (hit.zone === 'seam') {
-    return (probe - hit.top) / (hit.bottom - hit.top) < 0.4 ? 'dawn' : 'dusk';
-  }
-  return hit.zone;
-}
-
-export function useRegimeAtTop(offset = 72, fallback = 'dawn') {
-  const [regime, setRegime] = useState(fallback);
-  useEffect(() => {
-    let zones = [];
-    const measure = () => {
-      zones = [...document.querySelectorAll('[data-zone]')].map((el) => {
-        const r = el.getBoundingClientRect();
-        return {
-          zone: el.dataset.zone,
-          top: r.top + window.scrollY,
-          bottom: r.bottom + window.scrollY,
-        };
-      });
-    };
-
-    const update = () => setRegime(regimeForProbe(window.scrollY + offset, zones, fallback));
-
-    let frame = 0;
-    const onScroll = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(() => { frame = 0; update(); });
-    };
-    const onResize = () => { measure(); update(); };
-
-    measure();
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
-    };
-  }, [offset, fallback]);
-  return regime;
 }
 
 /* ── Tabs ───────────────────────────────────────────────────────────────

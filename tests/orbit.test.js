@@ -1,47 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { regimeForProbe } from '../src/ui.jsx';
 import { place, windowStart } from '../src/orbit.jsx';
-
-/* Two pieces of geometry that decide what the page looks like, both extracted
-   from their components so they can be checked without a layout engine.
-
-   The nav one matters because getting it wrong is invisible in a unit test of
-   the markup and very visible on the page: a light bar with near-black labels
-   sitting on top of the indigo-black half. */
-
-const ZONES = [
-  { zone: 'dawn', top: 0, bottom: 2255 },
-  { zone: 'seam', top: 2255, bottom: 2455 },
-  { zone: 'dusk', top: 2455, bottom: 10900 },
-];
-
-describe('regime under the header', () => {
-  it('reads dawn across the light half', () => {
-    expect(regimeForProbe(72, ZONES)).toBe('dawn');
-    expect(regimeForProbe(1200, ZONES)).toBe('dawn');
-    expect(regimeForProbe(2254, ZONES)).toBe('dawn');
-  });
-
-  it('holds dawn over the top of the horizon and flips partway down', () => {
-    expect(regimeForProbe(2260, ZONES)).toBe('dawn');   // still periwinkle
-    expect(regimeForProbe(2330, ZONES)).toBe('dawn');   // 37% through
-    expect(regimeForProbe(2340, ZONES)).toBe('dusk');   // 42%, ground has gone dark
-    expect(regimeForProbe(2450, ZONES)).toBe('dusk');
-  });
-
-  it('reads dusk across the dark half', () => {
-    expect(regimeForProbe(2455, ZONES)).toBe('dusk');
-    expect(regimeForProbe(5000, ZONES)).toBe('dusk');
-    expect(regimeForProbe(10899, ZONES)).toBe('dusk');
-  });
-
-  /* Overscroll at either end, and the moment before layout has happened. */
-  it('never falls through to an unstyled bar', () => {
-    expect(regimeForProbe(-500, ZONES)).toBe('dawn');
-    expect(regimeForProbe(99999, ZONES)).toBe('dusk');
-    expect(regimeForProbe(72, [])).toBe('dawn');
-  });
-});
 
 describe('orbit geometry', () => {
   const box = { w: 426, h: 480 };
