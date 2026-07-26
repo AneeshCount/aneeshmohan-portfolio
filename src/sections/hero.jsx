@@ -1,5 +1,5 @@
 import { useLang } from '../i18n.jsx';
-import { Arrow, scrollTo, useMotion } from '../ui.jsx';
+import { Arrow, scrollTo, useMotion, useReveal } from '../ui.jsx';
 import { Aperture, Lattice } from '../ornament.jsx';
 import { ParticleField } from '../interactive.jsx';
 import { METRICS } from '../data.js';
@@ -107,12 +107,13 @@ const WAVE_BARS = [0.4, 0.62, 0.35, 0.85, 0.5, 1, 0.45, 0.72, 0.38, 0.9, 0.55, 0
 export function AgentBanner() {
   const { s } = useLang();
   const { moving } = useMotion();
+  const ref = useReveal();
   return (
-    <section>
+    <section ref={ref}>
       <div className="shell section-y">
         <button
           onClick={() => scrollTo('play')}
-          className="group block w-full text-left surface grain spot p-7 sm:p-10 overflow-hidden transition-colors hover:border-accent/40"
+          className="reveal group block w-full text-left surface grain spot p-7 sm:p-10 overflow-hidden transition-colors hover:border-accent/40"
         >
           <div className="flex items-center justify-between gap-4">
             <span className="eyebrow">{s.hero.panel}</span>

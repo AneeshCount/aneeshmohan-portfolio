@@ -116,8 +116,10 @@ section { scroll-margin-top: 88px; }
     #EE9A55 8%,
     #F4BE93 18%,
     #FAF8F5 31%,
-    #FAF8F5 70%,
-    #E9ECFC 87%,
+    #FAF8F5 58%,
+    #F2F1F7 68%,
+    #E9ECFC 80%,
+    #D9DFFA 92%,
     #C7D2FE 100%
   );
 }
@@ -125,10 +127,13 @@ section { scroll-margin-top: 88px; }
 .zone-dusk { background: rgb(var(--c-bg)); }
 
 /* The handover. Periwinkle resolving into indigo-black over a tall band, so
-   the two halves meet as a horizon rather than a seam. */
+   the two halves meet as a horizon rather than a seam. Height is tied to
+   viewport height, not width, so the crossing takes a real stretch of
+   scrolling on any screen rather than flicking by in one gesture: the seam
+   alone used to fly by in a scroll or two, which is what read as sudden. */
 .zone-seam {
-  height: clamp(16rem, 34vw, 26rem);
-  background: linear-gradient(180deg, #C7D2FE 0%, #A8B3E0 18%, #8E9BD8 38%, #5B628F 58%, #3B416B 76%, #17193A 90%, #0B0E1A 100%);
+  height: clamp(22rem, 60vh, 38rem);
+  background: linear-gradient(180deg, #C7D2FE 0%, #B2BCE3 14%, #A8B3E0 26%, #8E9BD8 42%, #5B628F 58%, #3B416B 72%, #17193A 86%, #0B0E1A 100%);
 }
 
 /* ── Type ───────────────────────────────────────────────────────────────
