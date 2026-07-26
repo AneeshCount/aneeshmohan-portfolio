@@ -11,7 +11,9 @@ import { locDemo } from './demo-i18n.js';
 
 /* ── Mini artifacts the agent produces ───────────────────────────────────── */
 
-function Spark({ d, label, marker, markerLabel, color = '#2FE3BE' }) {
+/* Colour comes from `currentColor` and the class on the <svg>, so the chart
+   tracks the palette token instead of a hex frozen at authoring time. */
+function Spark({ d, label, marker, markerLabel, className = 'text-accent' }) {
   const W = 240, H = 54, P = 4;
   const min = Math.min(...d), max = Math.max(...d), span = max - min || 1;
   const x = (i) => P + (i / (d.length - 1)) * (W - 2 * P);
@@ -19,16 +21,16 @@ function Spark({ d, label, marker, markerLabel, color = '#2FE3BE' }) {
   const pts = d.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   const li = d.length - 1;
   return (
-    <svg viewBox={`0 0 ${W} ${H + 14}`} className="w-full max-w-[260px] h-auto" role="img" aria-label={label}>
+    <svg viewBox={`0 0 ${W} ${H + 14}`} className={`w-full max-w-[260px] h-auto ${className}`} role="img" aria-label={label}>
       {marker != null && (
         <>
-          <line x1={x(marker)} y1={P} x2={x(marker)} y2={H - P} stroke="rgba(245,185,66,.5)" strokeWidth="1" strokeDasharray="2 3" />
-          {markerLabel && <text x={x(marker)} y={H + 11} textAnchor="middle" fontSize="8.5" fill="#f5b942" fontFamily="JetBrains Mono">{markerLabel}</text>}
+          <line x1={x(marker)} y1={P} x2={x(marker)} y2={H - P} className="stroke-gold/50" strokeWidth="1" strokeDasharray="2 3" />
+          {markerLabel && <text x={x(marker)} y={H + 11} textAnchor="middle" fontSize="8.5" className="fill-gold" fontFamily="JetBrains Mono">{markerLabel}</text>}
         </>
       )}
-      <polyline points={pts} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
-      <circle cx={x(li)} cy={y(d[li])} r="3" fill={color} />
-      <text x={Math.min(x(li), W - 4)} y={Math.max(9, y(d[li]) - 7)} textAnchor="end" fontSize="9" fill="#EAF0EE" fontFamily="JetBrains Mono">{label}</text>
+      <polyline points={pts} fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx={x(li)} cy={y(d[li])} r="3" fill="currentColor" />
+      <text x={Math.min(x(li), W - 4)} y={Math.max(9, y(d[li]) - 7)} textAnchor="end" fontSize="9" className="fill-ivory" fontFamily="JetBrains Mono">{label}</text>
     </svg>
   );
 }
@@ -40,7 +42,7 @@ function Bars({ rows }) {
       {rows.map((r) => (
         <div key={r.l} className="flex items-center gap-2 font-mono text-[10px]">
           <span className="w-16 shrink-0 text-muted truncate">{r.l}</span>
-          <span className="flex-1 h-2 rounded-sm bg-white/[0.05] overflow-hidden">
+          <span className="flex-1 h-2 rounded-sm bg-hair/[0.06] overflow-hidden">
             <span className={`block h-full rounded-sm ${r.hot ? 'bg-danger' : 'bg-accent'}`} style={{ width: `${(Math.abs(r.v) / max) * 100}%` }} />
           </span>
           <span className={`w-20 shrink-0 text-right ${r.hot ? 'text-danger' : 'text-ivory'}`}>{r.txt}</span>
@@ -52,7 +54,7 @@ function Bars({ rows }) {
 
 function KV({ rows }) {
   return (
-    <div className="max-w-[320px] font-mono text-[10.5px] divide-y divide-white/[0.05]">
+    <div className="max-w-[320px] font-mono text-[10.5px] divide-y divide-hair/8">
       {rows.map(([k, v, hot]) => (
         <div key={k} className="flex justify-between gap-4 py-1">
           <span className="text-muted">{k}</span>
@@ -65,7 +67,7 @@ function KV({ rows }) {
 
 function Diff({ lines }) {
   return (
-    <div className="max-w-[320px] font-mono text-[10.5px] rounded border border-white/[0.06] overflow-hidden">
+    <div className="max-w-[320px] font-mono text-[10.5px] rounded border border-hair/8 overflow-hidden">
       {lines.map((l, i) => (
         <div key={i} className={`px-2.5 py-0.5 ${l[0] === '-' ? 'bg-danger/[0.08] text-danger/90' : l[0] === '+' ? 'bg-accent/[0.08] text-accent' : 'text-muted'}`}>
           {l}
@@ -77,7 +79,7 @@ function Diff({ lines }) {
 
 function Msg({ title, body }) {
   return (
-    <div className="max-w-[380px] rounded-lg border border-white/[0.08] bg-white/[0.02] p-3.5">
+    <div className="max-w-[380px] rounded-lg border border-hair/10 bg-hair/[0.03] p-3.5">
       <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-gold">{title}</div>
       <p className="mt-2 text-[13px] text-ivory/90 leading-relaxed font-display italic">{body}</p>
     </div>
@@ -126,7 +128,7 @@ function PlanList({ plan, addedLabel }) {
       {plan.map((p) => (
         <li key={p.id} className="flex items-start gap-2.5 text-[13px] leading-snug">
           <span className={`mt-1 w-2 h-2 rounded-full shrink-0 ${
-            p.st === 'done' ? 'bg-accent' : p.st === 'active' ? 'bg-accent ring-4 ring-accent/20' : p.added ? 'bg-gold/70' : 'bg-white/15'
+            p.st === 'done' ? 'bg-accent' : p.st === 'active' ? 'bg-accent ring-4 ring-accent/20' : p.added ? 'bg-gold/70' : 'bg-hair/25'
           }`} style={p.st === 'active' ? { animation: 'pulse2 1.2s infinite' } : undefined} />
           <span className={p.st === 'done' ? 'text-muted/60' : p.st === 'active' ? 'text-ivory' : 'text-muted'}>
             {p.t}
@@ -265,7 +267,7 @@ export function AgentConsole() {
               className={`group text-left rounded-xl border p-6 transition-all duration-300 ${
                 m.featured
                   ? 'sm:col-span-2 border-accent/40 bg-accent/[0.04] hover:border-accent/70'
-                  : 'border-white/[0.08] hover:border-accent/40 hover:bg-accent/[0.03]'}`}>
+                  : 'border-hair/10 hover:border-accent/40 hover:bg-accent/[0.03]'}`}>
               <div className="flex items-center gap-3 flex-wrap">
                 <span className="text-2xl">{m.icon}</span>
                 {m.badge && (
@@ -311,7 +313,7 @@ export function AgentConsole() {
             {S.curve !== 'none' && (
               <button onClick={throwCurve} disabled={S.curve !== 'ready'}
                 className={`shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] rounded-full px-4 py-2 border transition ${
-                  S.curve === 'ready' ? 'border-gold/50 text-gold hover:bg-gold/10' : 'border-white/10 text-muted/60'
+                  S.curve === 'ready' ? 'border-gold/50 text-gold hover:bg-gold/10' : 'border-hair/12 text-muted/60'
                 }`}>
                 {S.curve === 'ready' ? `⚡ ${O.curveball}: ${scen.curveball.label}` : S.curve === 'thrown' ? O.incoming : O.adapted}
               </button>
@@ -331,7 +333,7 @@ export function AgentConsole() {
         {/* feed */}
         <div>
           <div className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted mb-3">{O.liveRun}</div>
-          <div ref={feedRef} className="rounded-xl border border-white/[0.07] bg-ink/60 p-4 sm:p-5 h-[360px] overflow-y-auto space-y-3.5">
+          <div ref={feedRef} className="rounded-xl border border-hair/10 bg-ink/60 p-4 sm:p-5 h-[360px] overflow-y-auto space-y-3.5">
             {S.feed.map((item, i) => <FeedItem key={i} item={item} />)}
             {done && (
               <div className="rounded-xl border border-accent/30 bg-accent/[0.04] p-5 mt-4">
@@ -360,7 +362,7 @@ export function AgentConsole() {
           </button>
           {missions.filter((m) => m.id !== scen.id).map((m) => (
             <button key={m.id} onClick={() => start(m)}
-              className="rounded-full border border-white/15 text-muted font-mono text-[10px] uppercase tracking-[0.14em] px-4 py-2.5 hover:text-ivory hover:border-white/35 transition">
+              className="rounded-full border border-hair/20 text-muted font-mono text-[10px] uppercase tracking-[0.14em] px-4 py-2.5 hover:text-ivory hover:border-hair/40 transition">
               {m.icon} {m.short}
             </button>
           ))}

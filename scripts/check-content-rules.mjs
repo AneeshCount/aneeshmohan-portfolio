@@ -49,6 +49,18 @@ const FORBIDDEN_DASHES = [
   ['―', 'horizontal bar'],
 ];
 
+/* The roles that genuinely sit outside the two heading and two body tokens.
+   Each one is a different kind of thing, not a different size of the same thing:
+   a giant figure, text inside a pill, a form control, a status line, and the
+   phone menu's touch targets. Matched as substrings of the offending line. */
+const TYPE_EXCEPTIONS = [
+  'font-display text-[2.75rem] sm:text-6xl', // Metrics: the figure IS the content
+  'font-sans text-[12px]',                   // hero badge: article title inside a pill
+  'placeholder:text-muted/50',               // form field styling (contact FIELD_CLS)
+  'role="status"',                           // form error/confirmation line
+  'font-display text-2xl ${active === id',   // mobile nav sheet: large touch targets
+];
+
 const RULES = [
   {
     id: 'no-fancy-dashes',
@@ -88,6 +100,25 @@ const RULES = [
       return /rel="(noreferrer|noopener)/.test(line) || line.includes('rel="noreferrer"')
         ? null
         : 'target="_blank" without rel="noreferrer"';
+    },
+  },
+  {
+    id: 'one-type-scale',
+    why:
+      'Sections must use the type tokens, not ad-hoc sizes. The page had grown six heading '
+      + 'sizes and five body sizes for two roles, which is how a design stops looking designed. '
+      + 'Headings: display-1/2/3 or card-title. Body: lede or card-body. Mono captions (9-11px) '
+      + 'are their own scale and are fine. Add to TYPE_EXCEPTIONS only for a genuinely new role.',
+    test(line, file) {
+      if (!file.startsWith('src/sections/')) return null;
+      if (TYPE_EXCEPTIONS.some((ok) => line.includes(ok))) return null;
+      /* Arbitrary pixel sizes at body scale and up. Below 12px is the mono
+         caption scale, which is consistent already and would be noise here. */
+      const px = line.match(/text-\[(1[2-9]|[2-9]\d)(\.\d+)?px\]/);
+      if (px) return `ad-hoc font size ${px[0]}, use .card-body or .lede`;
+      const display = line.match(/font-display\s+text-[[\w.]+/);
+      if (display) return `ad-hoc display size "${display[0]}", use .display-* or .card-title`;
+      return null;
     },
   },
 ];

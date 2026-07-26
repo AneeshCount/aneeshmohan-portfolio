@@ -1,6 +1,15 @@
 import { useEffect, useRef } from 'react';
+import { tokenColor } from './ui.jsx';
 
-/* ParticleField: mouse-reactive constellation canvas (futuristic hero bg) */
+/* ParticleField: a pointer-reactive constellation behind the hero.
+
+   Only ever mounted at motion tier `full` (see sections/hero.jsx), so this
+   file no longer carries its own reduced-motion branch: if it is running at
+   all, the decision to run it has already been made. That keeps one source of
+   truth for how much this device should be asked to animate.
+
+   Colour is resolved from the palette tokens on the canvas itself rather than
+   hardcoded, so the field follows the regime it is drawn inside. */
 export function ParticleField() {
   const ref = useRef(null);
   useEffect(() => {
@@ -9,14 +18,28 @@ export function ParticleField() {
     let raf, w, h, dpr;
     const mouse = { x: -9999, y: -9999 };
     let nodes = [];
-    // Reduced motion: render one static constellation frame, no animation loop.
-    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* Read once per resize rather than per frame: getComputedStyle forces a
+       style recalc, which is not something to do 60 times a second.
+
+       The drifting field uses the secondary colour and the cursor threads use
+       the accent, not the other way round. On the dawn half the field sits on
+       saffron, where saffron-on-saffron dots read as dust; indigo threads read
+       as instrumentation. It also means the part of the field the visitor is
+       steering is a different signal from the part that is only drifting. */
+    let line, dot, near;
+    const readPalette = () => {
+      line = (a) => tokenColor(canvas, '--c-second', a);
+      dot = tokenColor(canvas, '--c-second', 0.45);
+      near = (a) => tokenColor(canvas, '--c-accent', a);
+    };
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = canvas.clientWidth; h = canvas.clientHeight;
       canvas.width = w * dpr; canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      readPalette();
       const count = Math.min(Math.floor(w / 18), 80);
       nodes = Array.from({ length: count }, () => ({
         x: Math.random() * w, y: Math.random() * h,
@@ -40,20 +63,23 @@ export function ParticleField() {
           const b = nodes[j];
           const d = Math.hypot(a.x - b.x, a.y - b.y);
           if (d < 120) {
-            ctx.strokeStyle = `rgba(47,227,190,${0.12 * (1 - d / 120)})`;
+            ctx.strokeStyle = line(0.11 * (1 - d / 120));
             ctx.lineWidth = 1;
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
           }
         }
+        /* Threads to the cursor pick up the secondary colour, so the part of
+           the field the visitor is steering reads as a different signal from
+           the part that is just drifting. */
         const dm = Math.hypot(a.x - mouse.x, a.y - mouse.y);
         if (dm < 160) {
-          ctx.strokeStyle = `rgba(47,227,190,${0.3 * (1 - dm / 160)})`;
+          ctx.strokeStyle = near(0.3 * (1 - dm / 160));
           ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
         }
-        ctx.fillStyle = 'rgba(47,227,190,0.5)';
+        ctx.fillStyle = dot;
         ctx.beginPath(); ctx.arc(a.x, a.y, 1.5, 0, Math.PI * 2); ctx.fill();
       }
-      if (!still) raf = requestAnimationFrame(tick);
+      raf = requestAnimationFrame(tick);
     };
 
     const onMove = (e) => {
@@ -62,14 +88,17 @@ export function ParticleField() {
     };
     const onLeave = () => { mouse.x = -9999; mouse.y = -9999; };
 
-    const onResize = () => { resize(); if (still) tick(); };
-    resize(); tick();
-    window.addEventListener('resize', onResize);
-    if (!still) {
-      window.addEventListener('mousemove', onMove);
-      window.addEventListener('mouseleave', onLeave);
-    }
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseleave', onLeave); };
+    resize();
+    tick();
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseleave', onLeave);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseleave', onLeave);
+    };
   }, []);
-  return <canvas ref={ref} className="absolute inset-0 w-full h-full opacity-70" aria-hidden />;
+  return <canvas ref={ref} className="absolute inset-0 w-full h-full opacity-60" aria-hidden />;
 }

@@ -33,7 +33,7 @@ function useHashRoute() {
 /* ── Chrome ─────────────────────────────────────────────────────────────── */
 function Header({ lang }) {
   return (
-    <header className="sticky top-0 z-50 bg-ink/90 backdrop-blur-md border-b border-white/[0.05]">
+    <header className="sticky top-0 z-50 bg-ink/90 backdrop-blur-md border-b border-hair/8">
       <nav className="shell-narrow h-16 flex items-center justify-between">
         <a href={homeHref(lang)} className="text-ivory"><Wordmark /></a>
         <LangSwitch />
@@ -113,9 +113,9 @@ function Article({ article, lang, ui, go }) {
 
       <div className="mt-10 flex flex-wrap items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em]">
         <span className="text-accent">{article.tag}</span>
-        <span className="text-white/15">·</span>
+        <span className="text-hair/25">·</span>
         <time className="text-muted/60" dateTime={article.date}>{article.date}</time>
-        <span className="text-white/15">·</span>
+        <span className="text-hair/25">·</span>
         <span className="text-muted/60">{article.readMins} {ui.minRead}</span>
       </div>
 
@@ -130,7 +130,7 @@ function Article({ article, lang, ui, go }) {
       <Cta lang={lang} ui={ui} />
 
       {others.length > 0 && (
-        <div className="mt-16 pt-10 border-t border-white/[0.06]">
+        <div className="mt-16 pt-10 border-t border-hair/8">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted/60">{ui.next}</p>
           <div className="mt-5 grid gap-5">
             {others.map((a) => (
@@ -166,9 +166,9 @@ function Index({ lang, ui, go }) {
           <button key={a.id} onClick={() => go(a.id)} className="reveal surface spot p-7 sm:p-8 text-left hover:border-accent/40 hover:-translate-y-0.5 transition-all duration-300">
             <div className="flex flex-wrap items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em]">
               <span className="text-accent">{a.tag}</span>
-              <span className="text-white/15">·</span>
+              <span className="text-hair/25">·</span>
               <time className="text-muted/60" dateTime={a.date}>{a.date}</time>
-              <span className="text-white/15">·</span>
+              <span className="text-hair/25">·</span>
               <span className="text-muted/60">{a.readMins} {ui.minRead}</span>
             </div>
             <h2 className="mt-5 font-display text-2xl sm:text-3xl text-ivory leading-snug">{a.title}</h2>
@@ -200,7 +200,7 @@ export default function Insights() {
           ? <Article article={article} lang={lang} ui={ui} go={go} />
           : <Index lang={lang} ui={ui} go={go} />}
       </main>
-      <footer className="border-t border-white/[0.05]">
+      <footer className="border-t border-hair/8">
         <div className="shell-narrow py-10 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-muted/70">
           <a href={homeHref(lang)} className="text-ivory text-sm normal-case"><Wordmark /></a>
           <span>© {new Date().getFullYear()} a-niche</span>

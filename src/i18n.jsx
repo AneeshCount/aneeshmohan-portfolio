@@ -26,7 +26,7 @@ export const STR = {
     metrics: ['Products shipped from scratch', 'Agentic AI in production', 'Async delivery across timezones'],
     wb: {
       eyebrow: 'What we build', h2: 'Premium builds. Production standards.',
-      p: 'Voice agents, AI workforces and full platforms, designed and shipped by a senior team that scales with your scope. Everything below is production-grade: secure, integrated, and yours.',
+      p: 'Designed and shipped by a senior team that scales with your scope. All of it production-grade: secure, integrated, yours.',
     },
     services: [
       { t: 'Voice agents', d: 'AI receptionists and outbound callers that answer, qualify, book and follow up, around the clock, in any language.', eg: 'Live demo: take a call below' },
@@ -43,7 +43,7 @@ export const STR = {
       p: 'Start with a fixed-fee AI audit: a two-week deep dive that maps the highest-ROI automations in your operation, with a costed roadmap. The fee is credited against your first build.',
       cta: 'Book an audit →',
     },
-    work: { eyebrow: 'Selected Work', h2a: 'Products designed, built', h2b: 'and shipped from zero.', howToCta: 'How to test this', swipe: 'Swipe to browse →', more: 'And more, on request.', showAll: 'View all projects', showLess: 'Show fewer' },
+    work: { eyebrow: 'Selected Work', h2a: 'Products designed, built', h2b: 'and shipped from zero.', howToCta: 'How to test this', swipe: 'Swipe to browse →', keys: 'to browse', more: 'And more, on request.', showAll: 'View all projects', showLess: 'Show fewer' },
     projects: [
       { tag: 'Flagship · Agentic AI', blurb: 'An EV charging and energy-management SaaS built from the ground up. Agentic watchdogs continuously monitor chargers, batteries and solar, while an LLM chat layer lets users control the system in plain language: start a vehicle charging, shift load to solar, or push a schedule, and the agents execute.', note: 'Proprietary codebase · live demo shows full functionality', label: 'demo.ridergy.com' },
       { tag: 'Live Product · Mentorship Marketplace', blurb: 'A two-sided mentorship marketplace: students planning to study abroad book verified mentors already at universities around the world, with paid sessions, contact unlock after checkout, document feedback, mentor earnings dashboards and multi-author guides. Built and run as our own product, expanding beyond study abroad.', label: 'auroramentors.com' },
@@ -79,9 +79,9 @@ export const STR = {
     ],
     pg: {
       eyebrow: 'Live demos', h2a: 'Give an agent a job.', h2b: 'Then interrupt it.',
-      p1: 'This is what we build: AI that does real work, not chat. Take a live call with a ', voice: 'voice agent',
-      p2: ' that speaks, books, and recovers when you cut it off mid-sentence. Or run an ', ops: 'operations agent',
-      p3: ' on a mission and throw it a curveball. The same loop we ship to production on frontier models, replayed right in your browser.',
+      p1: 'AI that does real work, not chat. Take a live call with a ', voice: 'voice agent',
+      p2: ' that recovers when you interrupt it. Or run an ', ops: 'operations agent',
+      p3: ' on a mission and throw it a curveball.',
       tabVoice: 'Voice agent · live call', tabOps: 'Ops agent · missions',
     },
     va: {
@@ -120,8 +120,8 @@ export const STR = {
     },
     pr: {
       eyebrow: 'How we work', h2a: 'Big-firm discipline.', h2b: 'Studio speed.',
-      p: 'Premium does not mean slow, and fast does not mean fragile. It means one accountable owner, clear milestones, and work you can inspect every week.',
-      platforms: 'Built on platforms your business already trusts',
+      p: 'One accountable owner, clear milestones, and work you can inspect every week.',
+      platforms: 'Built on platforms your business already trusts', showAll: 'All six commitments',
     },
     trust: [
       { t: 'Senior-led, always', d: 'Every project is led end to end by a senior engineer, never handed off to juniors. Vetted specialist designers and engineers join as your scope grows, so capacity is never the bottleneck.' },
@@ -133,7 +133,7 @@ export const STR = {
     ],
     join: {
       eyebrow: 'Join the studio', h2a: 'We hire talent,', h2b: 'not resumes.',
-      p: 'The project pipeline is growing: voice agents, AI workforces, premium apps and dashboards for clients worldwide. We work with freelancers and specialists, project-based, async-first, paid per milestone.',
+      p: 'Voice agents, AI workforces and premium apps for clients worldwide. Freelancers and specialists, project-based, async-first, paid per milestone.',
       roles: [
         { t: 'AI Engineer', d: 'LLM agents, RAG, evals' },
         { t: 'Voice AI Engineer', d: 'STT/TTS pipelines, telephony' },
@@ -149,7 +149,7 @@ export const STR = {
     ab: {
       eyebrow: 'About', h2a: 'A studio built on', h2b: 'senior craft.',
       p1: 'a-niche is a small studio of senior engineers and designers. The same accountable team stays on your project from kickoff to launch, with vetted specialists joining as your scope grows and the capacity to scale behind it.',
-      p2: 'Our own products, RiDERgy (agentic AI running EV charging and energy management) and Aurora Mentors (a live mentorship marketplace), run in production every day, where reliability is non-negotiable. Every client project is held to that same standard, from the architecture and the interface to the API, the data and the intelligence layer that makes it useful.',
+      p2: 'Our own products run in production every day: RiDERgy (agentic AI for EV charging and energy) and Aurora Mentors (a live mentorship marketplace). Every client project is held to that same standard.',
     },
     ct: {
       eyebrow: 'Contact', h2a: 'Have something', h2b: 'worth building?',
@@ -162,6 +162,12 @@ export const STR = {
       err: 'The form could not send just now. Please reach out via LinkedIn below instead.',
       nda: 'NDA-friendly · Milestone billing · Direct or platform escrow, your choice',
     },
+    footer: {
+      line1: 'Senior-led AI and software studio.',
+      line2: 'Made in India, shipping worldwide.',
+      sections: 'Sections', elsewhere: 'Elsewhere',
+    },
+    motion: { label: 'Motion' },
     consent: {
       p: 'We use cookies for analytics to understand how visitors use this site. No data is sold or used for ads.',
       accept: 'Accept', decline: 'Decline',
@@ -181,7 +187,7 @@ export const STR = {
     metrics: ['Produkte von null gebaut', 'Agentische KI in Produktion', 'Asynchrone Lieferung über Zeitzonen'],
     wb: {
       eyebrow: 'Was wir bauen', h2: 'Premium-Builds. Produktionsstandards.',
-      p: 'Voice-Agenten, KI-Workforces und komplette Plattformen, entworfen und geliefert von einem Senior-Team, das mit Ihrem Umfang wächst. Alles unten ist Produktionsqualität: sicher, integriert und Ihres.',
+      p: 'Entworfen und geliefert von einem Senior-Team, das mit Ihrem Umfang wächst. Alles davon Produktionsqualität: sicher, integriert, Ihres.',
     },
     services: [
       { t: 'Voice-Agenten', d: 'KI-Rezeption und Outbound-Anrufe: annehmen, qualifizieren, buchen und nachfassen, rund um die Uhr, in jeder Sprache.', eg: 'Live-Demo: unten einen Anruf annehmen' },
@@ -198,7 +204,7 @@ export const STR = {
       p: 'Starten Sie mit einem KI-Audit zum Festpreis: zwei Wochen Tiefenanalyse, die die Automationen mit dem höchsten ROI in Ihrem Betrieb kartiert, mit kalkulierter Roadmap. Die Gebühr wird auf Ihren ersten Build angerechnet.',
       cta: 'Audit buchen →',
     },
-    work: { eyebrow: 'Ausgewählte Arbeiten', h2a: 'Produkte entworfen, gebaut', h2b: 'und von null geliefert.', howToCta: 'So testen Sie es', swipe: 'Zum Durchblättern wischen →', more: 'Und mehr, auf Anfrage.', showAll: 'Alle Projekte anzeigen', showLess: 'Weniger anzeigen' },
+    work: { eyebrow: 'Ausgewählte Arbeiten', h2a: 'Produkte entworfen, gebaut', h2b: 'und von null geliefert.', howToCta: 'So testen Sie es', swipe: 'Zum Durchblättern wischen →', keys: 'zum Blättern', more: 'Und mehr, auf Anfrage.', showAll: 'Alle Projekte anzeigen', showLess: 'Weniger anzeigen' },
     projects: [
       { tag: 'Flaggschiff · Agentische KI', blurb: 'Ein SaaS für EV-Laden und Energiemanagement, von Grund auf gebaut. Agentische Watchdogs überwachen Ladepunkte, Batterien und Solar, während eine LLM-Chat-Ebene das System in Alltagssprache steuert: Fahrzeug laden, Last auf Solar verschieben, Zeitplan setzen, die Agenten führen aus.', note: 'Proprietäre Codebasis · Live-Demo zeigt vollen Funktionsumfang', label: 'demo.ridergy.com' },
       { tag: 'Live-Produkt · Mentoring-Marktplatz', blurb: 'Ein zweiseitiger Mentoring-Marktplatz: Studierende mit Auslandsplänen buchen verifizierte Mentoren, die bereits an Universitäten weltweit studieren, mit bezahlten Sessions, Kontaktfreigabe nach dem Checkout, Dokumenten-Feedback, Earnings-Dashboards und Guides mehrerer Autoren. Als eigenes Produkt gebaut und betrieben, mit Ausbau über das Auslandsstudium hinaus.', label: 'auroramentors.com' },
@@ -234,9 +240,9 @@ export const STR = {
     ],
     pg: {
       eyebrow: 'Live-Demos', h2a: 'Geben Sie einem Agenten einen Job.', h2b: 'Dann unterbrechen Sie ihn.',
-      p1: 'Das ist, was wir bauen: KI, die echte Arbeit leistet, nicht Chat. Führen Sie ein Live-Telefonat mit einem ', voice: 'Voice-Agenten',
-      p2: ', der spricht, bucht und sich fängt, wenn Sie ihn mitten im Satz unterbrechen. Oder schicken Sie einen ', ops: 'Operations-Agenten',
-      p3: ' auf Mission und werfen Sie ihm einen Störfall dazwischen. Dieselbe Schleife liefern wir mit Frontier-Modellen in Produktion, hier im Browser wiedergegeben.',
+      p1: 'KI, die echte Arbeit leistet, nicht Chat. Führen Sie ein Live-Telefonat mit einem ', voice: 'Voice-Agenten',
+      p2: ', der sich fängt, wenn Sie ihn unterbrechen. Oder schicken Sie einen ', ops: 'Operations-Agenten',
+      p3: ' auf Mission und werfen Sie ihm einen Störfall dazwischen.',
       tabVoice: 'Voice-Agent · Live-Anruf', tabOps: 'Ops-Agent · Missionen',
     },
     va: {
@@ -275,8 +281,8 @@ export const STR = {
     },
     pr: {
       eyebrow: 'Wie wir arbeiten', h2a: 'Konzern-Disziplin.', h2b: 'Studio-Tempo.',
-      p: 'Premium heißt nicht langsam, und schnell heißt nicht fragil. Es heißt: ein verantwortlicher Owner, klare Meilensteine und Arbeit, die Sie jede Woche prüfen können.',
-      platforms: 'Gebaut auf Plattformen, denen Ihr Unternehmen bereits vertraut',
+      p: 'Ein verantwortlicher Owner, klare Meilensteine und Arbeit, die Sie jede Woche prüfen können.',
+      platforms: 'Gebaut auf Plattformen, denen Ihr Unternehmen bereits vertraut', showAll: 'Alle sechs Zusagen',
     },
     trust: [
       { t: 'Senior-geführt, immer', d: 'Jedes Projekt führt ein Senior-Engineer Ende-zu-Ende, nie an Junioren abgegeben. Geprüfte Spezialisten für Design und Engineering stoßen dazu, wenn der Umfang wächst. Kapazität ist nie der Engpass.' },
@@ -288,7 +294,7 @@ export const STR = {
     ],
     join: {
       eyebrow: 'Ins Studio kommen', h2a: 'Wir suchen Talent,', h2b: 'keine Lebensläufe.',
-      p: 'Die Projekt-Pipeline wächst: Voice-Agenten, KI-Workforces, Premium-Apps und Dashboards für Kunden weltweit. Wir arbeiten mit Freelancern und Spezialisten, projektbasiert, async-first, bezahlt pro Meilenstein.',
+      p: 'Voice-Agenten, KI-Workforces und Premium-Apps für Kunden weltweit. Freelancer und Spezialisten, projektbasiert, async-first, bezahlt pro Meilenstein.',
       roles: [
         { t: 'AI Engineer', d: 'LLM-Agenten, RAG, Evals' },
         { t: 'Voice AI Engineer', d: 'STT/TTS-Pipelines, Telefonie' },
@@ -304,7 +310,7 @@ export const STR = {
     ab: {
       eyebrow: 'Über uns', h2a: 'Ein Studio, gebaut auf', h2b: 'Senior-Handwerk.',
       p1: 'a-niche ist ein kleines Studio aus Senior-Engineers und -Designern. Dasselbe verantwortliche Team bleibt vom Kickoff bis zum Launch an Ihrem Projekt, geprüfte Spezialisten stoßen dazu, wenn Ihr Umfang wächst, mit skalierbarer Kapazität dahinter.',
-      p2: 'Unsere eigenen Produkte, RiDERgy (agentische KI für EV-Laden und Energiemanagement) und Aurora Mentors (ein live betriebener Mentoring-Marktplatz), laufen täglich in Produktion, wo Zuverlässigkeit nicht verhandelbar ist. Jedes Kundenprojekt wird an demselben Standard gemessen, von Architektur und Interface bis zu API, Daten und der Intelligenz-Ebene, die alles nützlich macht.',
+      p2: 'Unsere eigenen Produkte laufen täglich in Produktion: RiDERgy (agentische KI für EV-Laden und Energie) und Aurora Mentors (ein live betriebener Mentoring-Marktplatz). Jedes Kundenprojekt wird an demselben Standard gemessen.',
     },
     ct: {
       eyebrow: 'Kontakt', h2a: 'Etwas, das es wert ist,', h2b: 'gebaut zu werden?',
@@ -317,6 +323,12 @@ export const STR = {
       err: 'Das Formular konnte gerade nicht senden. Bitte melden Sie sich stattdessen unten über LinkedIn.',
       nda: 'NDA-freundlich · Meilenstein-Abrechnung · Direkt oder Plattform-Escrow, Ihre Wahl',
     },
+    footer: {
+      line1: 'Senior-geführtes KI- und Software-Studio.',
+      line2: 'Made in India, weltweit im Einsatz.',
+      sections: 'Bereiche', elsewhere: 'Woanders',
+    },
+    motion: { label: 'Animation' },
     consent: {
       p: 'Wir verwenden Cookies für Analytics, um zu verstehen, wie Besucher diese Seite nutzen. Keine Daten werden verkauft oder für Werbung genutzt.',
       accept: 'Akzeptieren', decline: 'Ablehnen',
@@ -336,7 +348,7 @@ export const STR = {
     metrics: ['Productos creados desde cero', 'IA agéntica en producción', 'Entrega asíncrona entre husos horarios'],
     wb: {
       eyebrow: 'Qué construimos', h2: 'Construcción premium. Estándares de producción.',
-      p: 'Agentes de voz, plantillas de IA y plataformas completas, diseñadas y entregadas por un equipo senior que escala con tu alcance. Todo lo de abajo es calidad de producción: seguro, integrado y tuyo.',
+      p: 'Diseñado y entregado por un equipo senior que escala con tu alcance. Todo con calidad de producción: seguro, integrado, tuyo.',
     },
     services: [
       { t: 'Agentes de voz', d: 'Recepcionistas de IA y llamadas salientes que atienden, califican, agendan y hacen seguimiento, a toda hora y en cualquier idioma.', eg: 'Demo en vivo: atiende una llamada abajo' },
@@ -353,7 +365,7 @@ export const STR = {
       p: 'Empieza con una auditoría de IA a precio fijo: dos semanas de análisis que mapean las automatizaciones de mayor ROI en tu operación, con una hoja de ruta costeada. El importe se descuenta de tu primer proyecto.',
       cta: 'Reservar auditoría →',
     },
-    work: { eyebrow: 'Trabajo seleccionado', h2a: 'Productos diseñados, construidos', h2b: 'y entregados desde cero.', howToCta: 'Cómo probarlo', swipe: 'Desliza para ver más →', more: 'Y más, bajo petición.', showAll: 'Ver todos los proyectos', showLess: 'Ver menos' },
+    work: { eyebrow: 'Trabajo seleccionado', h2a: 'Productos diseñados, construidos', h2b: 'y entregados desde cero.', howToCta: 'Cómo probarlo', swipe: 'Desliza para ver más →', keys: 'para navegar', more: 'Y más, bajo petición.', showAll: 'Ver todos los proyectos', showLess: 'Ver menos' },
     projects: [
       { tag: 'Buque insignia · IA agéntica', blurb: 'Un SaaS de carga de vehículos eléctricos y gestión energética construido desde cero. Watchdogs agénticos vigilan cargadores, baterías y solar, mientras una capa de chat LLM permite controlar el sistema en lenguaje natural: cargar un vehículo, mover carga a solar o fijar un horario, y los agentes ejecutan.', note: 'Código propietario · la demo en vivo muestra toda la funcionalidad', label: 'demo.ridergy.com' },
       { tag: 'Producto en vivo · Marketplace de mentores', blurb: 'Un marketplace de mentores de dos lados: estudiantes que planean estudiar en el extranjero reservan mentores verificados que ya están en universidades de todo el mundo, con sesiones de pago, desbloqueo de contacto tras el checkout, revisión de documentos, panel de ingresos y guías multiautor. Construido y operado como producto propio, en expansión más allá del estudio en el extranjero.', label: 'auroramentors.com' },
@@ -389,9 +401,9 @@ export const STR = {
     ],
     pg: {
       eyebrow: 'Demos en vivo', h2a: 'Dale un trabajo a un agente.', h2b: 'Luego interrúmpelo.',
-      p1: 'Esto es lo que construimos: IA que hace trabajo real, no chat. Atiende una llamada en vivo con un ', voice: 'agente de voz',
-      p2: ' que habla, agenda y se recupera cuando lo cortas a mitad de frase. O lanza un ', ops: 'agente de operaciones',
-      p3: ' a una misión y tírale una bola curva. El mismo bucle que llevamos a producción con modelos frontier, reproducido en tu navegador.',
+      p1: 'IA que hace trabajo real, no chat. Atiende una llamada en vivo con un ', voice: 'agente de voz',
+      p2: ' que se recupera cuando lo interrumpes. O lanza un ', ops: 'agente de operaciones',
+      p3: ' a una misión y tírale una bola curva.',
       tabVoice: 'Agente de voz · llamada en vivo', tabOps: 'Agente de ops · misiones',
     },
     va: {
@@ -430,8 +442,8 @@ export const STR = {
     },
     pr: {
       eyebrow: 'Cómo trabajamos', h2a: 'Disciplina de gran firma.', h2b: 'Velocidad de estudio.',
-      p: 'Premium no significa lento, y rápido no significa frágil. Significa un responsable claro, hitos definidos y trabajo que puedes inspeccionar cada semana.',
-      platforms: 'Construido sobre plataformas en las que tu negocio ya confía',
+      p: 'Un responsable claro, hitos definidos y trabajo que puedes inspeccionar cada semana.',
+      platforms: 'Construido sobre plataformas en las que tu negocio ya confía', showAll: 'Los seis compromisos',
     },
     trust: [
       { t: 'Liderazgo senior, siempre', d: 'Cada proyecto lo dirige de principio a fin un ingeniero senior, nunca se delega a juniors. Diseñadores e ingenieros especialistas verificados se suman cuando el alcance crece; la capacidad nunca es el cuello de botella.' },
@@ -443,7 +455,7 @@ export const STR = {
     ],
     join: {
       eyebrow: 'Únete al estudio', h2a: 'Buscamos talento,', h2b: 'no currículums.',
-      p: 'La cartera de proyectos crece: agentes de voz, plantillas de IA, apps y dashboards premium para clientes de todo el mundo. Trabajamos con freelancers y especialistas, por proyecto, async-first, con pago por hito.',
+      p: 'Agentes de voz, plantillas de IA y apps premium para clientes de todo el mundo. Freelancers y especialistas, por proyecto, async-first, con pago por hito.',
       roles: [
         { t: 'AI Engineer', d: 'Agentes LLM, RAG, evals' },
         { t: 'Voice AI Engineer', d: 'Pipelines STT/TTS, telefonía' },
@@ -459,7 +471,7 @@ export const STR = {
     ab: {
       eyebrow: 'Nosotros', h2a: 'Un estudio construido con', h2b: 'oficio senior.',
       p1: 'a-niche es un estudio pequeño de ingenieros y diseñadores senior. El mismo equipo responsable se queda en tu proyecto desde el kickoff hasta el lanzamiento, con especialistas verificados que se suman cuando tu alcance crece y capacidad para escalar detrás.',
-      p2: 'Nuestros propios productos, RiDERgy (IA agéntica para carga de vehículos eléctricos y gestión energética) y Aurora Mentors (un marketplace de mentores en vivo), funcionan a diario en producción, donde la fiabilidad no es negociable. Cada proyecto de cliente se mide con ese mismo estándar, de la arquitectura y la interfaz a la API, los datos y la capa de inteligencia que lo hace útil.',
+      p2: 'Nuestros propios productos funcionan a diario en producción: RiDERgy (IA agéntica para carga de vehículos eléctricos y energía) y Aurora Mentors (un marketplace de mentores en vivo). Cada proyecto de cliente se mide con ese mismo estándar.',
     },
     ct: {
       eyebrow: 'Contacto', h2a: '¿Tienes algo que', h2b: 'valga la pena construir?',
@@ -472,6 +484,12 @@ export const STR = {
       err: 'El formulario no pudo enviarse ahora. Escríbenos por LinkedIn, aquí abajo.',
       nda: 'NDA disponible · Facturación por hitos · Directo o escrow de plataforma, tú eliges',
     },
+    footer: {
+      line1: 'Estudio senior de IA y software.',
+      line2: 'Hecho en India, entregando en todo el mundo.',
+      sections: 'Secciones', elsewhere: 'En otros sitios',
+    },
+    motion: { label: 'Animación' },
     consent: {
       p: 'Usamos cookies de analítica para entender cómo los visitantes usan este sitio. No vendemos datos ni los usamos para publicidad.',
       accept: 'Aceptar', decline: 'Rechazar',
@@ -491,7 +509,7 @@ export const STR = {
     metrics: ['Produits créés de zéro', 'IA agentique en production', 'Livraison asynchrone, tous fuseaux'],
     wb: {
       eyebrow: 'Ce que nous construisons', h2: 'Réalisation premium. Standards de production.',
-      p: "Agents vocaux, effectifs IA et plateformes complètes, conçus et livrés par une équipe senior qui grandit avec votre périmètre. Tout ce qui suit est de qualité production : sécurisé, intégré, et à vous.",
+      p: "Conçu et livré par une équipe senior qui grandit avec votre périmètre. Le tout en qualité production : sécurisé, intégré, et à vous.",
     },
     services: [
       { t: 'Agents vocaux', d: "Réceptionnistes IA et appels sortants : répondre, qualifier, réserver et relancer, jour et nuit, dans toutes les langues.", eg: 'Démo live : décrochez un appel ci-dessous' },
@@ -508,7 +526,7 @@ export const STR = {
       p: "Commencez par un audit IA à prix fixe : deux semaines d'analyse qui cartographient les automatisations au meilleur ROI dans votre activité, avec une feuille de route chiffrée. Le montant est déduit de votre premier projet.",
       cta: 'Réserver un audit →',
     },
-    work: { eyebrow: 'Réalisations choisies', h2a: 'Des produits conçus, construits', h2b: 'et livrés de zéro.', howToCta: 'Comment le tester', swipe: 'Balayez pour parcourir →', more: 'Et bien plus, sur demande.', showAll: 'Voir tous les projets', showLess: 'Afficher moins' },
+    work: { eyebrow: 'Réalisations choisies', h2a: 'Des produits conçus, construits', h2b: 'et livrés de zéro.', howToCta: 'Comment le tester', swipe: 'Balayez pour parcourir →', keys: 'pour parcourir', more: 'Et bien plus, sur demande.', showAll: 'Voir tous les projets', showLess: 'Afficher moins' },
     projects: [
       { tag: 'Vaisseau amiral · IA agentique', blurb: "Un SaaS de recharge VE et de gestion d'énergie construit de zéro. Des watchdogs agentiques surveillent bornes, batteries et solaire, tandis qu'une couche de chat LLM pilote le système en langage courant : lancer une charge, basculer sur le solaire, fixer un planning, et les agents exécutent.", note: 'Code propriétaire · la démo en direct montre toutes les fonctionnalités', label: 'demo.ridergy.com' },
       { tag: "Produit live · Marketplace de mentorat", blurb: "Une marketplace de mentorat à deux faces : les étudiants qui préparent des études à l'étranger réservent des mentors vérifiés déjà dans des universités du monde entier, avec sessions payantes, déblocage du contact après paiement, relecture de documents, tableau de gains et guides multi-auteurs. Construit et exploité comme notre propre produit, en expansion au-delà des études à l'étranger.", label: 'auroramentors.com' },
@@ -544,9 +562,9 @@ export const STR = {
     ],
     pg: {
       eyebrow: 'Démos live', h2a: 'Donnez un travail à un agent.', h2b: 'Puis interrompez-le.',
-      p1: "Voilà ce que nous construisons : une IA qui fait un vrai travail, pas du chat. Prenez un appel en direct avec un ", voice: 'agent vocal',
-      p2: " qui parle, réserve et se rattrape quand vous le coupez en pleine phrase. Ou envoyez un ", ops: "agent d'opérations",
-      p3: " en mission et lancez-lui un imprévu. La même boucle que nous livrons en production sur des modèles frontier, rejouée dans votre navigateur.",
+      p1: "Une IA qui fait un vrai travail, pas du chat. Prenez un appel en direct avec un ", voice: 'agent vocal',
+      p2: " qui se rattrape quand vous l'interrompez. Ou envoyez un ", ops: "agent d'opérations",
+      p3: " en mission et lancez-lui un imprévu.",
       tabVoice: 'Agent vocal · appel live', tabOps: "Agent d'ops · missions",
     },
     va: {
@@ -585,8 +603,8 @@ export const STR = {
     },
     pr: {
       eyebrow: 'Notre méthode', h2a: 'Rigueur de grand cabinet.', h2b: 'Vitesse de studio.',
-      p: "Premium ne veut pas dire lent, et rapide ne veut pas dire fragile. Cela veut dire : un responsable identifié, des jalons clairs et un travail que vous inspectez chaque semaine.",
-      platforms: 'Construit sur des plateformes que votre entreprise connaît déjà',
+      p: "Un responsable identifié, des jalons clairs et un travail que vous inspectez chaque semaine.",
+      platforms: 'Construit sur des plateformes que votre entreprise connaît déjà', showAll: 'Les six engagements',
     },
     trust: [
       { t: 'Direction senior, toujours', d: "Chaque projet est mené de bout en bout par un ingénieur senior, jamais délégué à des juniors. Des designers et ingénieurs spécialistes vérifiés rejoignent quand le périmètre grandit ; la capacité n'est jamais le goulot." },
@@ -598,7 +616,7 @@ export const STR = {
     ],
     join: {
       eyebrow: 'Rejoindre le studio', h2a: 'Nous cherchons du talent,', h2b: 'pas des CV.',
-      p: "Le pipeline de projets grandit : agents vocaux, effectifs IA, apps et dashboards premium pour des clients du monde entier. Nous travaillons avec des freelances et des spécialistes, au projet, async d'abord, payés au jalon.",
+      p: "Agents vocaux, effectifs IA et apps premium pour des clients du monde entier. Freelances et spécialistes, au projet, async d'abord, payés au jalon.",
       roles: [
         { t: 'AI Engineer', d: 'Agents LLM, RAG, évals' },
         { t: 'Voice AI Engineer', d: 'Pipelines STT/TTS, téléphonie' },
@@ -614,7 +632,7 @@ export const STR = {
     ab: {
       eyebrow: 'À propos', h2a: 'Un studio bâti sur', h2b: "un savoir-faire senior.",
       p1: "a-niche est un petit studio d'ingénieurs et designers senior. La même équipe responsable reste sur votre projet du lancement à la livraison, avec des spécialistes vérifiés qui rejoignent quand votre périmètre grandit et la capacité de monter en charge derrière.",
-      p2: "Nos propres produits, RiDERgy (IA agentique pour la recharge VE et la gestion d'énergie) et Aurora Mentors (une marketplace de mentorat en direct), tournent chaque jour en production, là où la fiabilité ne se négocie pas. Chaque projet client est tenu au même standard, de l'architecture et l'interface jusqu'à l'API, les données et la couche d'intelligence qui rend le tout utile.",
+      p2: "Nos propres produits tournent chaque jour en production : RiDERgy (IA agentique pour la recharge VE et l'énergie) et Aurora Mentors (une marketplace de mentorat en direct). Chaque projet client est tenu au même standard.",
     },
     ct: {
       eyebrow: 'Contact', h2a: 'Quelque chose qui mérite', h2b: "d'être construit ?",
@@ -627,6 +645,12 @@ export const STR = {
       err: "Le formulaire n'a pas pu envoyer. Contactez-nous plutôt via LinkedIn, ci-dessous.",
       nda: 'NDA possible · Facturation au jalon · Direct ou escrow de plateforme, au choix',
     },
+    footer: {
+      line1: "Studio IA et logiciel, mené par des seniors.",
+      line2: 'Made in India, livré dans le monde entier.',
+      sections: 'Sections', elsewhere: 'Ailleurs',
+    },
+    motion: { label: 'Animations' },
     consent: {
       p: "Nous utilisons des cookies d'analyse pour comprendre comment les visiteurs utilisent ce site. Aucune donnée n'est vendue ni utilisée pour la publicité.",
       accept: 'Accepter', decline: 'Refuser',

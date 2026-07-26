@@ -205,7 +205,7 @@ export const MISSIONS = [
         art: { kind: 'kv', rows: [['solar', '0 kW · night'], ['battery', '11.2 / 16 kWh'], ['building load', '3.8 kW'], ['fuse', '14 kW', true]] } },
       { t: 'step', id: 1 },
       { t: 'tool', call: "forecast.price(horizon: '12h')", ms: 1200, result: 'evening peak ₹12.4 at 19:00',
-        art: { kind: 'spark', d: [8.2, 9.6, 11.8, 12.4, 11.9, 9.4, 6.1, 4.3, 3.8, 3.6, 3.9, 4.4], label: '₹/kWh', marker: 3, markerLabel: '19:00 peak', color: '#f5b942' } },
+        art: { kind: 'spark', d: [8.2, 9.6, 11.8, 12.4, 11.9, 9.4, 6.1, 4.3, 3.8, 3.6, 3.9, 4.4], label: '₹/kWh', marker: 3, markerLabel: '19:00 peak', className: 'text-accent' } },
       { t: 'think', text: 'Two cars must leave by 07:00; the other three have slack. They charge after midnight at a third of the price.' },
       { t: 'step', id: 2 },
       { t: 'tool', call: 'schedule.solve(evs: 5, fuse: 14 kW)', ms: 1500, result: 'peak site draw 12.7 kW · 1.3 kW margin',

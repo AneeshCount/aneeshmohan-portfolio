@@ -58,12 +58,15 @@ export default function ConsentBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[60] p-4 sm:p-6">
-      <div className="mx-auto max-w-2xl rounded-xl border border-white/[0.08] bg-panel/95 backdrop-blur-md p-5 sm:p-6 shadow-2xl">
+    /* Dusk regardless of where the page is scrolled to: the banner is an
+       overlay on top of everything, so it needs one fixed identity rather than
+       inheriting whichever half happens to be behind it. */
+    <div data-regime="dusk" className="fixed inset-x-0 bottom-0 z-[60] p-4 sm:p-6">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-hair/10 bg-panel/95 backdrop-blur-md p-5 sm:p-6 shadow-2xl">
         <p className="text-[13px] text-muted leading-relaxed">{s.consent.p}</p>
         <div className="mt-4 flex flex-wrap gap-3">
-          <button onClick={() => choose(true)} className="rounded-full bg-accent text-ink font-mono text-[11px] uppercase tracking-[0.14em] px-5 py-2.5 hover:bg-ivory transition">{s.consent.accept}</button>
-          <button onClick={() => choose(false)} className="rounded-full border border-white/15 text-muted font-mono text-[11px] uppercase tracking-[0.14em] px-5 py-2.5 hover:text-ivory hover:border-white/30 transition">{s.consent.decline}</button>
+          <button onClick={() => choose(true)} className="rounded-full bg-accent text-ink font-mono text-[11px] uppercase tracking-[0.14em] px-5 py-2.5 hover:brightness-110 transition tactile">{s.consent.accept}</button>
+          <button onClick={() => choose(false)} className="rounded-full border border-hair/20 text-muted font-mono text-[11px] uppercase tracking-[0.14em] px-5 py-2.5 hover:text-ivory hover:border-hair/40 transition">{s.consent.decline}</button>
         </div>
       </div>
     </div>

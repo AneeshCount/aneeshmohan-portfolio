@@ -5,74 +5,203 @@
 /* ════════════════════════════════════════════════════════════════════════
    DESIGN SYSTEM
 
-   Structure borrowed from the engineered end of the spectrum (Linear):
-   a near-black canvas, hairline geometry, surfaces lit from the top edge,
-   restrained accent, and type that carries the hierarchy on its own.
+   The page runs a single arc from dawn to dusk. The upper third is a warm
+   saffron gradient dissolving through ivory into periwinkle: light, spacious,
+   almost nothing on screen. It then resolves into an indigo-black studio for
+   the work, the live demos and the close, where a dark surface genuinely
+   helps a glowing orbit and a waveform read as instruments.
 
-   The voice stays ours: an editorial serif display against mono utility
-   text, so the page reads as a studio rather than as a dev tool.
+   Two regimes, one set of classes. `[data-regime]` swaps the colour tokens;
+   every `.surface`, `.btn-*`, `.eyebrow` and Tailwind `text-ivory` below is
+   written against those tokens, so a section changes side of the page by
+   changing one attribute.
 
-   Every size here is fluid. The phone is the default case, not the
-   breakpoint we remember last.
+   The register is international and engineered. Sarvam supplies the warmth and
+   the air: a sunrise palette, one enormous serif line, almost nothing else on
+   the first screen. Linear supplies the precision: hairline construction,
+   glass surfaces, mono utility labels, and interactions that answer instantly
+   and physically. The studio is made in India and the palette carries that
+   quietly, in saffron resolving into indigo. Nothing here is folk ornament.
+
+   Every size is fluid. The phone is the default case, not the breakpoint we
+   remember last.
    ════════════════════════════════════════════════════════════════════════ */
+
+/* ── Colour tokens ──────────────────────────────────────────────────────
+   Space-separated RGB triples so Tailwind's `/opacity` modifiers work.
+   Contrast against each regime's own canvas, all clearing WCAG AA:
+     dawn  fg 15.9:1   muted 6.9:1   accent 4.9:1   second 7.5:1
+     dusk  fg 15.4:1   muted 7.9:1   accent 9.1:1   second 9.7:1
+   ──────────────────────────────────────────────────────────────────────── */
+/* Dawn is also the baseline on :root, so anything rendered outside a zone
+   wrapper (the consent banner, a portal, an error boundary) still resolves to a
+   real colour instead of falling back to initial black. */
+:root,
+[data-regime='dawn'] {
+  --c-bg: 250 248 245;     /* #FAF8F5 warm ivory */
+  --c-panel: 255 255 255;
+  --c-fg: 26 23 20;        /* #1A1714 warm near-black */
+  --c-muted: 90 85 80;     /* #5A5550 */
+  --c-accent: 194 65 12;   /* #C2410C deep saffron, dark enough to read */
+  --c-second: 67 56 202;   /* #4338CA indigo */
+  --c-hair: 26 23 20;
+
+  --surface-bg: rgb(255 255 255 / 0.72);
+  --surface-brd: rgb(26 23 20 / 0.09);
+  --surface-shadow: 0 1px 2px rgb(26 23 20 / 0.04), 0 12px 32px -12px rgb(26 23 20 / 0.1);
+  --surface-shadow-lift: 0 2px 4px rgb(26 23 20 / 0.05), 0 28px 60px -20px rgb(26 23 20 / 0.16);
+  --btn-fg: 250 248 245;
+  --btn-bg: 26 23 20;
+  /* Lower than dusk: the same stroke over a light saffron field reads much
+     heavier than it does over indigo-black. */
+  --lattice: 0.035;
+  /* A whisper of grain over the sunrise. Enough to make a wide gradient read as
+     paper rather than as a CSS gradient, which is where a light page usually
+     gives itself away. */
+  --grain: 0.13;
+}
+
+[data-regime='dusk'] {
+  --c-bg: 11 14 26;        /* #0B0E1A indigo-black */
+  --c-panel: 19 23 40;
+  --c-fg: 237 234 246;     /* #EDEAF6 */
+  --c-muted: 167 163 188;  /* #A7A3BC */
+  --c-accent: 240 161 75;  /* #F0A14B marigold */
+  --c-second: 165 180 252; /* #A5B4FC periwinkle */
+  --c-hair: 237 234 246;
+
+  --surface-bg: linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.014));
+  --surface-brd: rgb(237 234 246 / 0.09);
+  --surface-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.06);
+  --surface-shadow-lift: inset 0 1px 0 0 rgb(255 255 255 / 0.09), 0 22px 50px -22px rgb(0 0 0 / 0.85);
+  --btn-fg: 11 14 26;
+  --btn-bg: var(--c-accent);
+  --lattice: 0.14;
+  --grain: 0.3;
+}
 
 html {
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
+  background: #FAF8F5;
 }
 
-body { @apply bg-ink text-muted font-sans antialiased; overflow-x: hidden; }
+body { @apply text-muted font-sans antialiased; overflow-x: hidden; }
 
-/* A slow wash over the canvas so it is never flat black. Painted by a fixed
-   pseudo-element rather than background-attachment, which iOS Safari
-   repaints on every scroll frame. */
-body::before {
+section { scroll-margin-top: 88px; }
+::selection { background: rgb(var(--c-accent) / 0.24); color: rgb(var(--c-fg)); }
+
+/* ── The arc ────────────────────────────────────────────────────────────
+   `.zone-dawn` paints the sunrise behind everything above the transition:
+   saffron at the very top edge, settling into ivory across the hero, picking
+   up periwinkle as it approaches the handover. The gradient spans the whole
+   zone rather than each section, so it reads as one sky.
+
+   Painted on a pseudo-element rather than via background-attachment, which
+   iOS Safari repaints on every scroll frame.
+   ──────────────────────────────────────────────────────────────────────── */
+.zone-dawn, .zone-dusk { position: relative; isolation: isolate; }
+.zone-dawn > *, .zone-dusk > * { position: relative; z-index: 1; }
+
+.zone-dawn::before {
   content: '';
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(120% 60% at 50% -10%, rgba(47, 227, 190, 0.055), transparent 60%),
-    radial-gradient(80% 40% at 100% 0%, rgba(203, 180, 137, 0.03), transparent 55%);
+  background: linear-gradient(
+    180deg,
+    #E8833A 0%,
+    #EE9A55 8%,
+    #F4BE93 18%,
+    #FAF8F5 31%,
+    #FAF8F5 70%,
+    #E9ECFC 87%,
+    #C7D2FE 100%
+  );
 }
 
-section { scroll-margin-top: 80px; }
-::selection { background: rgba(47, 227, 190, 0.22); color: #fff; }
+.zone-dusk { background: rgb(var(--c-bg)); }
+
+/* The handover. Periwinkle resolving into indigo-black over a tall band, so
+   the two halves meet as a horizon rather than a seam. */
+.zone-seam {
+  height: clamp(9rem, 22vw, 15rem);
+  background: linear-gradient(180deg, #C7D2FE 0%, #8E9BD8 26%, #3B416B 62%, #0B0E1A 100%);
+}
 
 /* ── Type ───────────────────────────────────────────────────────────────
    One fluid scale, no breakpoint jumps. clamp() means a 360px phone and a
-   1600px display each get a size that was designed for them rather than
-   the nearest sm:/lg: guess.
+   1600px display each get a size designed for them rather than the nearest
+   sm:/lg: guess. Display weight is 500 and tracking is looser than a
+   headline usually takes, because the airiness is the point.
    ──────────────────────────────────────────────────────────────────────── */
-h1, h2, h3 { @apply font-display text-ivory; letter-spacing: -0.015em; font-weight: 600; }
+h1, h2, h3 { @apply font-display text-ivory; font-weight: 500; letter-spacing: -0.015em; }
 
-.display-1 { font-size: clamp(2.5rem, 8.5vw, 4.75rem); line-height: 1.04; letter-spacing: -0.03em; }
-.display-2 { font-size: clamp(1.875rem, 5.2vw, 2.75rem); line-height: 1.12; letter-spacing: -0.02em; }
-.display-3 { font-size: clamp(1.5rem, 3.6vw, 2rem); line-height: 1.2; letter-spacing: -0.015em; }
+.display-1 { font-size: clamp(2.75rem, 9vw, 5.25rem); line-height: 1.02; letter-spacing: -0.028em; }
+.display-2 { font-size: clamp(2rem, 5.4vw, 3rem); line-height: 1.1; letter-spacing: -0.022em; }
+.display-3 { font-size: clamp(1.5rem, 3.6vw, 2rem); line-height: 1.2; letter-spacing: -0.018em; }
 
-.lede { font-size: clamp(1rem, 2.4vw, 1.125rem); line-height: 1.7; }
+.lede { font-size: clamp(1.0625rem, 2.4vw, 1.25rem); line-height: 1.62; }
 
-/* The accent word in a headline. A gradient rather than flat teal so the
-   one place we raise our voice still feels lit rather than highlighted. */
+/* Below the display sizes there are exactly two roles, and they had grown six
+   heading sizes and five body sizes between them, which is how a page stops
+   feeling designed and starts feeling assembled.
+
+   `.card-title` is the heading of anything in a grid or a panel: a trust card, a
+   lab, an article, a role, the services panel's subject. `.card-body` is the
+   prose under it, anywhere. Section ledes stay on `.lede`; display lines stay on
+   `.display-*`. Nothing else should invent a size. */
+.card-title { @apply font-display text-xl text-ivory; line-height: 1.3; letter-spacing: -0.012em; }
+.card-body { @apply text-[14px] text-muted; line-height: 1.62; }
+
+/* The accent word in a headline. A gradient rather than flat saffron so the
+   one place we raise our voice reads as lit rather than highlighted. */
 .gradient-text {
-  background: linear-gradient(100deg, #2FE3BE 10%, #9df0dc 55%, #CBB489 100%);
+  background: linear-gradient(100deg, #C2410C 0%, #E8833A 45%, #4338CA 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
+[data-regime='dusk'] .gradient-text {
+  background: linear-gradient(100deg, #F0A14B 0%, #F6C99B 45%, #A5B4FC 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
 
 /* ── Layout ─────────────────────────────────────────────────────────────
    Gutters scale with the viewport. 32px of padding on a 360px phone spends
-   18% of the screen on nothing.
+   18% of the screen on nothing. Section rhythm is deliberately taller than
+   before: the density complaint was as much about vertical air as wordcount.
    ──────────────────────────────────────────────────────────────────────── */
 .shell { @apply mx-auto w-full max-w-6xl; padding-inline: clamp(1.25rem, 5vw, 2rem); }
 .shell-narrow { @apply mx-auto w-full max-w-3xl; padding-inline: clamp(1.25rem, 5vw, 2rem); }
-.section-y { padding-block: clamp(3.5rem, 9vw, 6rem); }
+/* Two vertical rhythms, so nothing has to invent a padding. `.section-y` is a
+   full section. `.band-y` is a thin band that is one row of content rather than a
+   section of it, like the three figures under the hero, which would read as
+   stranded with a full section's air above and below. */
+.section-y { padding-block: clamp(4.5rem, 11vw, 8.5rem); }
+.band-y { padding-block: clamp(3rem, 6vw, 5rem); }
 
-/* ── Motion ─────────────────────────────────────────────────────────────── */
-@keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+/* ── Motion ─────────────────────────────────────────────────────────────
+   Tiers are decided once in src/motion.js and written to `data-motion` on
+   <html>. Everything that moves is ambient, so `still` loses no information:
+   the gradients, lattice and ornaments are static paint and survive at every
+   tier, which is what keeps the static page premium rather than stripped.
+
+   `--ease-out` is the house curve for anything the visitor triggered: fast
+   departure, long settle. `--spring` overshoots very slightly and is reserved
+   for the orbit, where a node arriving at the front should feel like it has
+   mass. Press states use neither; they are instant, because a control that
+   eases into being pressed feels broken.
+   ──────────────────────────────────────────────────────────────────────── */
+:root {
+  --ease-out: cubic-bezier(.16, .8, .24, 1);
+  --spring: cubic-bezier(.34, 1.32, .48, 1);
+}
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes flow { 0% { transform: translateX(-120%); } 100% { transform: translateX(340%); } }
 @keyframes flowdash { to { stroke-dashoffset: -11; } }
@@ -84,13 +213,28 @@ h1, h2, h3 { @apply font-display text-ivory; letter-spacing: -0.015em; font-weig
 .reveal { opacity: 0; }
 .reveal.in { animation: fadeUp .9s cubic-bezier(.16, .8, .24, 1) both; }
 
-/* Keyboard focus stays visible and unmistakable; pointer clicks stay clean. */
-a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
-  outline: 2px solid #2FE3BE;
-  outline-offset: 3px;
-  border-radius: 4px;
-}
+/* calm: keep the cheap opacity/transform reveal, drop everything that runs
+   on a timer forever. */
+[data-motion='calm'] .aurora::before,
+[data-motion='calm'] .aurora::after,
+[data-motion='calm'] .charge-track::after { animation: none; }
+[data-motion='calm'] .spot::before { display: none; }
 
+/* still: nothing moves, and every element renders in its final state. */
+[data-motion='still'] { scroll-behavior: auto; }
+[data-motion='still'] .reveal { opacity: 1; }
+[data-motion='still'] *,
+[data-motion='still'] *::before,
+[data-motion='still'] *::after {
+  animation-duration: .01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .01ms !important;
+}
+[data-motion='still'] .charge-track::after { display: none; }
+[data-motion='still'] .spot::before { display: none; }
+
+/* The media query still applies on its own, so a reduced-motion visitor is
+   safe even before the tier script has run. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -102,75 +246,125 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .charge-track::after, .aurora { display: none; }
 }
 
-/* ── Chrome ─────────────────────────────────────────────────────────────── */
-
-/* Eyebrow: mono, uppercase, wide, with a hairline tick that ties it to the
-   rules used everywhere else. */
-.eyebrow { @apply font-mono text-[10px] font-medium uppercase text-gold inline-flex items-center gap-3; letter-spacing: 0.32em; }
-.eyebrow::before { content: ''; width: 24px; height: 1px; background: currentColor; display: inline-block; opacity: .6; }
-
-/* Hairlines that fade out at both ends, so a divider reads as a light
-   source rather than a border drawn to the edge of the container. */
-.rule {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(236, 231, 220, .14), transparent);
+/* Keyboard focus stays visible and unmistakable; pointer clicks stay clean. */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible,
+[role='tab']:focus-visible {
+  outline: 2px solid rgb(var(--c-accent));
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
-.charge-track { position: relative; height: 1px; background: rgba(236, 231, 220, .08); overflow: hidden; }
+/* ── Chrome ─────────────────────────────────────────────────────────────── */
+
+/* Eyebrow: mono, uppercase, wide, in the secondary colour, with a hairline
+   tick that ties it to the rules used everywhere else. */
+.eyebrow {
+  @apply font-mono text-[10px] font-medium uppercase text-gold inline-flex items-center gap-3;
+  letter-spacing: 0.3em;
+}
+.eyebrow::before {
+  content: ''; width: 24px; height: 1px; background: currentColor;
+  display: inline-block; opacity: .55;
+}
+
+/* Centred variant: a rule on both sides, the way a title page sets a label.
+   Used in the hero and above the closing headline.
+
+   Full-strength ink, not the secondary colour and not faded. In the hero this
+   label sits on saffron, where indigo at 10px manages about 3.5:1 and ink at
+   0.68 alpha only reaches 3.7:1; both miss AA for text this small. Solid ink is
+   6.6:1. Restraint comes from the size and the tracking instead of from opacity,
+   which is the right lever anyway. Elsewhere on the dawn half the ground is
+   ivory and `.eyebrow` can stay indigo. */
+.eyebrow-centred {
+  @apply font-mono text-[10px] font-medium uppercase text-ivory inline-flex items-center gap-4 justify-center;
+  letter-spacing: 0.3em;
+}
+/* The rules either side stay faint; it is only the text that needed the
+   contrast, and a hairline is decoration rather than content.
+
+   They appear only once there is room for the label on one line. On a narrow
+   screen the label wraps to two lines and the flankers end up as two stray
+   dashes pinned to the vertical centre of a two-line block, which reads as a
+   rendering fault rather than as typography. */
+@media (min-width: 640px) {
+  .eyebrow-centred::before, .eyebrow-centred::after {
+    content: ''; width: clamp(24px, 8vw, 64px); height: 1px;
+    background: currentColor; opacity: .32;
+  }
+}
+
+/* Two divider devices, and which one to use is decided by scope, not by taste:
+   a boundary *between* sections is a full-bleed `border-t border-hair/8` on the
+   <section> itself, crisp from edge to edge; a divider *inside* a section or a
+   card is `.rule`, which fades at both ends so it reads as a light source rather
+   than a line drawn to the edge of its container. Both were previously used for
+   both jobs. */
+.rule { height: 1px; background: linear-gradient(90deg, transparent, rgb(var(--c-hair) / .16), transparent); }
+
+.charge-track { position: relative; height: 1px; background: rgb(var(--c-hair) / .1); overflow: hidden; }
 .charge-track::after {
   content: ''; position: absolute; top: 0; left: 0; width: 28%; height: 100%;
-  background: linear-gradient(90deg, transparent, #2FE3BE, transparent);
+  background: linear-gradient(90deg, transparent, rgb(var(--c-accent)), transparent);
   animation: flow 4.5s ease-in-out infinite;
 }
 
-/* Status pill: a live dot and a short claim. Used once, at the top. */
+/* Status pill: a live dot and a short claim. */
 .badge {
   @apply inline-flex items-center gap-2.5 rounded-full font-mono text-[10px] uppercase tracking-[0.16em] text-muted;
   padding: 0.4rem 0.85rem 0.4rem 0.7rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--surface-brd);
+  background: var(--surface-bg);
+  transition: border-color .3s, color .3s;
 }
-.badge:hover { border-color: rgba(47, 227, 190, 0.35); color: #EAF0EE; }
+.badge:hover { border-color: rgb(var(--c-accent) / .45); color: rgb(var(--c-fg)); }
 
 /* ── Surfaces ───────────────────────────────────────────────────────────
-   Every raised element is lit from its top edge: a 1px inset highlight
-   above a hairline border. It is the detail that makes a dark UI read as
-   material rather than as boxes drawn on a background.
+   Dawn surfaces are paper lifted off the page: translucent white over the
+   gradient, a contact shadow, no inset highlight. Dusk surfaces are lit from
+   their top edge instead, which is the detail that makes a dark UI read as
+   material rather than as boxes drawn on a background. Both come out of the
+   same tokens, so a card does not know which half it is on.
+
+   Two classes, and the difference is whether the whole thing is clickable:
+   `.surface` is a panel you read, `.pcard` is a card you press, and it earns the
+   lift and the accent sweep for it. Labs and Insights used to hand-roll that
+   hover; anything clickable should take `.pcard` rather than reinvent it.
    ──────────────────────────────────────────────────────────────────────── */
 .surface {
-  @apply relative rounded-xl;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  @apply relative rounded-2xl;
+  background: var(--surface-bg);
+  border: 1px solid var(--surface-brd);
+  box-shadow: var(--surface-shadow);
   transition: border-color .4s, box-shadow .4s, transform .4s cubic-bezier(.16, .8, .24, 1);
 }
 
 .pcard {
-  @apply relative rounded-xl overflow-hidden;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01));
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  @apply relative rounded-2xl overflow-hidden;
+  background: var(--surface-bg);
+  border: 1px solid var(--surface-brd);
+  box-shadow: var(--surface-shadow);
   transition: border-color .5s, box-shadow .5s, transform .5s cubic-bezier(.16, .8, .24, 1);
 }
 .pcard::after {
   content: ''; position: absolute; top: 0; left: 0; height: 1px; width: 0;
-  background: linear-gradient(90deg, #2FE3BE, transparent);
+  background: linear-gradient(90deg, rgb(var(--c-accent)), transparent);
   transition: width .7s cubic-bezier(.16, .8, .24, 1);
 }
 .pcard:hover {
-  border-color: rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.09), 0 22px 50px -22px rgba(0, 0, 0, .85);
+  border-color: rgb(var(--c-accent) / .3);
+  box-shadow: var(--surface-shadow-lift);
   transform: translateY(-3px);
 }
 .pcard:hover::after { width: 100%; }
 
-/* Cursor spotlight. The card lights up where the pointer is, which is the
-   one piece of ambient motion tied to the visitor rather than to a timer.
-   Coordinates come from a single delegated listener (useSpotlight). */
+/* Cursor spotlight. The card lights up where the pointer is, the one piece of
+   ambient motion tied to the visitor rather than to a timer. Coordinates come
+   from a single delegated listener (useSpotlight). */
 .spot > * { position: relative; }
 .spot::before {
   content: ''; position: absolute; inset: 0; z-index: 0; border-radius: inherit;
-  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), rgba(47, 227, 190, 0.10), transparent 62%);
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 0%), rgb(var(--c-accent) / 0.1), transparent 62%);
   opacity: 0; transition: opacity .4s; pointer-events: none;
 }
 @media (hover: hover) and (pointer: fine) {
@@ -178,61 +372,144 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 /* ── Controls ───────────────────────────────────────────────────────────
-   Minimum 44px tall so every primary action clears the touch target floor
-   without needing a separate mobile rule.
+   Minimum 46px tall so every primary action clears the touch target floor
+   without a separate mobile rule.
    ──────────────────────────────────────────────────────────────────────── */
 .btn-primary {
-  @apply inline-flex items-center justify-center gap-3 rounded-full bg-accent text-ink font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.18em] px-6 sm:px-7 shadow-glow transition-all duration-300;
+  @apply inline-flex items-center justify-center gap-3 rounded-full font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.16em] px-7 transition-all duration-300;
   min-height: 46px;
+  color: rgb(var(--btn-fg));
+  background: rgb(var(--btn-bg));
 }
-.btn-primary:hover { @apply shadow-glow-lg; filter: brightness(1.06); transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0) scale(.98); box-shadow: 0 4px 14px -6px rgba(47, 227, 190, .45); }
+.btn-primary:hover { filter: brightness(1.12); transform: translateY(-1px); box-shadow: var(--surface-shadow-lift); }
+.btn-primary:active { transform: translateY(0) scale(.975); transition-duration: 0s; }
 
 .btn-ghost {
-  @apply inline-flex items-center justify-center gap-3 rounded-full font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.18em] text-ivory px-6 transition-all duration-300;
+  @apply inline-flex items-center justify-center gap-3 rounded-full font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.16em] text-ivory px-7 transition-all duration-300;
   min-height: 46px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+  border: 1px solid rgb(var(--c-hair) / .18);
+  background: var(--surface-bg);
 }
-.btn-ghost:hover { border-color: rgba(47, 227, 190, 0.45); color: #2FE3BE; }
+.btn-ghost:hover { border-color: rgb(var(--c-accent) / .5); color: rgb(var(--c-accent)); }
+.btn-ghost:active { transform: scale(.975); transition-duration: 0s; }
 
-.chip { @apply font-mono text-[10px] tracking-wide rounded px-2 py-1 bg-white/[0.03] border border-white/[0.06] text-muted; }
+.chip {
+  @apply font-mono text-[10px] tracking-wide rounded px-2 py-1 text-muted;
+  background: rgb(var(--c-hair) / .04);
+  border: 1px solid rgb(var(--c-hair) / .09);
+}
+
+/* ── Haptics ────────────────────────────────────────────────────────────
+   The tactile layer. A premium interface is mostly this: every control
+   acknowledges the press immediately and physically, and nothing waits on an
+   animation to tell you it heard you.
+
+   `.tactile` is the shared contract. Scale down on press, not up, because a
+   surface being pushed into the page is the metaphor that matches a finger.
+   The transform is instant on the way down and eased on the way back, which
+   is how a real key feels.
+   ──────────────────────────────────────────────────────────────────────── */
+.tactile { transition: transform .32s var(--ease-out), border-color .32s, box-shadow .32s, color .2s; }
+.tactile:active { transform: scale(.975); transition-duration: 0s; }
+[data-motion='still'] .tactile:active { transform: none; }
+
+/* Keyboard hint: the small mono key cap next to an affordance that has one.
+   Present because the orbit and the tab strips are genuinely arrow-navigable,
+   and an interface that is keyboard-first should say so. */
+.kbd {
+  @apply inline-flex items-center justify-center font-mono text-[9px] rounded text-muted;
+  min-width: 1.15rem; height: 1.15rem; padding-inline: .25rem;
+  border: 1px solid rgb(var(--c-hair) / .16);
+  background: rgb(var(--c-hair) / .05);
+  box-shadow: 0 1px 0 0 rgb(var(--c-hair) / .12);
+}
+
+/* Roll-up: a label that swaps for a copy of itself on hover, sliding up through
+   a clipped box. Two stacked copies in a column the height of one line, moved by
+   exactly 100%, so the outgoing and incoming text are always in register no
+   matter the font size.
+
+   The reason to prefer this over a colour fade is that it moves in the same
+   direction as the cursor's intent and it is over in 400ms: it reads as the
+   control acknowledging you, which is the whole point of the tactile layer. Used
+   across the footer, where there are a lot of small links and a plain colour
+   change on each one would say nothing.
+
+   The second copy is decorative, so a `.rollup` must mark it aria-hidden; the
+   Rollup component in src/ui.jsx does that. */
+.rollup {
+  display: inline-flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Exactly one line tall, and the line height is pinned so the clip cannot
+     drift with inherited leading. */
+  height: 1.35em;
+  line-height: 1.35em;
+  vertical-align: bottom;
+}
+.rollup > span {
+  display: block;
+  transition: transform .42s var(--ease-out);
+}
+a:hover .rollup > span,
+button:hover .rollup > span,
+a:focus-visible .rollup > span,
+button:focus-visible .rollup > span { transform: translateY(-100%); }
+
+/* With motion off the swap would be an instant jump to an identical word, which
+   is worse than nothing. The second copy is simply never shown. */
+[data-motion='still'] .rollup { height: auto; }
+[data-motion='still'] .rollup > span:last-child { display: none; }
+
+/* A very fine grain over the dusk half. Flat dark panels band visibly on
+   cheap displays; a little noise breaks the gradient into something that
+   looks like a surface. SVG turbulence, so it costs no request. */
+.grain::after {
+  content: '';
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  opacity: var(--grain, .28); mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
+}
+
+/* Tab strip. One panel of content visible at a time, which is how a section
+   that contains a lot shows a little. Shared by Services and the orbit. */
+.tabstrip {
+  @apply inline-flex gap-1 rounded-full p-1;
+  border: 1px solid rgb(var(--c-hair) / .1);
+  background: var(--surface-bg);
+}
+.tab {
+  @apply whitespace-nowrap rounded-full px-4 sm:px-5 py-2.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted transition;
+}
+.tab:hover { color: rgb(var(--c-fg)); }
+.tab[aria-selected='true'] {
+  color: rgb(var(--btn-fg));
+  background: rgb(var(--btn-bg));
+}
 
 /* ── Atmosphere ─────────────────────────────────────────────────────────── */
-.grid-bg {
-  background-image:
-    linear-gradient(rgba(236, 231, 220, .018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(236, 231, 220, .018) 1px, transparent 1px);
-  background-size: 72px 72px;
-  /* Fade the grid out rather than cutting it, so it reads as depth. */
-  -webkit-mask-image: radial-gradient(110% 80% at 50% 0%, #000 20%, transparent 75%);
-  mask-image: radial-gradient(110% 80% at 50% 0%, #000 20%, transparent 75%);
-}
-
 .glow {
   position: absolute; border-radius: 9999px; pointer-events: none;
-  background: radial-gradient(circle, rgba(47, 227, 190, .10), transparent 70%);
+  background: radial-gradient(circle, rgb(var(--c-accent) / .12), transparent 70%);
   filter: blur(30px);
 }
 
-/* The hero light field: two slow, oversized washes that never quite repeat. */
+/* The light field: two slow, oversized washes that never quite repeat. */
 .aurora { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-.aurora::before, .aurora::after {
-  content: ''; position: absolute; border-radius: 9999px; filter: blur(80px);
-}
+.aurora::before, .aurora::after { content: ''; position: absolute; border-radius: 9999px; filter: blur(80px); }
 .aurora::before {
   width: 46rem; height: 46rem; top: -18rem; right: -14rem;
-  background: radial-gradient(circle, rgba(47, 227, 190, .16), transparent 65%);
+  background: radial-gradient(circle, rgb(var(--c-accent) / .16), transparent 65%);
   animation: drift 18s ease-in-out infinite;
 }
 .aurora::after {
   width: 34rem; height: 34rem; bottom: -16rem; left: -10rem;
-  background: radial-gradient(circle, rgba(203, 180, 137, .10), transparent 65%);
+  background: radial-gradient(circle, rgb(var(--c-second) / .13), transparent 65%);
   animation: drift 22s ease-in-out infinite reverse;
 }
 
 .link-underline {
-  background-image: linear-gradient(#2FE3BE, #2FE3BE);
+  background-image: linear-gradient(rgb(var(--c-accent)), rgb(var(--c-accent)));
   background-size: 0% 1px; background-repeat: no-repeat; background-position: 0 100%;
   transition: background-size .4s;
 }
@@ -240,8 +517,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 
 /* ── Scrollbars and carousels ───────────────────────────────────────────── */
 *::-webkit-scrollbar { width: 9px; height: 9px; }
-*::-webkit-scrollbar-thumb { background: #26262b; border-radius: 8px; }
-*::-webkit-scrollbar-thumb:hover { background: #33333a; }
+*::-webkit-scrollbar-thumb { background: rgb(var(--c-hair) / .18); border-radius: 8px; }
+*::-webkit-scrollbar-thumb:hover { background: rgb(var(--c-hair) / .3); }
 
 .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }

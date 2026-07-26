@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { CALLS } from './calls.js';
 import { FeedItem } from './agent.jsx';
 import { useLang } from './i18n.jsx';
+import { tokenColor } from './ui.jsx';
 import { locDemo, TTS_LANG } from './demo-i18n.js';
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -35,14 +36,17 @@ function pickVoice(lang) {
   return vs[0];
 }
 
-/* ── Waveform: who is talking, drawn as sound ────────────────────────────── */
+/* ── Waveform: who is talking, drawn as sound ──────────────────────────────
+   Colour is named as a palette token plus an alpha rather than as a hex, and
+   resolved against the live stylesheet on each frame, so the canvas cannot
+   drift off the palette the rest of the page is using. */
 const WAVE = {
-  agent: { color: '#2FE3BE', amp: 1 },
-  caller: { color: '#CBB489', amp: 0.85 },
-  think: { color: 'rgba(47,227,190,.45)', amp: 0.2 },
-  tool: { color: 'rgba(47,227,190,.45)', amp: 0.3 },
-  idle: { color: 'rgba(234,240,238,.22)', amp: 0.07 },
-  done: { color: 'rgba(234,240,238,.22)', amp: 0.07 },
+  agent: { token: '--c-accent', alpha: 1, amp: 1 },
+  caller: { token: '--c-second', alpha: 1, amp: 0.85 },
+  think: { token: '--c-accent', alpha: 0.45, amp: 0.2 },
+  tool: { token: '--c-accent', alpha: 0.45, amp: 0.3 },
+  idle: { token: '--c-fg', alpha: 0.22, amp: 0.07 },
+  done: { token: '--c-fg', alpha: 0.22, amp: 0.07 },
 };
 
 function Waveform({ modeRef }) {
@@ -60,7 +64,7 @@ function Waveform({ modeRef }) {
       ctx.clearRect(0, 0, w, h);
       const m = WAVE[modeRef.current] || WAVE.idle;
       const n = Math.max(28, Math.floor(w / 9));
-      ctx.fillStyle = m.color;
+      ctx.fillStyle = tokenColor(c, m.token, m.alpha);
       for (let i = 0; i < n; i++) {
         const x = (i + 0.5) * (w / n);
         const v = (Math.sin(i * 0.9 + t * 0.22) + Math.sin(i * 2.3 - t * 0.14) + Math.sin(i * 0.37 + t * 0.08)) / 3;
@@ -294,7 +298,7 @@ export function VoiceAgent({ onOps }) {
         <div className="mt-8 grid sm:grid-cols-2 gap-4">
           {calls.map((c) => (
             <button key={c.id} onClick={() => start(c)}
-              className="group text-left rounded-xl border border-white/[0.08] p-6 hover:border-accent/40 hover:bg-accent/[0.03] transition-all duration-300">
+              className="group text-left rounded-xl border border-hair/10 p-6 hover:border-accent/40 hover:bg-accent/[0.03] transition-all duration-300">
               {/* Wraps rather than squeezes: on a narrow card the label
                   drops to its own line instead of colliding with the icon. */}
               <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
@@ -342,14 +346,14 @@ export function VoiceAgent({ onOps }) {
         </div>
         {synthOK && (
           <button onClick={toggleSound}
-            className="shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] rounded-full px-3.5 py-2 border border-white/10 text-muted hover:text-ivory hover:border-white/30 transition">
+            className="shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] rounded-full px-3.5 py-2 border border-hair/12 text-muted hover:text-ivory hover:border-hair/40 transition">
             {S.sound ? V.soundOn : V.muted}
           </button>
         )}
       </div>
 
       {/* waveform + call controls: kept together so the interrupt is always in view */}
-      <div className="mt-5 rounded-xl border border-white/[0.07] bg-ink/60 px-4 py-2.5">
+      <div className="mt-5 rounded-xl border border-hair/10 bg-ink/60 px-4 py-2.5">
         <Waveform modeRef={modeRef} />
         <div className="flex items-center justify-between gap-3 flex-wrap mt-1.5">
           <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/70">{V.states[S.state]}</span>
@@ -359,7 +363,7 @@ export function VoiceAgent({ onOps }) {
                 <button onClick={bargeIn} disabled={!S.armed}
                   title={S.armed ? '' : scen.bargeHint}
                   className={`font-mono text-[10px] uppercase tracking-[0.16em] rounded-full px-3.5 py-1.5 border transition ${
-                    S.armed ? 'border-gold/60 text-gold hover:bg-gold/10' : 'border-white/10 text-muted/50'
+                    S.armed ? 'border-gold/60 text-gold hover:bg-gold/10' : 'border-hair/12 text-muted/50'
                   }`} style={S.armed ? { animation: 'pulse2 1.6s infinite' } : undefined}>
                   {S.barge === 'used' ? V.handled : S.armed ? `⚡ ${V.interrupt}: ${scen.bargeLabel}` : `⚡ ${scen.bargeLabel} · ${V.soon}`}
                 </button>
@@ -371,14 +375,14 @@ export function VoiceAgent({ onOps }) {
       </div>
 
       {/* transcript */}
-      <div ref={feedEl} className="mt-4 rounded-xl border border-white/[0.07] bg-ink/60 p-4 sm:p-5 h-[340px] overflow-y-auto space-y-3.5">
+      <div ref={feedEl} className="mt-4 rounded-xl border border-hair/10 bg-ink/60 p-4 sm:p-5 h-[340px] overflow-y-auto space-y-3.5">
         {S.feed.map((item, i) => <Turn key={i} item={item} />)}
         {!live && S.outcome && (
           <div className="rounded-xl border border-accent/30 bg-accent/[0.04] p-5 mt-4">
             <div className="font-mono text-[9px] uppercase tracking-[0.22em] text-accent">{V.complete} · {fmt(S.clock)} · {V.summary}</div>
             <div className="font-display text-2xl text-ivory mt-2.5">{S.outcome.headline}</div>
             <p className="text-[13px] text-muted mt-2 leading-relaxed">{S.outcome.detail}</p>
-            <div className="mt-4 max-w-[320px] font-mono text-[10.5px] divide-y divide-white/[0.05]">
+            <div className="mt-4 max-w-[320px] font-mono text-[10.5px] divide-y divide-hair/8">
               {S.outcome.extract.map(([k, v]) => (
                 <div key={k} className="flex justify-between gap-4 py-1">
                   <span className="text-muted">{k}</span><span className="text-ivory">{v}</span>
@@ -409,13 +413,13 @@ export function VoiceAgent({ onOps }) {
           </button>
           {calls.filter((c) => c.id !== scen.id).map((c) => (
             <button key={c.id} onClick={() => start(c)}
-              className="rounded-full border border-white/15 text-muted font-mono text-[10px] uppercase tracking-[0.14em] px-4 py-2.5 hover:text-ivory hover:border-white/35 transition">
+              className="rounded-full border border-hair/20 text-muted font-mono text-[10px] uppercase tracking-[0.14em] px-4 py-2.5 hover:text-ivory hover:border-hair/40 transition">
               {c.icon} {c.short}
             </button>
           ))}
           {onOps && (
             <button onClick={onOps}
-              className="rounded-full border border-white/15 text-muted font-mono text-[10px] uppercase tracking-[0.14em] px-4 py-2.5 hover:text-ivory hover:border-white/35 transition">
+              className="rounded-full border border-hair/20 text-muted font-mono text-[10px] uppercase tracking-[0.14em] px-4 py-2.5 hover:text-ivory hover:border-hair/40 transition">
               {V.opsBtn}
             </button>
           )}
