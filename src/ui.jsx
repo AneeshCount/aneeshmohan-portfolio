@@ -305,7 +305,10 @@ export function useTabs({ count, active, onSelect, orientation = 'horizontal' })
     'aria-selected': i === active,
     'aria-controls': panelId,
     tabIndex: i === active ? 0 : -1,
-    onClick: () => onSelect(i),
+    /* Also focuses on click: Safari and Firefox don't focus a <button> on
+       mouse click (only on Tab), so without this the arrow keys the ↑↓ hint
+       promises do nothing until the visitor tabs in first. */
+    onClick: () => { onSelect(i); refs.current[i]?.focus(); },
     onKeyDown,
   }), [active, onSelect, onKeyDown]);
 
