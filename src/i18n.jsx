@@ -22,6 +22,7 @@ export const STR = {
       h1a: 'Fast, intelligent', h1b: 'software, built to ', ship: 'ship.',
       p: 'A senior-led studio building voice agents, AI workforces, and production software, from blank page to ship.',
       view: 'View the work', avail: 'Accepting new projects', panel: 'Live agent',
+      bannerP: 'A preview of the voice and ops agents below, working in real time.', bannerCta: 'Watch one work',
     },
     metrics: ['Products shipped from scratch', 'Agentic AI in production', 'Async delivery across timezones'],
     wb: {
@@ -164,7 +165,7 @@ export const STR = {
     },
     footer: {
       line1: 'Senior-led AI and software studio.',
-      line2: 'Made in India, shipping worldwide.',
+      line2: 'Async delivery across US and EU timezones.',
       sections: 'Sections', elsewhere: 'Elsewhere',
     },
     motion: { label: 'Motion' },
@@ -183,6 +184,7 @@ export const STR = {
       h1a: 'Schnelle, intelligente', h1b: 'Software, gebaut zum ', ship: 'Liefern.',
       p: 'Ein senior-geführtes Studio für Voice-Agenten, KI-Workforces und Produktionssoftware, vom leeren Blatt bis zum Launch.',
       view: 'Arbeiten ansehen', avail: 'Wir nehmen neue Projekte an', panel: 'Live-Agent',
+      bannerP: 'Eine Vorschau der Voice- und Ops-Agenten weiter unten, in Echtzeit.', bannerCta: 'Live ansehen',
     },
     metrics: ['Produkte von null gebaut', 'Agentische KI in Produktion', 'Asynchrone Lieferung über Zeitzonen'],
     wb: {
@@ -325,7 +327,7 @@ export const STR = {
     },
     footer: {
       line1: 'Senior-geführtes KI- und Software-Studio.',
-      line2: 'Made in India, weltweit im Einsatz.',
+      line2: 'Asynchrone Lieferung über US- und EU-Zeitzonen.',
       sections: 'Bereiche', elsewhere: 'Woanders',
     },
     motion: { label: 'Animation' },
@@ -344,6 +346,7 @@ export const STR = {
       h1a: 'Software rápido e', h1b: 'inteligente, hecho para ', ship: 'entregar.',
       p: 'Un estudio senior que construye agentes de voz, plantillas de IA y software de producción, del papel en blanco al lanzamiento.',
       view: 'Ver el trabajo', avail: 'Aceptamos nuevos proyectos', panel: 'Agente en vivo',
+      bannerP: 'Un adelanto de los agentes de voz y de operaciones de abajo, en tiempo real.', bannerCta: 'Verlo en acción',
     },
     metrics: ['Productos creados desde cero', 'IA agéntica en producción', 'Entrega asíncrona entre husos horarios'],
     wb: {
@@ -486,7 +489,7 @@ export const STR = {
     },
     footer: {
       line1: 'Estudio senior de IA y software.',
-      line2: 'Hecho en India, entregando en todo el mundo.',
+      line2: 'Entrega asíncrona en husos horarios de EE. UU. y Europa.',
       sections: 'Secciones', elsewhere: 'En otros sitios',
     },
     motion: { label: 'Animación' },
@@ -505,6 +508,7 @@ export const STR = {
       h1a: 'Des logiciels rapides,', h1b: 'intelligents, faits pour ', ship: 'livrer.',
       p: 'Un studio senior qui construit agents vocaux, effectifs IA et logiciels de production, de la page blanche à la livraison.',
       view: 'Voir les réalisations', avail: 'Nouveaux projets bienvenus', panel: 'Agent live',
+      bannerP: 'Un aperçu des agents vocaux et ops plus bas, en temps réel.', bannerCta: 'Le voir en action',
     },
     metrics: ['Produits créés de zéro', 'IA agentique en production', 'Livraison asynchrone, tous fuseaux'],
     wb: {
@@ -647,7 +651,7 @@ export const STR = {
     },
     footer: {
       line1: "Studio IA et logiciel, mené par des seniors.",
-      line2: 'Made in India, livré dans le monde entier.',
+      line2: 'Livraison asynchrone sur les fuseaux horaires US et UE.',
       sections: 'Sections', elsewhere: 'Ailleurs',
     },
     motion: { label: 'Animations' },

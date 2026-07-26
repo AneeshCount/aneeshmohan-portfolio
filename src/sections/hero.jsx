@@ -110,7 +110,10 @@ export function AgentBanner() {
   return (
     <section>
       <div className="shell section-y">
-        <div className="surface grain spot p-7 sm:p-10 overflow-hidden">
+        <button
+          onClick={() => scrollTo('play')}
+          className="group block w-full text-left surface grain spot p-7 sm:p-10 overflow-hidden transition-colors hover:border-accent/40"
+        >
           <div className="flex items-center justify-between gap-4">
             <span className="eyebrow">{s.hero.panel}</span>
             <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
@@ -134,13 +137,19 @@ export function AgentBanner() {
           </div>
 
           <div className="mt-8 rule" />
-          <div className="mt-6 flex items-center gap-2.5 font-mono text-[10px] text-muted uppercase tracking-[0.18em]">
+          <div className="mt-6 flex items-center justify-between gap-4 flex-wrap">
+            <p className="card-body">{s.hero.bannerP}</p>
+            <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-accent opacity-80 group-hover:opacity-100 transition">
+              {s.hero.bannerCta} <Arrow className="w-4 h-4 rotate-90" />
+            </span>
+          </div>
+          <div className="mt-4 flex items-center gap-2.5 font-mono text-[10px] text-muted uppercase tracking-[0.18em]">
             <span className="text-gold">EN</span><span className="text-hair/25">·</span>
             <span>DE</span><span className="text-hair/25">·</span>
             <span>ES</span><span className="text-hair/25">·</span>
             <span>FR</span>
           </div>
-        </div>
+        </button>
       </div>
     </section>
   );
