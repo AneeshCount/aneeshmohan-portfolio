@@ -86,7 +86,7 @@ export const PROJECTS = [
     id: 'giftr',
     name: 'Giftr',
     tech: ['Next.js', 'Prisma', 'PostgreSQL', 'AI Agent'],
-    link: null,
+    link: 'https://giftr-liart.vercel.app',
   },
   {
     id: 'resume-search',
