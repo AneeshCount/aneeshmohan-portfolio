@@ -124,15 +124,30 @@ section { scroll-margin-top: 88px; }
   );
 }
 
-.zone-dusk { background: rgb(var(--c-bg)); }
+.zone-dusk { background: rgb(var(--c-bg)); position: relative; }
 
-/* The handover. Periwinkle resolving into indigo-black over a tall band, so
-   the two halves meet as a horizon rather than a seam. Height is close to a
-   full viewport, so crossing it is a deliberate stretch of scrolling on any
-   screen, not something that flies by in a gesture or two. */
+/* A long, gentle afterglow bled over the top of the dusk zone's own solid
+   background, sitting behind its real content (the agent banner, the start
+   of Work) rather than in a gap before it. This is what actually reads as
+   gradual: a stretch of content that keeps settling into full dark as you
+   scroll it, not a longer empty band, which just reads as a page with
+   nothing on it. */
+.zone-dusk::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  height: clamp(34rem, 85vh, 64rem);
+  background: linear-gradient(180deg, rgba(199, 210, 254, 0.55) 0%, rgba(142, 155, 216, 0.4) 16%, rgba(91, 98, 143, 0.28) 34%, rgba(59, 65, 107, 0.16) 54%, rgba(23, 25, 58, 0.07) 75%, rgba(11, 14, 26, 0) 100%);
+}
+
+/* The horizon. Periwinkle resolving into indigo over a short band: legible
+   as a deliberate seam, not a section of its own. The afterglow above picks
+   up the rest of the crossing once real content starts. */
 .zone-seam {
-  height: clamp(30rem, 100vh, 58rem);
-  background: linear-gradient(180deg, #C7D2FE 0%, #B2BCE3 10%, #A8B3E0 20%, #8E9BD8 32%, #6E77A8 46%, #5B628F 58%, #3B416B 72%, #22254D 84%, #17193A 92%, #0B0E1A 100%);
+  height: clamp(9rem, 18vh, 15rem);
+  background: linear-gradient(180deg, #C7D2FE 0%, #A8B3E0 26%, #8E9BD8 52%, #5B628F 76%, #3B416B 92%, #17193A 100%);
 }
 
 /* ── Type ───────────────────────────────────────────────────────────────
