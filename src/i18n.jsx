@@ -165,7 +165,6 @@ export const STR = {
     },
     footer: {
       line1: 'Senior-led AI and software studio.',
-      line2: 'Async delivery across US and EU timezones.',
       sections: 'Sections', elsewhere: 'Elsewhere',
     },
     motion: { label: 'Motion' },
@@ -327,7 +326,6 @@ export const STR = {
     },
     footer: {
       line1: 'Senior-geführtes KI- und Software-Studio.',
-      line2: 'Asynchrone Lieferung über US- und EU-Zeitzonen.',
       sections: 'Bereiche', elsewhere: 'Woanders',
     },
     motion: { label: 'Animation' },
@@ -489,7 +487,6 @@ export const STR = {
     },
     footer: {
       line1: 'Estudio senior de IA y software.',
-      line2: 'Entrega asíncrona en husos horarios de EE. UU. y Europa.',
       sections: 'Secciones', elsewhere: 'En otros sitios',
     },
     motion: { label: 'Animación' },
@@ -651,7 +648,6 @@ export const STR = {
     },
     footer: {
       line1: "Studio IA et logiciel, mené par des seniors.",
-      line2: 'Livraison asynchrone sur les fuseaux horaires US et UE.',
       sections: 'Sections', elsewhere: 'Ailleurs',
     },
     motion: { label: 'Animations' },

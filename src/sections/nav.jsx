@@ -162,8 +162,7 @@ export function Footer() {
               <Wordmark />
             </a>
             <p className="display-3 mt-7 max-w-md">
-              {s.footer.line1}<br />
-              <span className="text-muted">{s.footer.line2}</span>
+              {s.footer.line1}
             </p>
             <button onClick={() => scrollTo('contact')} className="btn-primary mt-9">
               <Rollup>{s.cta}</Rollup> <Arrow className="w-4 h-4" />
